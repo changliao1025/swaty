@@ -1,0 +1,64 @@
+import sys
+import os
+import numpy as np
+import datetime
+import calendar
+import julian
+import platform 
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import matplotlib.cbook as cbook
+from pathlib import Path
+from numpy  import array
+sPlatform_os=platform.system()
+
+
+
+sPath_library_python = sWorkspace_code +  slash + 'python' + slash + 'library' + slash + 'eslib_python'
+print(sPath_library_python)
+
+sys.path.append(sPath_library_python)
+
+from toolbox.reader.text_reader_string import text_reader_string
+def swat_prepare_pest_control_file(sFilename_configuration_in):
+    if os.path.isfile(sFilename_configuration_in):
+        pass
+    else:
+        return
+   
+    config={}
+    ifs=open(sFilename_configuration_in, 'r')    
+    for sLine in ifs:
+       sDummy = sLine.split(',')
+       if(len(sDummy) != 2):
+           sDummy = sLine.split(' ')
+       sKey = (sDummy[0]).strip()
+       sValue =  (sDummy[1]).strip()
+       config[sKey] =sValue
+    sWorkspace_data = config['sWorkspace_data']
+    sWorkspace_pest = config['sWorkspace_pest']
+    sWorkspace_simulation = config['sWorkspace_simulation']
+    run_mode =  config['run_mode'] 
+    sRegion = config['sRegion']
+
+    start_year = int(config['start_year'] )
+    start_year_spinup = int(config['start_year_spinup'] )
+    end_year  = int( config['end_year'] )
+    nsegment = int( config['nsegment'] )
+    
+    if not os.path.exists(sWorkspace_pest):
+        os.makedirs(sWorkspace_pest)
+
+    sFilename_control = sWorkspace_pest + slash + sRegion + '_swat.pst'
+    ofs = open(sFilename_control, 'w')
+    ofs.write('pcf\n')
+    ofs.write('* control data\n')
+
+    
+    ofs.close
+
+
+if __name__ == '__main__':
+    import os
+    sFilename_configuration_in = '/Volumes/mac/03model/swat/purgatoire30/purgatoire30.txt'
+    swat_prepare_pest_control_file(sFilename_configuration_in)

@@ -1,0 +1,15 @@
+#!/bin/bash
+#SBATCH -A inversion
+#SBATCH -t 100:00:00
+#SBATCH -N 1
+#SBATCH -n 1
+#SBATCH -J child
+#SBATCH -o stdout.out
+#SBATCH -e stderr.err
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=chang.liao@pnnl.gov
+cd $SLURM_SUBMIT_DIR
+module purge
+module load gcc/5.2.0
+module load python/anaconda3.6
+./swat
