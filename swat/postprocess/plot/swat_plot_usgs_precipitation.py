@@ -108,9 +108,10 @@ def swat_plot_usgs_precipitation(sFilename_configuration_in):
 
 
     print('Finished!')
+    
 if __name__ == '__main__':
-    sRegion = 'tinpan'
     sModel ='swat'
+    sRegion = 'tinpan'    
     sCase = 'test'
     sJob = sCase
     sTask = 'simulation'
@@ -118,7 +119,8 @@ if __name__ == '__main__':
     iFlag_pest = 0
     if iFlag_pest == 1:
         sTask = 'calibration'
-    sFilename_configuration = sWorkspace_scratch + slash + '03model' + slash \
+    sFilename_configuration = sWorkspace_configuration  + slash \
               + sModel + slash + sRegion + slash \
-              + sTask  + slash + sFilename_config
+              + sTask  + slash + 'constance_configuration.txt'
+
     swat_plot_usgs_precipitation(sFilename_configuration_in)
