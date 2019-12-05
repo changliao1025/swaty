@@ -4,14 +4,14 @@ from jdcal import gcal2jd, jd2gcal
 
 sSystem_paths = os.environ['PATH'].split(os.pathsep)
 sys.path.extend(sSystem_paths)
-from eslib.system import define_global_variables
+
 from eslib.system.define_global_variables import *
 from eslib.toolbox.reader.read_configuration_file import read_configuration_file
 
 sPath_swat_python = sWorkspace_code +  slash + 'python' + slash + 'swat' + slash + 'swat_python'
 sys.path.append(sPath_swat_python)
-from swat.simulation import swat_global
-from swat.simulation.swat_global import *
+from swat.shared import swat_global
+
 
 def swat_read_configuration_file(sFilename_configuration_in,\
      sCase_in=None, sJob_in=None, iFlag_mode_in=None, aVariable_in = None, aValue_in = None):
@@ -58,6 +58,8 @@ def swat_read_configuration_file(sFilename_configuration_in,\
     swat_global.iYear_end  = int( config['iYear_end'])
     swat_global.iMonth_end  = int(  config['iMonth_end'])
     swat_global.iDay_end  = int(  config['iDay_end'])
+
+    swat_global.iYear_spinup_end  = int( config['iYear_spinup_end'])
 
     #swat_global.dResolution  = float( config['dResolution'])
     #by default, this system is used to prepare inputs for modflow simulation.

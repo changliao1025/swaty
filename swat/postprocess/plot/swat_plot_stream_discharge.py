@@ -190,8 +190,10 @@ def swat_plot_stream_discharge(sFilename_configuration_in, sCase_in = None, sJob
 
 
 if __name__ == '__main__':
-    sRegion = 'tinpan'
+    
     sModel ='swat'
+    
+    sRegion = 'tinpan'
     sCase = 'tr003'
     sJob = sCase
     sTask = 'simulation'

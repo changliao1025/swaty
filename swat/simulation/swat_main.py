@@ -11,8 +11,8 @@ from eslib.toolbox.reader.read_configuration_file import read_configuration_file
 sPath_swat_python = sWorkspace_code +  slash + 'python' + slash + 'swat' + slash + 'swat_python'
 sys.path.append(sPath_swat_python)
 
-from swat.simulation import swat_global
-from swat.simulation.swat_global import *
+from swat.shared import swat_global
+
 from swat.simulation.swat_read_configuration_file import swat_read_configuration_file
 from swat.simulation.swat_copy_TxtInOut_files import swat_copy_TxtInOut_files
 from swat.scenarios.swat_prepare_hru_parameter_file import swat_prepare_hru_parameter_file

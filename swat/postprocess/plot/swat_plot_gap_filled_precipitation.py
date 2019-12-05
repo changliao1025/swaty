@@ -26,7 +26,7 @@ from swat.shared import swat_global
 def time_series(x):
             return '$%1.2f' % x
 missing_value1  = -99
-def swat_plot_usgs_precipitation(sFilename_configuration_in):
+def swat_plot_gap_filled_precipitation(sFilename_configuration_in):
     """
     plot the precipitation data file
     sFilename_configuration_in
@@ -55,14 +55,14 @@ def swat_plot_usgs_precipitation(sFilename_configuration_in):
     for iSite in range(0, nsite):
         sFilename = sWorkspace_data_project + slash \
                 + 'auxiliary' + slash + 'usgs' + slash + 'pcp' + slash \
-                + aSiteName[iSite].zfill(8) + '.txt' 
+                + aSiteName[iSite].zfill(8) + '_new' + sExtension_txt 
         if os.path.isfile(sFilename):
             pass
         else:
             print(sFilename)
                
             return
-        aData = text_reader_string(sFilename, iSkipline_in = 1)
+        aData = text_reader_string(sFilename)
         #convert it float data type
         aPrec  = aData.astype(float)
         iIndex = np.where(aPrec == missing_value1)
@@ -75,10 +75,9 @@ def swat_plot_usgs_precipitation(sFilename_configuration_in):
 
         sFilename_jpg = sWorkspace_data_project + slash \
                 + 'auxiliary' + slash + 'usgs' + slash + 'pcp' + slash \
-                + aSiteName[iSite].zfill(8) +    sExtension_jpg 
+                + aSiteName[iSite].zfill(8) + '_new' +  sExtension_jpg 
         print('start ploting')
-        inch2mm = 25.4
-        aPrec = aPrec * inch2mm
+        
         plot_time_series_data(dates, aPrec, sFilename_jpg, sTitle_in = '', sLabel_Y_in= r'Precipitation ($mm \, day^{-1}$)' ,\
             iSize_X_in = 12, iSize_Y_in = 5)
         
@@ -102,4 +101,4 @@ if __name__ == '__main__':
               + sModel + slash + sRegion + slash \
               + sTask  + slash + 'constance_configuration.txt'
 
-    swat_plot_usgs_precipitation(sFilename_configuration)
+    swat_plot_gap_filled_precipitation(sFilename_configuration)

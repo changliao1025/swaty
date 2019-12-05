@@ -24,12 +24,17 @@ global iMonth_end
 global iYear_start
 global iYear_end
 
+global iYear_spinup_end
+
 global lJulian_start
 global lJulian_end
 global nstress
 global nsteady
 global ntransient
 global nstep
+
+global lJulian_start_obs
+global lJulian_end_obs
 
 global ncutoff
 global missing_value

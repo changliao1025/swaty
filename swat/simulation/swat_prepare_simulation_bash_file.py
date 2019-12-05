@@ -3,13 +3,13 @@ import sys #used to add system path
 
 sSystem_paths = os.environ['PATH'].split(os.pathsep)
 sys.path.extend(sSystem_paths)
-from eslib.system import define_global_variables
+
 from eslib.system.define_global_variables import *
 
 sPath_swat_python = sWorkspace_code +  slash + 'python' + slash + 'swat' + slash + 'swat_python'
 sys.path.append(sPath_swat_python)
 from swat.simulation import swat_global
-from swat.simulation.swat_global import *
+
 
 def swat_prepare_simulation_bash_file():
     

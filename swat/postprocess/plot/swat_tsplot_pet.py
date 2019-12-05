@@ -141,6 +141,8 @@ def swat_tsplot_pet(sFilename_configuration_in, sCase_in = None, sJob_in = None,
             dSimulation = datetime.datetime(iYear, iMonth, 15) 
             dates.append(dSimulation )
 
+    
+                            
     fig, ax = plt.subplots(1, 1, figsize=(12, 9))
     aDischarge_monthly.shape = (12* nyear)
     ax.plot(dates, aDischarge_monthly)
