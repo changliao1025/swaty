@@ -6,62 +6,44 @@ import datetime
 from numpy  import array
 
 #import eslib library
-sPath_library_python = sWorkspace_code +  slash + 'python' + slash + 'library' + slash + 'eslib_python'
-sys.path.append(sPath_library_python)
-from toolbox.reader.text_reader_string import text_reader_string
+sSystem_paths = os.environ['PATH'].split(os.pathsep)
+sys.path.extend(sSystem_paths)
 
-def swat_extract_stream_discharge(sFilename_configuration_in, sCase_in = None, sJob_in = None, sModel_in = None):
+from eslib.toolbox.reader.text_reader_string import text_reader_string
+from eslib.system.define_global_variables import *
+from eslib.toolbox.reader.read_configuration_file import read_configuration_file
+
+sPath_swat_python = sWorkspace_code +  slash + 'python' + slash + 'swat' + slash + 'swat_python'
+sys.path.append(sPath_swat_python)
+from swat.shared.swat_read_configuration_file import swat_read_configuration_file
+from swat.shared import swat_global
+
+def swat_extract_stream_discharge(sFilename_configuration_in, iCase_index_in = None):
     """
     extract discharge from swat model simulation
     """
   
-    if sCase_in is not None:
-        print(sCase_in)
-        sCase = sCase_in
-    else:
-        #by default, this model will run in steady state
-        sCase = 'ss'
-    if sJob_in is not None:
-        sJob = sJob_in
-    else:
-        sJob = 'swat'
-    if sModel_in is not None:
-        print(sModel_in)
-        sModel = sModel_in
-    else:
-        sModel = 'swat' #the default mode is modflow
-    
-    sWorkspace_scratch = config['sWorkspace_scratch']
+    config = swat_read_configuration_file(sFilename_configuration_in, iCase_index_in)
+    sModel = swat_global.sModel
+    sRegion = swat_global.sRegion
+    sCase = swat_global.sCase
 
-    sWorkspace_calibration_relative = config['sWorkspace_calibration']
-    sWorkspace_simulation_relative = config['sWorkspace_simulation']
-
-    sWorkspace_simulation = sWorkspace_scratch + slash + sWorkspace_simulation_relative + slash + sCase
-    sWorkspace_calibration = sWorkspace_scratch + slash + sWorkspace_calibration_relative + slash + sCase
-
-    sWorkspace_pest_model = sWorkspace_calibration + slash + sModel
-    
-    iYear_start = int(config['iYear_start'] )
-    iYear_spinup_end = int(config['iYear_spinup_end'] )
-    iYear_end  = int( config['iYear_end'] )
-    nsegment = int( config['nsegment'] )
-
-    dSimulation_start = datetime.datetime(iYear_start, 1, 1)  #year, month, day
-    dSimulation_transient_start = datetime.datetime(iYear_spinup_end + 1, 1, 1)  #year, month, day
-    dSimulation_end = datetime.datetime(iYear_end, 12, 31)  #year, month, day
-
-    jdStart = julian.to_jd(dSimulation_start, fmt='jd')
-    jdEnd = julian.to_jd(dSimulation_end, fmt='jd')
-
-    nstress = int(jdEnd - jdStart + 1)
-    
+    iYear_start = swat_global.iYear_start
+    iYear_spinup_end = swat_global.iYear_spinup_end
+    iYear_end  = swat_global.iYear_end
+   
+    nstress = swat_global.nstress
+    nsegment = swat_global.nsegment
+    sProject = sModel + slash + sRegion
+    sWorkspace_data_project = swat_global.sWorkspace_data_project  
+    sWorkspace_simulation_case = swat_global.sWorkspace_simulation_case
     iFlag_debug = 2
     if(iFlag_debug == 1 ):
         sPath_current = sWorkspace_pest_model + slash + 'beopest1'
     else:
         if iFlag_debug == 2:
             #run from the arcswat directory
-            sPath_current = sWorkspace_simulation # + slash  + 'TxtInOut'
+            sPath_current = sWorkspace_simulation_case # + slash  + 'TxtInOut'
         else:
             sPath_current = os.getcwd()
     print('The current path is: ' + sPath_current)
@@ -69,7 +51,7 @@ def swat_extract_stream_discharge(sFilename_configuration_in, sCase_in = None, s
 
     sFilename = sWorkspace_slave + slash + 'output.rch'
 
-    aData = text_reader_string(sFilename, skipline_in=9)
+    aData = text_reader_string(sFilename, iSkipline_in=9)
     aData_all = array( aData )
     nrow_dummy = len(aData_all)
     ncolumn_dummy = len(aData_all[0,:])
@@ -94,15 +76,15 @@ if __name__ == '__main__':
    
     sRegion = 'tinpan'
     sModel ='swat'
-    sCase = 'tr003'
-    sJob = sCase
+    iCase = 0
+    
     sTask = 'simulation'
     iFlag_simulation = 1
     iFlag_pest = 0
     if iFlag_pest == 1:
         sTask = 'calibration'
-    sFilename_configuration = sWorkspace_scratch + slash + '03model' + slash \
+    sFilename_configuration = sWorkspace_configuration  + slash \
               + sModel + slash + sRegion + slash \
-              + sTask  + slash + sFilename_config
-    swat_extract_stream_discharge(sFilename_configuration,sCase, sJob, sModel)
+              + sTask  + slash + 'marianas_configuration.txt'
+    swat_extract_stream_discharge(sFilename_configuration, iCase)
 

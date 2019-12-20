@@ -33,19 +33,14 @@ def swat_plot_usgs_precipitation(sFilename_configuration_in):
     """
     config = swat_read_configuration_file(sFilename_configuration_in)
     sModel = swat_global.sModel
-
     sRegion = swat_global.sRegion
     #sFilename_ncdc = config['sFilename_ncdc']
     iYear_start = swat_global.iYear_start
     iYear_spinup_end = swat_global.iYear_spinup_end
     iYear_end  = swat_global.iYear_end
-
     dObservation_start = datetime.datetime(iYear_start, 1, 1)  #year, month, day
-    dObservation_end = datetime.datetime(iYear_end, 12, 31)  #year, month, day
-
-   
+    dObservation_end = datetime.datetime(iYear_end, 12, 31)  #year, month, day   
     nstress = swat_global.nstress
-
     sProject = sModel + slash + sRegion
     sWorkspace_data_project = sWorkspace_data + slash + sProject
 
@@ -102,4 +97,4 @@ if __name__ == '__main__':
               + sModel + slash + sRegion + slash \
               + sTask  + slash + 'constance_configuration.txt'
 
-    swat_plot_usgs_precipitation(sFilename_configuration)
+    swat_plot_usgs_precipitation(sFilename_configuration, iCase_index)

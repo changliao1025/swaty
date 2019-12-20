@@ -4,21 +4,18 @@ import os
 import datetime
 import calendar
 import julian  #to covert datetime to julian date 
-import platform #platform independent
+
 import numpy as np
-from numpy  import array
+
 from calendar import monthrange #calcuate the number of days in a month
 
 
-
-#import the eslib library
-#this library is used to read data and maybe other operations
 sPath_library_python = sWorkspace_code +  slash + 'python' + slash + 'library' + slash + 'eslib_python'
 sys.path.append(sPath_library_python)
 from toolbox.reader.text_reader_string import text_reader_string
 
 #global variables
-feet2meter = 0.3048
+
 missing_value = -99.0
 
 #the function to prepare precipition file (with both usgs and ncdc)
@@ -26,17 +23,7 @@ missing_value = -99.0
 def swat_prepare_arcswat_usgs_temperature_file(sFilename_configuration_in):
     #check whether the configuration exist or not
     
-    #retrieve the data
-    sWorkspace_home = config['sWorkspace_home']
-    sWorkspace_data = config['sWorkspace_data']
-    sWorkspace_raw = config['sWorkspace_raw']
-    sWorkspace_scratch = config['sWorkspace_scratch']
-    sRegion = config['sRegion']
-    sFilename_ncdc = config['sFilename_ncdc']
-    iYear_start = int(config['iYear_start'] )
-    #the end year of spinup
-    iYear_spinup_end = int(config['iYear_spinup_end'] )
-    iYear_end  = int( config['iYear_end'] )
+   
  
     #the new simulation is 1975-1981  
    

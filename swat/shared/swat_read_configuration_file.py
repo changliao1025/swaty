@@ -1,6 +1,7 @@
 import os 
 import sys #used to add system path
 from jdcal import gcal2jd, jd2gcal
+import datetime
 
 sSystem_paths = os.environ['PATH'].split(os.pathsep)
 sys.path.extend(sSystem_paths)
@@ -12,20 +13,16 @@ sPath_swat_python = sWorkspace_code +  slash + 'python' + slash + 'swat' + slash
 sys.path.append(sPath_swat_python)
 from swat.shared import swat_global
 
+pDate = datetime.datetime.today()
+sDate = "{:04d}".format(pDate.year) + "{:02d}".format(pDate.month) + "{:02d}".format(pDate.day)
 
 def swat_read_configuration_file(sFilename_configuration_in,\
-     sCase_in=None, sJob_in=None, iFlag_mode_in=None, aVariable_in = None, aValue_in = None):
+     iCase_index_in=None, sJob_in=None, iFlag_mode_in=None, aVariable_in = None, aValue_in = None):
     config = read_configuration_file(sFilename_configuration_in)
-    if sCase_in is not None:
-        print(sCase_in)
-        sCase = sCase_in
-    else:
-        #by default, this model will run in steady state
-        sCase = 'test'
-    if sJob_in is not None:
-        sJob = sJob_in
-    else:
-        sJob = sCase
+    sModel = config['sModel']  
+    sRegion = config['sRegion']
+
+    
     if iFlag_mode_in is not None:
         iFlag_mode = iFlag_mode_in
     else:
@@ -40,6 +37,17 @@ def swat_read_configuration_file(sFilename_configuration_in,\
     else:
         aValue = None
         pass
+
+    if iCase_index_in is not None:        
+        iCase_index = iCase_index_in
+    else:       
+        iCase_index = 0
+    sCase_index = "{:03d}".format(iCase_index)
+    sCase = sModel + sDate + sCase_index
+    if sJob_in is not None:
+        sJob = sJob_in
+    else:
+        sJob = sCase
     swat_global.sCase = sCase
     swat_global.sJob = sJob
     swat_global.aVariable = aVariable
@@ -75,7 +83,7 @@ def swat_read_configuration_file(sFilename_configuration_in,\
     swat_global.lJulian_start =   lJulian_start[1]
     swat_global.lJulian_end =  lJulian_end[1]
     swat_global.nstress =   nstress
-
+    swat_global.nsegment  = int( config['nsegment'])
     swat_global.sJob = sJob
     
     #swat_global.nsteady =  int( config['nsteady'] )   
