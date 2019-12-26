@@ -14,10 +14,11 @@ sys.path.append(sPath_swat_python)
 from swat.shared import swat_global
 
 pDate = datetime.datetime.today()
-sDate = "{:04d}".format(pDate.year) + "{:02d}".format(pDate.month) + "{:02d}".format(pDate.day)
+sDate_default = "{:04d}".format(pDate.year) + "{:02d}".format(pDate.month) + "{:02d}".format(pDate.day)
 
 def swat_read_configuration_file(sFilename_configuration_in,\
-     iCase_index_in=None, sJob_in=None, iFlag_mode_in=None, aVariable_in = None, aValue_in = None):
+     iCase_index_in=None, sJob_in=None, iFlag_mode_in=None, \
+         aVariable_in = None, aValue_in = None, sDate_in =None):
     config = read_configuration_file(sFilename_configuration_in)
     sModel = config['sModel']  
     sRegion = config['sRegion']
@@ -37,7 +38,11 @@ def swat_read_configuration_file(sFilename_configuration_in,\
     else:
         aValue = None
         pass
-
+    if sDate_in is not None:
+        sDate = sDate_in
+    else:
+        sDate_in = sDate_default
+        pass
     if iCase_index_in is not None:        
         iCase_index = iCase_index_in
     else:       

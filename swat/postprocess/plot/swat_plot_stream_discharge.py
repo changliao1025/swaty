@@ -41,8 +41,8 @@ def time_series(x, position):
         return '%4.1e' % x
 
 def swat_plot_stream_discharge(sFilename_configuration_in, sCase_in = None, sJob_in = None, sModel_in = None):
-
-    config = swat_read_configuration_file(sFilename_configuration_in)
+    #sDate = "{:04d}".format(2019) + "{:02d}".format(pDate.month) + "{:02d}".format(pDate.day)
+    config = swat_read_configuration_file(sFilename_configuration_in, sDate_in='20191219')
     sModel = swat_global.sModel
     sRegion = swat_global.sRegion
    
@@ -80,6 +80,7 @@ def swat_plot_stream_discharge(sFilename_configuration_in, sCase_in = None, sJob
         dates.append(dSimulation_start + datetime.timedelta(days))
    
     sFilename_out = sWorkspace_simulation_case + slash + 'discharge_daily.png'
+    sFilename_out =  '/people/liao313/discharge_daily.png'
     sLabel_Y =r'Stream discharge ($m^{3} \, day^{-1}$)' 
     sLabel_legend = 'Simulated stream discharge'
     plot_time_series_data(dates, aDischarge_simulation, sFilename_out,\

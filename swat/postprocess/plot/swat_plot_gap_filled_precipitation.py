@@ -77,8 +77,10 @@ def swat_plot_gap_filled_precipitation(sFilename_configuration_in):
                 + 'auxiliary' + slash + 'usgs' + slash + 'pcp' + slash \
                 + aSiteName[iSite].zfill(8) + '_new' +  sExtension_jpg 
         print('start ploting')
-        
-        plot_time_series_data(dates, aPrec, sFilename_jpg, sTitle_in = '', sLabel_Y_in= r'Precipitation ($mm \, day^{-1}$)' ,\
+        sLabel_Y = r'Precipitation ($mm \, day^{-1}$)'
+        sLabel_legend = 'Observed precipitation'
+        plot_time_series_data(dates, aPrec, sFilename_jpg, \
+            sTitle_in = '', sLabel_Y_in= sLabel_Y ,sLabel_legend_in = sLabel_legend, \
             iSize_X_in = 12, iSize_Y_in = 5)
         
 
@@ -99,6 +101,6 @@ if __name__ == '__main__':
         sTask = 'calibration'
     sFilename_configuration = sWorkspace_configuration  + slash \
               + sModel + slash + sRegion + slash \
-              + sTask  + slash + 'constance_configuration.txt'
+              + sTask  + slash + 'marianas_configuration.txt'
 
     swat_plot_gap_filled_precipitation(sFilename_configuration)

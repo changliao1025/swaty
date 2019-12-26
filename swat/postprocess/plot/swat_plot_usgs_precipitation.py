@@ -23,8 +23,7 @@ sys.path.append(sPath_swat_python)
 from swat.shared.swat_read_configuration_file import swat_read_configuration_file
 from swat.shared import swat_global
 
-def time_series(x):
-            return '$%1.2f' % x
+
 missing_value1  = -99
 def swat_plot_usgs_precipitation(sFilename_configuration_in):
     """
@@ -74,7 +73,10 @@ def swat_plot_usgs_precipitation(sFilename_configuration_in):
         print('start ploting')
         inch2mm = 25.4
         aPrec = aPrec * inch2mm
-        plot_time_series_data(dates, aPrec, sFilename_jpg, sTitle_in = '', sLabel_Y_in= r'Precipitation ($mm \, day^{-1}$)' ,\
+
+        sLabel_Y = r'Precipitation ($mm \, day^{-1}$)'
+        plot_time_series_data(dates, aPrec, sFilename_jpg,\
+             sTitle_in = '', sLabel_Y_in= sLabel_Y ,\
             iSize_X_in = 12, iSize_Y_in = 5)
         
 
@@ -95,6 +97,6 @@ if __name__ == '__main__':
         sTask = 'calibration'
     sFilename_configuration = sWorkspace_configuration  + slash \
               + sModel + slash + sRegion + slash \
-              + sTask  + slash + 'constance_configuration.txt'
+              + sTask  + slash + 'marianas_configuration.txt'
 
-    swat_plot_usgs_precipitation(sFilename_configuration, iCase_index)
+    swat_plot_usgs_precipitation(sFilename_configuration)
