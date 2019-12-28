@@ -45,6 +45,7 @@ global sJob
 global sRegion
 global sCase
 
+global sWorkspace_simulation
 global sWorkspace_data_project
 global sWorkspace_simulation_case
 global sWorkspace_simulation_in

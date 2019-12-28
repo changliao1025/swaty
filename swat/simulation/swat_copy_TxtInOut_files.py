@@ -12,8 +12,7 @@ from eslib.system.define_global_variables import *
 
 sPath_swat_python = sWorkspace_code +  slash + 'python' + slash + 'swat' + slash + 'swat_python'
 sys.path.append(sPath_swat_python)
-from swat.simulation import swat_global
-from swat.simulation.swat_global import *
+from swat.shared import swat_global
 
 #from eslib.toolbox.reader.read_configuration_file import read_configuration_file
 

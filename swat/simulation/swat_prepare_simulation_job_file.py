@@ -8,8 +8,7 @@ from eslib.system.define_global_variables import *
 
 sPath_swat_python = sWorkspace_code +  slash + 'python' + slash + 'swat' + slash + 'swat_python'
 sys.path.append(sPath_swat_python)
-from swat.simulation import swat_global
-from swat.simulation.swat_global import *
+from swat.shared import swat_global
 
 def swat_prepare_simulation_job_file():
     
@@ -22,7 +21,7 @@ def swat_prepare_simulation_job_file():
     #end of example
     sLine = '#!/bin/bash' + '\n'
     ifs.write(sLine)
-    sLine = '#SBATCH -A inversion' + '\n'
+    sLine = '#SBATCH -A br20_liao313' + '\n'
     ifs.write(sLine)
     sLine = '#SBATCH -t 0:10:00' + '\n'
     ifs.write(sLine)

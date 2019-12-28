@@ -35,8 +35,9 @@ for i in range(ncase):
     aValue = [dCN2]
     
     sCase = 'CN2_' + sCN2
+    iCase_index =i
 
-    swat_main(sFilename_configuration, sCase_in = sCase, iFlag_mode_in= iFlag_mode, aVariable_in = aVariable, aValue_in = aValue)
+    swat_main(sFilename_configuration, iCase_index_in = iCase_index, iFlag_mode_in= iFlag_mode, aVariable_in = aVariable, aValue_in = aValue)
 
 ncase = len(aAWC)
 for i in range(ncase):
@@ -45,7 +46,7 @@ for i in range(ncase):
     sAWC = "{:03d}".format(i)
     aVariable = [ 'awc']
     aValue = [ dAWC]
-    
+    iCase_index =i+10
     sCase = 'AWC_' + sAWC
 
-    swat_main(sFilename_configuration, sCase_in = sCase, iFlag_mode_in= iFlag_mode, aVariable_in = aVariable, aValue_in = aValue)
+    swat_main(sFilename_configuration, iCase_index_in = iCase_index, iFlag_mode_in= iFlag_mode, aVariable_in = aVariable, aValue_in = aValue)

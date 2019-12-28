@@ -8,7 +8,7 @@ from eslib.system.define_global_variables import *
 
 sPath_swat_python = sWorkspace_code +  slash + 'python' + slash + 'swat' + slash + 'swat_python'
 sys.path.append(sPath_swat_python)
-from swat.simulation import swat_global
+from swat.shared import swat_global
 
 
 def swat_prepare_simulation_bash_file():

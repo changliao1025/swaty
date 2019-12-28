@@ -10,8 +10,7 @@ from eslib.toolbox.reader.text_reader_string import text_reader_string
 
 sPath_swat_python = sWorkspace_code +  slash + 'python' + slash + 'swat' + slash + 'swat_python'
 sys.path.append(sPath_swat_python)
-from swat.simulation import swat_global
-from swat.simulation.swat_global import *
+from swat.shared import swat_global
 
 def swat_prepare_hru_parameter_file():
     """

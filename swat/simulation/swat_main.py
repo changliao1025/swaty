@@ -6,14 +6,14 @@ sSystem_paths = os.environ['PATH'].split(os.pathsep)
 sys.path.extend(sSystem_paths)
 from eslib.system import define_global_variables
 from eslib.system.define_global_variables import *
-from eslib.toolbox.reader.read_configuration_file import read_configuration_file
+
 
 sPath_swat_python = sWorkspace_code +  slash + 'python' + slash + 'swat' + slash + 'swat_python'
 sys.path.append(sPath_swat_python)
 
 from swat.shared import swat_global
 
-from swat.simulation.swat_read_configuration_file import swat_read_configuration_file
+from swat.shared.swat_read_configuration_file import swat_read_configuration_file
 from swat.simulation.swat_copy_TxtInOut_files import swat_copy_TxtInOut_files
 from swat.scenarios.swat_prepare_hru_parameter_file import swat_prepare_hru_parameter_file
 from swat.scenarios.swat_write_hru_input_file import swat_write_hru_input_file
@@ -21,11 +21,11 @@ from swat.simulation.swat_copy_executable_file import swat_copy_executable_file
 from swat.simulation.swat_prepare_simulation_bash_file import swat_prepare_simulation_bash_file
 from swat.simulation.swat_prepare_simulation_job_file import swat_prepare_simulation_job_file
 
-def swat_main(sFilename_configuration_in, sCase_in=None, sJob_in=None, iFlag_mode_in=None, aVariable_in = None, aValue_in = None):    
+def swat_main(sFilename_configuration_in, iCase_index_in=None, sJob_in=None, iFlag_mode_in=None, aVariable_in = None, aValue_in = None):    
     
     #step 1
     error_code = swat_read_configuration_file(sFilename_configuration_in, \
-        sCase_in=sCase_in, sJob_in=sJob_in, iFlag_mode_in=iFlag_mode_in, aVariable_in = aVariable_in, aValue_in = aValue_in)
+        iCase_index_in=iCase_index_in, sJob_in=sJob_in, iFlag_mode_in=iFlag_mode_in, aVariable_in = aVariable_in, aValue_in = aValue_in)
     if(error_code == 0):
         exit()
     else:

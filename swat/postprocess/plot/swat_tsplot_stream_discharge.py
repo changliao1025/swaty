@@ -16,7 +16,6 @@ sSystem_paths = os.environ['PATH'].split(os.pathsep)
 sys.path.extend(sSystem_paths)
 
 from eslib.system.define_global_variables import *
-from eslib.toolbox.reader.read_configuration_file import read_configuration_file
 from eslib.toolbox.reader.text_reader_string import text_reader_string
 from eslib.visual.plot.plot_time_series_data import plot_time_series_data
 
@@ -35,14 +34,12 @@ from swat.shared import swat_global
 
 from swat.plot.swat_convert_data_daily_2_monthly import swat_convert_data_daily_2_monthly
 
-# format the coords message box
-def time_series(x, position):
 
-        return '%4.1e' % x
-
-def swat_plot_stream_discharge(sFilename_configuration_in, sCase_in = None, sJob_in = None, sModel_in = None):
-    #sDate = "{:04d}".format(2019) + "{:02d}".format(pDate.month) + "{:02d}".format(pDate.day)
-    config = swat_read_configuration_file(sFilename_configuration_in, sDate_in='20191219')
+def swat_plot_stream_discharge(sFilename_configuration_in, iCase_index_in = None, sJob_in = None, sModel_in = None):
+  
+    config = swat_read_configuration_file(sFilename_configuration_in, \
+        iCase_index_in = iCase_index_in,\
+         sDate_in = '20191219')
     sModel = swat_global.sModel
     sRegion = swat_global.sRegion
    
@@ -80,22 +77,17 @@ def swat_plot_stream_discharge(sFilename_configuration_in, sCase_in = None, sJob
         dates.append(dSimulation_start + datetime.timedelta(days))
    
     sFilename_out = sWorkspace_simulation_case + slash + 'discharge_daily.png'
-    sFilename_out =  '/people/liao313/discharge_daily.png'
+    
     sLabel_Y =r'Stream discharge ($m^{3} \, day^{-1}$)' 
     sLabel_legend = 'Simulated stream discharge'
-    plot_time_series_data(dates, aDischarge_simulation, sFilename_out,\
-         sTitle_in = '', sLabel_Y_in= sLabel_Y, sLabel_legend_in = sLabel_legend, \
+
+    plot_time_series_data(dates, aDischarge_simulation,\
+         sFilename_out,\
+         sTitle_in = '', \
+             sLabel_Y_in= sLabel_Y,\
+              sLabel_legend_in = sLabel_legend, \
             iSize_X_in = 12, iSize_Y_in = 5)
     
-    #aDischarge_monthly = swat_convert_data_daily_2_monthly( aDischarge_simulation, \
-    #     jdEnd, jdStart, iFlag_mean_or_total_in =1 ) * 24 * 60* 60
-
-    #dates = list()
-    #nyear = iYear_end - iYear_start + 1
-    #for iYear in range(iYear_start, iYear_end + 1):
-    #    for iMonth in range(1,13):
-    #        dSimulation = datetime.datetime(iYear, iMonth, 15) 
-    #        dates.append(dSimulation )
 
 
     
@@ -118,5 +110,5 @@ if __name__ == '__main__':
     sFilename_configuration = sWorkspace_configuration+ slash \
               + sModel + slash + sRegion + slash \
               + sTask  + slash + 'marianas_configuration.txt'
-    swat_plot_stream_discharge(sFilename_configuration, iCase)
+    swat_tsplot_stream_discharge(sFilename_configuration, iCase)
 

@@ -11,8 +11,7 @@ from eslib.toolbox.reader.text_reader_string import text_reader_string
 
 sPath_swat_python = sWorkspace_code +  slash + 'python' + slash + 'swat' + slash + 'swat_python'
 sys.path.append(sPath_swat_python)
-from swat.simulation import swat_global
-from swat.simulation.swat_global import *
+from swat.shared import swat_global
 #in order to write a new hru file, we need to know the parameters to be replaced.
 #the user need to be familiar with the structure of the input file
 #ideally, the input variable should have dictionary data type so a list of variable can be repalced together

@@ -9,7 +9,7 @@ sys.path.extend(sSystem_paths)
 from eslib.system.define_global_variables import *
 from eslib.toolbox.reader.read_configuration_file import read_configuration_file
 
-sPath_swat_python = sWorkspace_code +  slash + 'python' + slash + 'swat' + slash + 'swat_python'
+sPath_swat_python = sWorkspace_code + slash + 'python' + slash + 'swat' + slash + 'swat_python'
 sys.path.append(sPath_swat_python)
 from swat.shared import swat_global
 
@@ -17,8 +17,12 @@ pDate = datetime.datetime.today()
 sDate_default = "{:04d}".format(pDate.year) + "{:02d}".format(pDate.month) + "{:02d}".format(pDate.day)
 
 def swat_read_configuration_file(sFilename_configuration_in,\
-     iCase_index_in=None, sJob_in=None, iFlag_mode_in=None, \
-         aVariable_in = None, aValue_in = None, sDate_in =None):
+     iCase_index_in=None, \
+         sJob_in=None,\
+          iFlag_mode_in=None, \
+         aVariable_in = None, \
+             aValue_in = None, \
+                 sDate_in = None):
     config = read_configuration_file(sFilename_configuration_in)
     sModel = config['sModel']  
     sRegion = config['sRegion']
@@ -41,7 +45,7 @@ def swat_read_configuration_file(sFilename_configuration_in,\
     if sDate_in is not None:
         sDate = sDate_in
     else:
-        sDate_in = sDate_default
+        sDate = sDate_default
         pass
     if iCase_index_in is not None:        
         iCase_index = iCase_index_in
@@ -53,6 +57,7 @@ def swat_read_configuration_file(sFilename_configuration_in,\
         sJob = sJob_in
     else:
         sJob = sCase
+    
     swat_global.sCase = sCase
     swat_global.sJob = sJob
     swat_global.aVariable = aVariable
@@ -114,6 +119,7 @@ def swat_read_configuration_file(sFilename_configuration_in,\
 
     swat_global.sWorkspace_data_project = sWorkspace_data_project
 
+    swat_global.sWorkspace_simulation = sWorkspace_simulation
     swat_global.sWorkspace_simulation_case = sWorkspace_simulation_case    
     swat_global.sWorkspace_simulation_in = sWorkspace_simulation_case
     swat_global.sWorkspace_simulation_out = sWorkspace_simulation_case
