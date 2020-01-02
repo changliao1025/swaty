@@ -57,7 +57,7 @@ def swat_read_configuration_file(sFilename_configuration_in,\
         sJob = sJob_in
     else:
         sJob = sCase
-    
+    swat_global.iCase_index = iCase_index
     swat_global.sCase = sCase
     swat_global.sJob = sJob
     swat_global.aVariable = aVariable
@@ -124,25 +124,7 @@ def swat_read_configuration_file(sFilename_configuration_in,\
     swat_global.sWorkspace_simulation_in = sWorkspace_simulation_case
     swat_global.sWorkspace_simulation_out = sWorkspace_simulation_case
     swat_global.sWorkspace_simulation_copy = sWorkspace_simulation_copy
-
-    #swat_global.sFilename_elevation =  sWorkspace_data_project + slash + 'raster' + slash + 'elevation' + slash  \
-    #    +  config['sFilename_elevation']
-    #swat_global.sFilename_boundary =  sWorkspace_data_project + slash + 'raster' + slash + 'elevation' + slash  \
-    #    + config['sFilename_boundary']
-    #swat_global.sFilename_slope =  sWorkspace_data_project + slash + 'raster' + slash + 'elevation' + slash  \
-    #    + config['sFilename_slope']
-    #swat_global.sFilename_header_source =  sWorkspace_data_project + slash + 'raster' + slash + 'elevation' + slash  \
-    #    + config['sFilename_header_source']
-    #swat_global.sFilename_stream_segment = sWorkspace_data_project + slash + 'raster' + slash + 'hydrology' + slash  \
-    #    + config['sFilename_stream_segment']
-    #swat_global.sFilename_stream_order = sWorkspace_data_project + slash + 'raster' + slash + 'hydrology' + slash  \
-    #    + config['sFilename_stream_order']
-    #swat_global.sFilename_stream_buffer = sWorkspace_data_project + slash + 'raster' + slash + 'hydrology' + slash  \
-    #    + config['sFilename_stream_buffer']
-    #swat_global.sFilename_rock_type =  sWorkspace_data_project + slash + 'raster' + slash + 'geology' + slash \
-    #    + config['sFilename_rock_type']
-    #swat_global.sFilename_subbasin =  sWorkspace_data_project + slash + 'raster' + slash + 'hydrology' + slash  \
-    #    +  config['sFilename_subbasin']
+   
     
     swat_global.ncutoff = 200
     swat_global.nstep = 1

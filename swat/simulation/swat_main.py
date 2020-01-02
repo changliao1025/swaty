@@ -24,14 +24,11 @@ from swat.simulation.swat_prepare_simulation_job_file import swat_prepare_simula
 def swat_main(sFilename_configuration_in, iCase_index_in=None, sJob_in=None, iFlag_mode_in=None, aVariable_in = None, aValue_in = None):    
     
     #step 1
-    error_code = swat_read_configuration_file(sFilename_configuration_in, \
+    swat_read_configuration_file(sFilename_configuration_in, \
         iCase_index_in=iCase_index_in, sJob_in=sJob_in, iFlag_mode_in=iFlag_mode_in, aVariable_in = aVariable_in, aValue_in = aValue_in)
-    if(error_code == 0):
-        exit()
-    else:
-        pass
+   
     #step 2
-    swat_copy_TxtInOut_files()
+    #swat_copy_TxtInOut_files()
 
     #step 3 and 4 are optional
     iFlag_replace = swat_global.iFlag_replace
@@ -48,6 +45,8 @@ def swat_main(sFilename_configuration_in, iCase_index_in=None, sJob_in=None, iFl
     sFilename_job = swat_prepare_simulation_job_file()    
     #step 8 submit
     iFlag_mode = swat_global.iFlag_mode
+    print('Finished')
+    return
     if( iFlag_mode == 1):
         #run local
         subprocess.call(sFilename_bash, shell=True, executable=sFilename_interactive_bash )
@@ -58,7 +57,7 @@ def swat_main(sFilename_configuration_in, iCase_index_in=None, sJob_in=None, iFl
         # cannot run on marianas
         subprocess.call(sLine, shell=True, executable=sFilename_interactive_bash )  
 
-    print('Finished')
+    
 if __name__ == '__main__':
     iFlag_mode = 1
     sModel = 'swat'

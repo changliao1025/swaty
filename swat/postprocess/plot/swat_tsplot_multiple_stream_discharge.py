@@ -92,9 +92,6 @@ def swat_tsplot_multiple_stream_discharge(sFilename_configuration_in, \
     iFlag_cn = 0
     if iFlag_cn ==1:
         sFilename_out = sWorkspace_simulation + slash + 'discharge_cn2_comparison.png'
-
-        
-
         aCN2 = np.arange(10) * 10 + 5
         for i in range(n):
             j = n-i-1

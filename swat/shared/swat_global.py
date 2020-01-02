@@ -44,6 +44,7 @@ global sModel
 global sJob
 global sRegion
 global sCase
+global iCase_index
 
 global sWorkspace_simulation
 global sWorkspace_data_project
