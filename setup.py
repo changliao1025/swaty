@@ -6,9 +6,9 @@ import shutil
 
 from setuptools import setup, find_packages, Command
 
-NAME = "pyearth"
+NAME = "pyswat"
 DESCRIPTION = \
-    "Python for Earth Science."
+    "Python for SWAT."
 AUTHOR = "Chang Liao"
 AUTHOR_EMAIL = "chang.liao@pnnl.gov"
 URL = "https://github.com/changliao1025/pyearth"
@@ -16,18 +16,7 @@ VERSION = "0.1.1"
 REQUIRES_PYTHON = ">=3.6.0"
 KEYWORDS = "Earth Science"
 
-REQUIRED = [
-    "numpy",
-    "matplotlib",
-    "scipy",
-    "statsmodels",
-    "pandas",
-    "osgeo",
-    "netCDF4",
-    "adjustText",
-    "jdcal",
-    "pyevtk"
-]
+REQUIRED = []
 
 CLASSIFY = [
     "Development Status :: 4 - Beta",

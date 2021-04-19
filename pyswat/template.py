@@ -1,17 +1,10 @@
 import sys #append path
 import os #check existence
 import datetime
-
-
 import numpy as np
-
 from numpy  import array
 
-
-#import the eslib library
-sPath_library_python = sWorkspace_code +  slash + 'python' + slash + 'library' + slash + 'eslib_python'
-sys.path.append(sPath_library_python)
-from toolbox.reader.text_reader_string import text_reader_string
+from pyearth.toolbox.reader.text_reader_string import text_reader_string
 
 
 def swat_plot_usgs_precipitation(sFilename_configuration_in):
