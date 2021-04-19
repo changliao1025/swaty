@@ -39,7 +39,7 @@ def swat_copy_TxtInOut_files():
         os.makedirs(sWorkspace_target_case)
     else:      
         print("The simulation folder already exist")
-        return
+        #return
     
     
     #the following file will be copied    

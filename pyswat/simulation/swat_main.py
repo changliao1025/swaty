@@ -28,7 +28,7 @@ def swat_main(sFilename_configuration_in, iCase_index_in=None, sJob_in=None, iFl
         iCase_index_in=iCase_index_in, sJob_in=sJob_in, iFlag_mode_in=iFlag_mode_in, aVariable_in = aVariable_in, aValue_in = aValue_in)
    
     #step 2
-    #swat_copy_TxtInOut_files()
+    swat_copy_TxtInOut_files()
 
     #step 3 and 4 are optional
     iFlag_replace = swat_global.iFlag_replace

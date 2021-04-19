@@ -86,7 +86,8 @@ def swat_plot_stream_discharge(sFilename_configuration_in, iCase_index_in = None
          sTitle_in = '', \
              sLabel_Y_in= sLabel_Y,\
               sLabel_legend_in = sLabel_legend, \
-            iSize_X_in = 12, iSize_Y_in = 5)
+            iSize_X_in = 12,\
+                 iSize_Y_in = 5)
     
 
 

@@ -90,7 +90,7 @@ def swat_write_hru_input_file():
     aHru_combination= aHru_combination.reshape(nhru_type)
 
     # we need to identify a list of files that are HRU defined, you can add others later
-    aExtension = ('.chm','.gw','.hru','.mgt','.sdr','.sep', '.sol')
+    aExtension = ('.chm','.gw','.hru','.mgt','.sdr', '.sep', '.sol')
     #now we can add corresponding possible variables
     #aParameter_table[3]= np.array(['cn2'])
     #aParameter_table[6]= np.array(['awc'])

@@ -4,7 +4,7 @@ import sys
 
 sSystem_paths = os.environ['PATH'].split(os.pathsep)
 sys.path.extend(sSystem_paths)
-from eslib.system import define_global_variables
+
 from eslib.system.define_global_variables import *
 from eslib.toolbox.reader.text_reader_string import text_reader_string
 
