@@ -1,4 +1,3 @@
-#def initialize_global_variable():
 #dimensional variable
 global iFlag_pest_calibration
 global iFlag_transient
