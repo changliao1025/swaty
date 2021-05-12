@@ -6,17 +6,13 @@ import calendar
 
 import numpy as np
 
+from pyearth.system.define_global_variables import *
 
+from pyearth.toolbox.reader.text_reader_string import text_reader_string
 
+from pyswat.shared.swat import pyswat
 
-
-
-#import the eslib library
-#this library is used to read data and maybe other operations
-sPath_library_python = sWorkspace_code +  slash + 'python' + slash + 'library' + slash + 'eslib_python'
-print(sPath_library_python)
-sys.path.append(sPath_library_python)
-from toolbox.reader.text_reader_string import text_reader_string
+from pyswat.shared.swat_read_model_configuration_file import swat_read_model_configuration_file
 
 #global variables
 feet2meter = 0.3048
@@ -24,35 +20,24 @@ missing_value = -99.0
 
 #this function is used to prepare the parameter files for swat calibration purpose
 
-def swat_prepare_watershed_configuration_and_parameter_file(sFilename_configuration_in_in):
+def swat_prepare_watershed_configuration_and_parameter_file(oModel_in):
     
-    print(type(config) )
+    
     #retrieve the data
-    sWorkspace_home = config['sWorkspace_home']
-    sWorkspace_scratch = config['sWorkspace_scratch']
-    sWorkspace_raw = config['sWorkspace_raw']
-    sWorkspace_data_relative = config['sWorkspace_data']
-
-    sWorkspace_calibration_relative = config['sWorkspace_calibration']    
-    sWorkspace_simulation_relative = config['sWorkspace_simulation']
-    sWorkspace_project_relative = config['sWorkspace_project']
-
-    sRegion = config['sRegion']
-    sFilename_ncdc = config['sFilename_ncdc']
-
-
-    iYear_start = int(config['iYear_start'] )
-    #the end year of spinup
-    iYear_spinup_end = int(config['iYear_spinup_end'] )
-    iYear_end  = int( config['iYear_end'] )
+    
+    sWorkspace_scratch = oModel_in.sWorkspace_scratch
+    
+    sWorkspace_data = oModel_in.sWorkspace_data
 
     
-    #we need to read some information from the report first
-    sWorkspace_data = sWorkspace_scratch + slash + sWorkspace_data_relative
-    sWorkspace_data_project = sWorkspace_data + slash + sWorkspace_project_relative
+    sWorkspace_project = oModel_in.sWorkspace_project
 
-    sWorkspace_simulation = sWorkspace_scratch +  slash  + sWorkspace_simulation_relative
-    sWorkspace_calibration = sWorkspace_scratch + slash + sWorkspace_calibration_relative
+    
+
+    sWorkspace_data_project = sWorkspace_data + slash + sWorkspace_project
+
+    sWorkspace_simulation = oModel_in.sWorkspace_simulation
+
 
 
     sFilename_hru_report = sWorkspace_data_project + slash + 'auxiliary' + slash \
@@ -112,14 +97,26 @@ def swat_prepare_watershed_configuration_and_parameter_file(sFilename_configurat
                     sLine=ifs.readline()
             #we found the hru index now
             sLine=(ifs.readline()).rstrip()
-            aDummy = sLine.split()
-            sFirst = aDummy[0]
-            while( sFirst.isdigit() ):
+            aDummy = sLine.split() #this is invalid if the line is too long
+            #aDummy=np.full(7, '', dtype=string)
+            #aDummy[0] = sLine[0,3]
+            #aDummy[1] = sLine[3,3]
+            #aDummy[2] = sLine[0,3]
+            #aDummy[3] = sLine[0,3]
+            #aDummy[4] = sLine[0,3]
+            #aDummy[5] = sLine[0,3]
+            #aDummy[6] = sLine[0,3]
+            
+            #sFirst = aDummy[ 0 ]
+            sLast=aDummy[ len(aDummy)-1 ]
+            while( sLast.isdigit() ):
                 #print(aDummy)
                 if(len(aDummy)>0):
                     print(aDummy)
                     iHru = iHru + 1
-                    sKey = aDummy[3] 
+
+                    index = aDummy.index("-->")
+                    sKey = aDummy[index+1] 
                    
                     if sKey in lookup_table1:
                         pass
@@ -133,7 +130,8 @@ def swat_prepare_watershed_configuration_and_parameter_file(sFilename_configurat
                     aDummy = sLine.split()
                     
                     if( len(aDummy) > 0) :
-                        sFirst = aDummy[0]
+                        #sFirst = aDummy[ len(aDummy)-1 ]
+                        sLast = aDummy[ len(aDummy)-1 ]
                     else:
                         break
                 else:
@@ -199,19 +197,15 @@ def swat_prepare_watershed_configuration_and_parameter_file(sFilename_configurat
     print('finished')
 
 if __name__ == '__main__':
-    sModel ='swat'
-    sCase = 'tr003'
-    sTask = 'simulation'
-    iFlag_simulation = 1
-    iFlag_pest = 0
-    if iFlag_pest == 1:
-        sTask = 'calibration'
+    
 
-    sFilename_configuration_in = sWorkspace_scratch + slash + '03model' + slash \
-            + sModel + slash + sRegion + slash \
-            + sTask + slash + sFilename_config
-   
+    sFilename_model_configuration = '/global/homes/l/liao313/workspace/python/pyswat/pyswat/shared/swat_simulation.xml'
+    aParameter_model = swat_read_model_configuration_file(sFilename_model_configuration)
+    
+    aParameter_model['sFilename_model_configuration'] = sFilename_model_configuration
+    oswat = pyswat(aParameter_model)
 
       
     
-    swat_prepare_watershed_configuration_and_parameter_file(sFilename_configuration_in)
+    swat_prepare_watershed_configuration_and_parameter_file(oswat)
+    
