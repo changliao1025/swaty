@@ -7,10 +7,8 @@ import calendar
 from numpy  import array
 
 
-#import eslib library
-sPath_library_python = sWorkspace_code +  slash + 'python' + slash + 'library' + slash + 'eslib_python'
-sys.path.append(sPath_library_python)
-from toolbox.reader.text_reader_string import text_reader_string
+
+from pyearth.toolbox.reader.text_reader_string import text_reader_string
 
 def swat_extract_et(sFilename_configuration_in, sCase_in = None, sModel_in = None):
     """

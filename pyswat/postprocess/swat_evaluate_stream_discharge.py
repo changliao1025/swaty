@@ -10,13 +10,7 @@ import matplotlib.dates as mdates
 import matplotlib.cbook as cbook
 
 
-
-sPath_library_python = sWorkspace_code +  slash + 'python' + slash + 'library' + slash + 'eslib_python'
-print(sPath_library_python)
-
-sys.path.append(sPath_library_python)
-
-from toolbox.reader.text_reader_string import text_reader_string
+from pyearth.toolbox.reader.text_reader_string import text_reader_string
 
 def swat_evaluate_stream_discharge(sFilename_configuration_in):
     

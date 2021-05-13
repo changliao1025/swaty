@@ -1,8 +1,6 @@
 #this is a new simulation which includes both ncdc and usgs data
 import sys
 import os
-import datetime
-import calendar
 
 import numpy as np
 

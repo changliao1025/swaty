@@ -8,11 +8,9 @@ import calendar
 from numpy  import array
 
 
-#import the eslib library
-sPath_library_python = sWorkspace_code +  slash + 'python' + slash + 'library' + slash + 'eslib_python'
-sys.path.append(sPath_library_python)
-from toolbox.reader.text_reader_string import text_reader_string
-from toolbox.math.gap_fill_by_window import gap_fill_by_window
+
+from pyearth.toolbox.reader.text_reader_string import text_reader_string
+from pyearth.toolbox.math.gap_fill_by_window import gap_fill_by_window
 
 
 def swat_gap_filling_precipitation(sFilename_configuration_in):

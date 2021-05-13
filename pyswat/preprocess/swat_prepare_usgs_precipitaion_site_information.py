@@ -2,18 +2,9 @@ import sys
 import os
 import numpy as np
 from numpy  import array
-import datetime
-import calendar
-import julian  #to covert datetime to julian date 
-import platform #platform indenpendent
 
 
-
-#import the library
-sPath_library_python = sWorkspace_code +  slash + 'python' + slash + 'library' + slash + 'eslib_python'
-print(sPath_library_python)
-sys.path.append(sPath_library_python)
-from toolbox.reader.text_reader_string import text_reader_string
+from pyearth.toolbox.reader.text_reader_string import text_reader_string
 
 def swat_prepare_precipitation_site_information(sFilename_configuration_in):
      #check whether the configuration exist or not

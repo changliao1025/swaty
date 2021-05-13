@@ -9,11 +9,7 @@ import platform #platform indenpendent
 from calendar import monthrange
 
 
-
-#import the library
-sPath_library_python = sWorkspace_code +  slash + 'python' + slash + 'library' + slash + 'eslib_python'
-sys.path.append(sPath_library_python)
-from toolbox.reader.text_reader_string import text_reader_string
+from pyearth.toolbox.reader.text_reader_string import text_reader_string
 
 feet2meter = 0.3048
 

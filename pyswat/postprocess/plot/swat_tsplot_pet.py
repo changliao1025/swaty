@@ -17,13 +17,10 @@ plt.rcParams['axes.titlesize']=ftsz
 sPlatform_os = platform.system()
 
 
-sPath_library_python = sWorkspace_code +  slash + 'python' + slash + 'library' + slash + 'eslib_python'
-sys.path.append(sPath_library_python)
 
-from toolbox.reader.text_reader_string import text_reader_string
+from pyearth.toolbox.reader.text_reader_string import text_reader_string
 
-sPath_swat_python = sWorkspace_code +  slash + 'python' + slash + 'swat' + slash + 'swat_python'
-sys.path.append(sPath_swat_python)
+
 
 from swat.plot.swat_convert_data_daily_2_monthly import swat_convert_data_daily_2_monthly
 # format the coords message box

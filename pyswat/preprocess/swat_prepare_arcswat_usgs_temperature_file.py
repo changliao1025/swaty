@@ -10,9 +10,8 @@ import numpy as np
 from calendar import monthrange #calcuate the number of days in a month
 
 
-sPath_library_python = sWorkspace_code +  slash + 'python' + slash + 'library' + slash + 'eslib_python'
-sys.path.append(sPath_library_python)
-from toolbox.reader.text_reader_string import text_reader_string
+
+from pyearth.toolbox.reader.text_reader_string import text_reader_string
 
 #global variables
 
