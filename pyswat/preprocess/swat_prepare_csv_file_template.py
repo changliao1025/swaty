@@ -2,20 +2,20 @@ import sys
 import os
 import numpy as np
 from numpy  import array
-import datetime
-import calendar
+
 
 from calendar import monthrange
 
 from pyearth.toolbox.reader.text_reader_string import text_reader_string
 
-def swat_prepare_csv_file_template(sFilename_configuration_in):
+def swat_prepare_csv_file_template(oModel_in):
     #check whether the configuration exist or not
     
-    sRegion = config['sRegion']
-    iYear_start = int(config['iYear_start'] )
-    iYear_spinup = int(config['iYear_spinup'] )
-    iYear_end  = int( config['iYear_end'] )
+    sRegion = oModel_in.sRegion
+    iYear_start = oModel_in.iYear_start
+    iYear_spinup = oModel_in.iYear_spinup
+    iYear_end  = oModel_in.iYear_end
+    sWorkspace_data=  oModel_in.sWorkspace_data
 
     for iYear in range(iYear_start, iYear_end+1):
         sYear =  "{:04d}".format(iYear)

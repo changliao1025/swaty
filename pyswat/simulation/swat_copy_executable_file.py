@@ -3,34 +3,39 @@ import sys
 import os
 from shutil import copy2
 
-sSystem_paths = os.environ['PATH'].split(os.pathsep)
-sys.path.extend(sSystem_paths)
-from eslib.system import define_global_variables
-from eslib.system.define_global_variables import *
 
-sPath_swat_python = sWorkspace_code +  slash + 'python' + slash + 'swat' + slash + 'swat_python'
-sys.path.append(sPath_swat_python)
+from pyearth.system.define_global_variables import *
 
-from swat.shared import swat_global
-#from eslib.toolbox.reader.read_configuration_file import read_configuration_file
+
+#from pyearth.toolbox.reader.read_configuration_file import read_configuration_file
     
-def swat_copy_executable_file():
+def swat_copy_executable_file(oModel_in):
     """    
     prepare executable file
     """    
-    sFilename_swat = swat_global.sFilename_swat   
-    sWorkspace_simulation_case = swat_global.sWorkspace_simulation_case
-    
+    sWorkspace_bin = oModel_in.sWorkspace_bin 
+    sFilename_swat = oModel_in.sFilename_swat   
+    sWorkspace_simulation_case = oModel_in.sWorkspace_simulation_case
+    sWorkspace_calibration_case = oModel_in.sWorkspace_calibration_case
+   
+    sWorkspace_pest_model = sWorkspace_calibration_case
+
+
+    #copy swat
+    sFilename_swat_source = sWorkspace_bin + slash + sFilename_swat
+    sFilename_swat_new = sWorkspace_simulation_case + slash + 'swat'
     if not os.path.exists(sWorkspace_simulation_case):
         print("The simiulation folder is missing")
         return
     else:
         pass    
 
-    #copy swat
-    sFilename_swat_source = sWorkspace_bin + slash + sFilename_swat
-    sFilename_swat_new = sWorkspace_simulation_case + slash + 'swat'
+    
     copy2(sFilename_swat_source, sFilename_swat_new)
+
+    
+
+   
 
     #copy ppest
     #sFilename_beopest_source = sWorkspace_calibration + slash + sFilename_pest

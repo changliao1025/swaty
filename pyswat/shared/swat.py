@@ -9,6 +9,7 @@ class pyswat(object):
     iCase_index=0
     iSiteID=0
     iFlag_calibration=0
+    iFlag_mode=0
     iYear_start=0
     iYear_end=0
     iMonth_start=0
@@ -55,6 +56,7 @@ class pyswat(object):
         #self.sDate_end                = aParameter[ 'sDate_end']
 
         self.sWorkspace_project= aParameter[ 'sWorkspace_project']
+        self.sWorkspace_bin= aParameter[ 'sWorkspace_bin']
 
         self.sWorkspace_simulation = sWorkspace_scratch + slash + '04model' + slash \
             + self.sModel + slash + self.sRegion +  slash + 'simulation'
@@ -66,14 +68,14 @@ class pyswat(object):
         sPath = self.sWorkspace_calibration
         Path(sPath).mkdir(parents=True, exist_ok=True)
 
-
-        sCase_index = "{:03d}".format( int(aParameter['iCase_index']) )
+        iCase_index = int(aParameter['iCase_index'])
+        sCase_index = "{:03d}".format( iCase_index )
         sDate   = aParameter[ 'sDate']
         if sDate is not None:
             self.sDate= sDate
         else:
             self.sDate = sDate_default
-            
+        self.iCase_index =   iCase_index
         sCase = self.sModel + self.sDate + sCase_index
         self.sCase = sCase
         
@@ -86,8 +88,11 @@ class pyswat(object):
         sPath = self.sWorkspace_calibration_case
         Path(sPath).mkdir(parents=True, exist_ok=True)
 
-        #self.iFlag_calibration =  int(aParameter['iFlag_calibration']) 
+        self.iFlag_calibration =  int(aParameter['iFlag_calibration']) 
+        self.iFlag_simulation =  int(aParameter['iFlag_simulation']) 
         self.sFilename_observation_discharge = aParameter[ 'sFilename_observation_discharge']
+        self.sFilename_swat = aParameter[ 'sFilename_swat']
+        
 
         self.iYear_start =  int( aParameter['iYear_start'] )
         self.iYear_end =    int( aParameter['iYear_end']   )
@@ -97,9 +102,16 @@ class pyswat(object):
         self.iDay_end =     int( aParameter['iDay_end']    )
         self.nstress =      int( aParameter['nstress']     )
 
-        self.sWorkspace_simulation_copy = aParameter['sWorkspace_simulation_copy']
+        self.iFlag_mode =  int(aParameter['iFlag_mode']) 
+        self.iFlag_replace =  int(aParameter['iFlag_replace']) 
+        self.aValue =  aParameter['aValue']
+        self.aVariable =  aParameter['aVariable'] 
 
-        
+        self.sJob =  aParameter['sJob'] 
+
+        self.sWorkspace_data_project = self.sWorkspace_data +  slash + self.sWorkspace_project
+
+        self.sWorkspace_simulation_copy = self.sWorkspace_data  + aParameter['sWorkspace_simulation_copy']
 
                 
         return

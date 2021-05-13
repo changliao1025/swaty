@@ -3,6 +3,38 @@
     This file is used to control the pest calibrationb process.
   </header>  
   <group id="model">
+
+<entry id="iFlag_simulation" value="1">
+      <type>int</type>
+      <desc>
+        The scratch workspace
+      </desc>
+    </entry>
+<entry id="iFlag_calibration" value="0">
+      <type>int</type>
+      <desc>
+        The scratch workspace
+      </desc>
+    </entry>
+    <entry id="iFlag_mode" value="1">
+      <type>int</type>
+      <desc>
+        The scratch workspace
+      </desc>
+    </entry>
+ <entry id="iFlag_replace" value="1">
+      <type>int</type>
+      <desc>
+        The scratch workspace
+      </desc>
+    </entry>
+    
+   <entry id="sWorkspace_bin" value="/global/homes/l/liao313/bin">
+      <type>char</type>
+      <desc>
+        The scratch workspace
+      </desc>
+    </entry>
     <entry id="sWorkspace_data" value="/global/homes/l/liao313/data">
       <type>char</type>
       <desc>
@@ -97,12 +129,39 @@
         The scratch workspace
       </desc>
     </entry>
-    <entry id="sFilename_swat" value="1">
+     <entry id="iCase_index" value="2">
       <type>int</type>
       <desc>
         The scratch workspace
       </desc>
     </entry>
+    <entry id="sFilename_swat" value="swat670">
+      <type>char</type>
+      <desc>
+        The scratch workspace
+      </desc>
+    </entry>
+  <entry id="sFilename_observation_discharge" value="obs.flow_am.csv">
+      <type>char</type>
+      <desc>
+        The scratch workspace
+      </desc>
+    </entry>
+      <entry id="sWorkspace_simulation_copy" value="/swat/arw/copy/">
+      <type>char</type>
+      <desc>
+        The scratch workspace
+      </desc>
+    </entry>
+  <entry id="sJob" value="test">
+      <type>char</type>
+      <desc>
+        The scratch workspace
+      </desc>
+    </entry>
+    
+    
+    
   </group>
 
 

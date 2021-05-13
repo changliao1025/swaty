@@ -2,27 +2,24 @@
 import os
 import sys
 
-sSystem_paths = os.environ['PATH'].split(os.pathsep)
-sys.path.extend(sSystem_paths)
 
-from eslib.system.define_global_variables import *
-from eslib.toolbox.reader.text_reader_string import text_reader_string
+from pyearth.system.define_global_variables import *
+from pyearth.toolbox.reader.text_reader_string import text_reader_string
 
-sPath_swat_python = sWorkspace_code +  slash + 'python' + slash + 'swat' + slash + 'swat_python'
-sys.path.append(sPath_swat_python)
-from swat.shared import swat_global
 
-def swat_prepare_hru_parameter_file():
+
+
+def swat_prepare_hru_parameter_file(oModel_in):
     """
     #prepare the pest control file
     """      
-    sWorkspace_data_project = swat_global.sWorkspace_data_project    
-    sWorkspace_simulation_case = swat_global.sWorkspace_simulation_case    
+    sWorkspace_data_project = oModel_in.sWorkspace_data + slash +  oModel_in.sWorkspace_project
+    sWorkspace_simulation_case = oModel_in.sWorkspace_simulation_case    
     
-    iFlag_simulation = swat_global.iFlag_simulation
-    iFlag_pest_calibration = swat_global.iFlag_pest_calibration      
-    aVariable = swat_global.aVariable
-    aValue = swat_global.aValue
+    iFlag_simulation = oModel_in.iFlag_simulation
+    
+    aVariable = oModel_in.aVariable
+    aValue = oModel_in.aValue
     
     if not os.path.exists(sWorkspace_simulation_case):
         os.makedirs(sWorkspace_simulation_case)      
@@ -67,9 +64,3 @@ def swat_prepare_hru_parameter_file():
     print('hru parameter is ready!')
 
     return
-if __name__ == '__main__':
-    
-    
-    
-    
-    swat_prepare_hru_parameter_file()

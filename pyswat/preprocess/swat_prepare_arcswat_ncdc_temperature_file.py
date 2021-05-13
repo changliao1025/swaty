@@ -4,26 +4,22 @@ import numpy as np
 from numpy  import array
 import datetime
 import calendar
-import julian
+
 import platform 
-
-
-
-
 
 
 from pyearth.toolbox.reader.text_reader_string import text_reader_string
 
 missing_value = -99.0
 
-def swat_prepare_arcswat_ncdc_temperature_file(sFilename_configuration_in):
-    
-    sFilename_ncdc = config['sFilename_ncdc']
-    sRegion = config['sRegion']
+def swat_prepare_arcswat_ncdc_temperature_file(oModel_in):
+    sWorkspace_scratch = oModel_in.sWorkspace_scratch
+    sFilename_ncdc = oModel_in.sFilename_ncdc
+    sRegion = oModel_in.sRegion
 
-    iYear_start = int(config['iYear_start'] )
-    iYear_spinup_end = int(config['iYear_spinup_end'] )
-    iYear_end  = int( config['iYear_end'] )
+    iYear_start = oModel_in.iYear_start
+    iYear_spinup_end = oModel_in.iYear_spinup_end
+    iYear_end  = oModel_in.iYear_end
 
 
     dObservation_start = datetime.datetime(iYear_start, 1, 1)  #year, month, day

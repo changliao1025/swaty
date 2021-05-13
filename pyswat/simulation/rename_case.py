@@ -10,6 +10,7 @@ sModel='swat'
 ncase = len(aCN2)
 
 sWorkspace_dummy = '/pic/scratch/liao313/04model/swat/tinpan/simulation'
+
 for i in range(ncase):
     #call the create case function
     

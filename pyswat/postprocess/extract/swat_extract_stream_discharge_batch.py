@@ -5,13 +5,13 @@ import datetime
 
 from numpy  import array
 
-#import eslib library
+#import pyearth library
 sSystem_paths = os.environ['PATH'].split(os.pathsep)
 sys.path.extend(sSystem_paths)
 
-from eslib.toolbox.reader.text_reader_string import text_reader_string
-from eslib.system.define_global_variables import *
-from eslib.toolbox.reader.read_configuration_file import read_configuration_file
+from pyearth.toolbox.reader.text_reader_string import text_reader_string
+from pyearth.system.define_global_variables import *
+from pyearth.toolbox.reader.read_configuration_file import read_configuration_file
 
 sPath_swat_python = sWorkspace_code +  slash + 'python' + slash + 'swat' + slash + 'swat_python'
 sys.path.append(sPath_swat_python)

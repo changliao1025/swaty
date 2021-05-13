@@ -9,11 +9,11 @@ import numpy as np
 from numpy  import array
 from calendar import monthrange #calcuate the number of days in a month
 
-sProject  ='tinpan'
+#sProject  ='tinpan'
 
 
 
-from toolbox.reader.text_reader_string import text_reader_string
+from pyearth.toolbox.reader.text_reader_string import text_reader_string
 
 #global variables
 feet2meter = 0.3048

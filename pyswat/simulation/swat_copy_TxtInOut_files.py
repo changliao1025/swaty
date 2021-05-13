@@ -5,27 +5,31 @@ import sys
 import glob
 from shutil import copyfile
 
-sSystem_paths = os.environ['PATH'].split(os.pathsep)
-sys.path.extend(sSystem_paths)
-from eslib.system import define_global_variables
-from eslib.system.define_global_variables import *
 
-sPath_swat_python = sWorkspace_code +  slash + 'python' + slash + 'swat' + slash + 'swat_python'
-sys.path.append(sPath_swat_python)
-from swat.shared import swat_global
+from pyearth.system.define_global_variables import *
 
-#from eslib.toolbox.reader.read_configuration_file import read_configuration_file
 
-def swat_copy_TxtInOut_files():
+
+#from pyearth.toolbox.reader.read_configuration_file import read_configuration_file
+
+def swat_copy_TxtInOut_files(oModel_in):
     """
     sFilename_configuration_in
     sModel
     """
+    sWorkspace_data= oModel_in.sWorkspace_data
+    sWorkspace_data_project = sWorkspace_data+ slash+ oModel_in.sWorkspace_project
+    sWorkspace_simulation_copy = sWorkspace_data_project + slash + 'copy' + slash + 'TxtInOut'
     
     
-    sWorkspace_simulation_copy = swat_global.sWorkspace_simulation_copy
-    sWorkspace_simulation_case = swat_global.sWorkspace_simulation_case  
-    sWorkspace_target_case = sWorkspace_simulation_case    
+    sWorkspace_simulation_case = oModel_in.sWorkspace_simulation_case  
+    sWorkspace_calibration_case = oModel_in.sWorkspace_calibration_case  
+    if oModel_in.iFlag_calibration ==1:
+        sWorkspace_target_case = sWorkspace_calibration_case   + slash + 'TxtInOut'
+        
+    else:
+        sWorkspace_target_case = sWorkspace_simulation_case   
+        
 
     if not os.path.exists(sWorkspace_simulation_copy):
         print(sWorkspace_simulation_copy)
@@ -34,12 +38,8 @@ def swat_copy_TxtInOut_files():
     else:      
         pass
     
+    Path(sWorkspace_target_case).mkdir(parents=True, exist_ok=True)
     
-    if not os.path.exists(sWorkspace_target_case):
-        os.makedirs(sWorkspace_target_case)
-    else:      
-        print("The simulation folder already exist")
-        #return
     
     
     #the following file will be copied    
@@ -47,7 +47,7 @@ def swat_copy_TxtInOut_files():
     aExtension = ('.pnd','.rte','.sub','.swq','.wgn','.wus',\
             '.chm','.gw','.hru','.mgt','sdr','.sep',\
              '.sol','ATM','bsn','wwq','deg','.cst',\
-             'dat','fig','cio','fin','dat','.pcp','.Tmp'  )
+             'dat','fig','cio','fin','dat','.pcp','.tmp'  )
 
     #we need to be careful that Tmp is different in python/linux with tmp
             
@@ -56,7 +56,7 @@ def swat_copy_TxtInOut_files():
 
         sRegax = sWorkspace_simulation_copy + slash + '*' + sExtension
 
-        if sExtension == '.Tmp':
+        if sExtension == '.tmp':
             for sFilename in glob.glob(sRegax):
                 sBasename_with_extension = os.path.basename(sFilename)
                 sFilename_new = sWorkspace_target_case + slash + sBasename_with_extension.lower()

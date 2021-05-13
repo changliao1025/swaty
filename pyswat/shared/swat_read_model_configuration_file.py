@@ -59,7 +59,7 @@ def swat_read_model_configuration_file(sFilename_configuration_in,\
     if iCase_index_in is not None:        
         iCase_index = iCase_index_in
     else:       
-        iCase_index = 1
+        iCase_index = int( config['iCase_index'])
 
     
 
@@ -90,11 +90,14 @@ def swat_read_model_configuration_file(sFilename_configuration_in,\
     config['lJulian_start'] =   lJulian_start[1]
     config['lJulian_end'] =  lJulian_end[1]
     config['nstress'] =   nstress 
+
+    config['aValue'] =   aValue 
+    config['aVariable'] =   aVariable 
    
     sFilename_swat = config['sFilename_swat']   
     
     #data
-    sWorkspace_data_project = sWorkspace_data + slash + sModel + slash + sRegion
+    
     #simulation
     
     

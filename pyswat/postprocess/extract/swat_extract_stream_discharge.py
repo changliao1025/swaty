@@ -5,20 +5,16 @@ import datetime
 
 from numpy  import array
 
-#import eslib library
-sSystem_paths = os.environ['PATH'].split(os.pathsep)
-sys.path.extend(sSystem_paths)
 
-from eslib.toolbox.reader.text_reader_string import text_reader_string
-from eslib.system.define_global_variables import *
-from eslib.toolbox.reader.read_configuration_file import read_configuration_file
 
-sPath_swat_python = sWorkspace_code +  slash + 'python' + slash + 'swat' + slash + 'swat_python'
-sys.path.append(sPath_swat_python)
-from swat.shared.swat_read_configuration_file import swat_read_configuration_file
-from swat.shared import swat_global
+from pyearth.toolbox.reader.text_reader_string import text_reader_string
+from pyearth.system.define_global_variables import *
+from pyearth.toolbox.reader.read_configuration_file import read_configuration_file
 
-def swat_extract_stream_discharge(sFilename_configuration_in, iCase_index_in = None):
+
+
+
+def swat_extract_stream_discharge(oModel_in):
     """
     extract discharge from swat model simulation
     """

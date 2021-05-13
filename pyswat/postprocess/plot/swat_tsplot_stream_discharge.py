@@ -15,9 +15,9 @@ from matplotlib.ticker import FuncFormatter
 sSystem_paths = os.environ['PATH'].split(os.pathsep)
 sys.path.extend(sSystem_paths)
 
-from eslib.system.define_global_variables import *
-from eslib.toolbox.reader.text_reader_string import text_reader_string
-from eslib.visual.plot.plot_time_series_data import plot_time_series_data
+from pyearth.system.define_global_variables import *
+from pyearth.toolbox.reader.text_reader_string import text_reader_string
+from pyearth.visual.plot.plot_time_series_data import plot_time_series_data
 
 #ftsz = 18
 #plt.rcParams['xtick.labelsize']=ftsz

@@ -1,7 +1,7 @@
 #This program can be used to prepare the precipitation
 #for the ArcSWAT program
-#This program requires the eslib python library
-#you can also use numpy to replace the eslib library (only the text_reader_string function was used)
+#This program requires the pyearth python library
+#you can also use numpy to replace the pyearth library (only the text_reader_string function was used)
 #the input file is the NCDC data file, which include site name, location and precipitation
 #you need to check the unit of the data before usage
 #this program is designed as platform indenpendent
@@ -13,31 +13,29 @@ import numpy as np
 from numpy  import array
 import datetime
 
-
+from pyearth.system.define_global_variables import *
 from pyearth.toolbox.reader.text_reader_string import text_reader_string
 
 missing_value = -99.0
 
 
 #the function
-def swat_prepare_arcswat_ncdc_precipitation_file(sFilename_configuration_in):
+def swat_prepare_arcswat_ncdc_precipitation_file(oModel_in):
     #check whether the configuration exist or not
+    sWorkspace_scratch = oModel_in.sWorkspace_scratch
+    sWorkspace_data =  oModel_in.sWorkspace_data
+
+    sWorkspace_raw = oModel_in.sWorkspace_raw
+    sFilename_ncdc = oModel_in.sFilename_ncdc
+    sRegion = oModel_in.sRegion
+
+    iYear_start = oModel_in.iYear_start
+    iYear_spinup_end = oModel_in.iYear_spinup_end
+    iYear_end  = oModel_in.iYear_end
+
+
     
-    sFilename_ncdc = config['sFilename_ncdc']
-    sRegion = config['sRegion']
-
-    iYear_start = int(config['iYear_start'] )
-    iYear_spinup_end = int(config['iYear_spinup_end'] )
-    iYear_end  = int( config['iYear_end'] )
-
-
-    dObservation_start = datetime.datetime(iYear_start, 1, 1)  #year, month, day
-    dObservation_end = datetime.datetime(iYear_end, 12,31)  #year, month, day
-    jdStart = julian.to_jd(dObservation_start, fmt='jd')
-    
-    dt_dummy = julian.from_jd(jdStart, fmt='jd')
-    jdEnd = julian.to_jd(dObservation_end, fmt='jd')
-    nstress = int(jdEnd - jdStart + 1) #this is the data series what will be used.
+    nstress = oModel_in.nstress
     #read the ncdc file
     sFilename_ncdc = sWorkspace_scratch + slash + sWorkspace_raw + slash + sFilename_ncdc
         

@@ -4,16 +4,14 @@ import sys #used to add system path
 sSystem_paths = os.environ['PATH'].split(os.pathsep)
 sys.path.extend(sSystem_paths)
 
-from eslib.system.define_global_variables import *
-
-sPath_swat_python = sWorkspace_code +  slash + 'python' + slash + 'swat' + slash + 'swat_python'
-sys.path.append(sPath_swat_python)
-from swat.shared import swat_global
+from pyearth.system.define_global_variables import *
 
 
-def swat_prepare_simulation_bash_file():
+
+
+def swat_prepare_simulation_bash_file(oModel_in):
     
-    sWorkspace_simulation_case = swat_global.sWorkspace_simulation_case
+    sWorkspace_simulation_case = oModel_in.sWorkspace_simulation_case
 
     sFilename_bash = sWorkspace_simulation_case + slash + 'run.sh'
     ifs = open(sFilename_bash, 'w')       
@@ -22,7 +20,7 @@ def swat_prepare_simulation_bash_file():
     ifs.write(sLine)    
     sLine = 'module purge' + '\n'
     ifs.write(sLine)    
-    sLine = 'module load gcc/5.2.0' + '\n'
+    sLine = 'module load gcc/6.1.0' + '\n'
     ifs.write(sLine)
     sLine = 'cd ' + sWorkspace_simulation_case + '\n'
     ifs.write(sLine)

@@ -29,7 +29,7 @@ def swat_write_hru_input_file(oModel_in):
 
     
     sWorkspace_simulation_case = oModel_in.sWorkspace_simulation_case
-    sWorkspace_simulation_copy = oModel_in.sWorkspace_simulation_copy
+    sWorkspace_simulation_copy =  oModel_in.sWorkspace_simulation_copy
 
     sWorkspace_calibration_case = oModel_in.sWorkspace_calibration_case
     sWorkspace_pest_model = sWorkspace_calibration_case
@@ -192,7 +192,7 @@ def swat_write_hru_input_file(oModel_in):
     if iFlag_simulation == 1:
         pass
     else:
-        iFlag_debug = 0
+        
         
         sPath_current = os.getcwd()
         
@@ -223,7 +223,7 @@ def swat_write_hru_input_file(oModel_in):
                 iFlag = aParameter_flag[iFile_type]
                 if( iFlag == 1):
                     sFilename = sSubbasin + sHru + sExtension
-                    sFilename_hru = sWorkspace_source_case + slash + sFilename 
+                    sFilename_hru = sWorkspace_source_case + 'TxtInOut' + slash + sFilename 
                     #open the file to read
                     ifs=open(sFilename_hru, 'r')   
                     sLine = ifs.readline()

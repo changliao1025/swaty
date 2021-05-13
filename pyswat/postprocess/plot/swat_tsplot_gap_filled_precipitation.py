@@ -13,10 +13,10 @@ from numpy  import array
 sSystem_paths = os.environ['PATH'].split(os.pathsep)
 sys.path.extend(sSystem_paths)
 
-from eslib.system.define_global_variables import *
-from eslib.toolbox.reader.read_configuration_file import read_configuration_file
-from eslib.toolbox.reader.text_reader_string import text_reader_string
-from eslib.visual.plot.plot_time_series_data import plot_time_series_data
+from pyearth.system.define_global_variables import *
+from pyearth.toolbox.reader.read_configuration_file import read_configuration_file
+from pyearth.toolbox.reader.text_reader_string import text_reader_string
+from pyearth.visual.plot.plot_time_series_data import plot_time_series_data
 
 sPath_swat_python = sWorkspace_code +  slash + 'python' + slash + 'swat' + slash + 'swat_python'
 sys.path.append(sPath_swat_python)

@@ -4,7 +4,7 @@ import numpy as np
 from numpy  import array
 import datetime
 import calendar
-import julian  #to covert datetime to julian date 
+
 import platform #platform indenpendent
 from calendar import monthrange
 
@@ -13,7 +13,7 @@ from pyearth.toolbox.reader.text_reader_string import text_reader_string
 
 feet2meter = 0.3048
 
-def swat_prepare_arcswat_usgs_precipitation_site_file(sFilename_configuration_in):
+def swat_prepare_arcswat_usgs_precipitation_site_file(oModel_in):
      #check whether the configuration exist or not
        
     #retrieve the data
