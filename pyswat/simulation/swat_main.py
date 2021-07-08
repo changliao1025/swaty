@@ -14,12 +14,9 @@ from pyswat.simulation.swat_copy_executable_file import swat_copy_executable_fil
 from pyswat.simulation.swat_prepare_simulation_bash_file import swat_prepare_simulation_bash_file
 from pyswat.simulation.swat_prepare_simulation_job_file import swat_prepare_simulation_job_file
 
-def swat_main(oModel_in):    
+def swat_main(oModel_in):        
     
-    
-   
-    #step 2
-    swat_copy_TxtInOut_files(oModel_in)
+    #swat_copy_TxtInOut_files(oModel_in)
 
     #step 3 and 4 are optional
     iFlag_replace = oModel_in.iFlag_replace
@@ -60,7 +57,7 @@ if __name__ == '__main__':
     #step 1
     aParameter = swat_read_model_configuration_file(sFilename_configuration_in, aVariable_in = aVariable, aValue_in = aValue)
 
-       # iCase_index_in=iCase_index_in, sJob_in=sJob_in, iFlag_mode_in=iFlag_mode_in)
+    # iCase_index_in=iCase_index_in, sJob_in=sJob_in, iFlag_mode_in=iFlag_mode_in)
 
     aParameter['sFilename_model_configuration'] = sFilename_configuration_in
     oModel = pyswat(aParameter)

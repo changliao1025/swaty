@@ -5,19 +5,15 @@ import datetime
 
 from numpy  import array
 
-#import pyearth library
-sSystem_paths = os.environ['PATH'].split(os.pathsep)
-sys.path.extend(sSystem_paths)
+
 
 from pyearth.toolbox.reader.text_reader_string import text_reader_string
 from pyearth.system.define_global_variables import *
 from pyearth.toolbox.reader.read_configuration_file import read_configuration_file
 
-sPath_swat_python = sWorkspace_code +  slash + 'python' + slash + 'swat' + slash + 'swat_python'
-sys.path.append(sPath_swat_python)
-from swat.shared.swat_read_configuration_file import swat_read_configuration_file
-from swat.shared import swat_global
-from swat.postprocess.extract.swat_extract_stream_discharge import swat_extract_stream_discharge
+
+
+from pyswat.postprocess.extract.swat_extract_stream_discharge import swat_extract_stream_discharge
 
 
 if __name__ == '__main__':

@@ -123,18 +123,5 @@ def swat_evaluate_stream_discharge(sFilename_configuration_in):
 
 
 
-if __name__ == '__main__':
-    sRegion = 'tinpan'
-    sModel ='swat'
-    sCase = 'test'
-    sJob = sCase
-    sTask = 'simulation'
-    iFlag_simulation = 1
-    iFlag_pest = 0
-    if iFlag_pest == 1:
-        sTask = 'calibration'
-    sFilename_configuration = sWorkspace_scratch + slash + '03model' + slash \
-              + sModel + slash + sRegion + slash \
-              + sTask  + slash + sFilename_config
-    swat_evaluate_stream_discharge(sFilename_configuration_in)
+
 

@@ -17,26 +17,19 @@ class pyswat(object):
     iDay_start=0
     iDay_end=0
     nstress=0
-
-
+    nsegment =0
     sFilename_model_configuration=''
-
     sWorkspace_data=''
-    sWorkspace_scratch=''
-    
-    sWorkspace_project=''
-    
+    sWorkspace_scratch=''    
+    sWorkspace_project=''    
     sWorkspace_simulation=''
     sWorkspace_simulation_case=''
-
     sWorkspace_calibration=''
     sWorkspace_calibration_case=''
     sFilename_model_configuration=''
-
     sFilename_observation_discharge=''
     sRegion=''
     sModel=''
-
     sCase=''
     sDate=''
     sSiteID=''
@@ -44,7 +37,7 @@ class pyswat(object):
     sDate_end=''
     def __init__(self, aParameter):
         self.sFilename_model_configuration    = aParameter[ 'sFilename_model_configuration']
-
+        self.sWorkspace_home = aParameter[ 'sWorkspace_home']
         self.sWorkspace_data = aParameter[ 'sWorkspace_data']
        
         self.sWorkspace_scratch    = aParameter[ 'sWorkspace_scratch']
@@ -52,8 +45,11 @@ class pyswat(object):
         sWorkspace_data=self.sWorkspace_data
         self.sRegion               = aParameter[ 'sRegion']
         self.sModel                = aParameter[ 'sModel']
+        self.sPython               = aParameter[ 'sPython']
         #self.sDate_start              = aParameter[ 'sDate_start']
         #self.sDate_end                = aParameter[ 'sDate_end']
+        self.nsegment = int( aParameter[ 'nsegment'] )
+        self.nbasin = int (aParameter[ 'nbasin'])
 
         self.sWorkspace_project= aParameter[ 'sWorkspace_project']
         self.sWorkspace_bin= aParameter[ 'sWorkspace_bin']
@@ -94,16 +90,16 @@ class pyswat(object):
         self.sFilename_swat = aParameter[ 'sFilename_swat']
         
 
-        self.iYear_start =  int( aParameter['iYear_start'] )
-        self.iYear_end =    int( aParameter['iYear_end']   )
+        self.iYear_start  = int( aParameter['iYear_start'] )
+        self.iYear_end    = int( aParameter['iYear_end']   )
         self.iMonth_start = int( aParameter['iMonth_start'])
-        self.iMonth_end =   int( aParameter['iMonth_end']  ) 
-        self.iDay_start =   int( aParameter['iDay_start']  )
-        self.iDay_end =     int( aParameter['iDay_end']    )
-        self.nstress =      int( aParameter['nstress']     )
-
-        self.iFlag_mode =  int(aParameter['iFlag_mode']) 
-        self.iFlag_replace =  int(aParameter['iFlag_replace']) 
+        self.iMonth_end   = int( aParameter['iMonth_end']  ) 
+        self.iDay_start   = int( aParameter['iDay_start']  )
+        self.iDay_end     = int( aParameter['iDay_end']    )
+        self.nstress      = int( aParameter['nstress']     )
+        self.iFlag_mode   = int( aParameter['iFlag_mode']) 
+        self.iFlag_replace= int( aParameter['iFlag_replace'] ) 
+        #for replace and calibration
         self.aValue =  aParameter['aValue']
         self.aVariable =  aParameter['aVariable'] 
 

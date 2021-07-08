@@ -3,84 +3,66 @@ import os
 import numpy as np
 import datetime
 
+from shutil import copy2
 from numpy  import array
 
-
-
-from pyearth.toolbox.reader.text_reader_string import text_reader_string
 from pyearth.system.define_global_variables import *
-from pyearth.toolbox.reader.read_configuration_file import read_configuration_file
-
-
-
+from pyearth.toolbox.reader.text_reader_string import text_reader_string
 
 def swat_extract_stream_discharge(oModel_in):
     """
     extract discharge from swat model simulation
     """
   
-    config = swat_read_configuration_file(sFilename_configuration_in, iCase_index_in)
-    sModel = swat_global.sModel
-    sRegion = swat_global.sRegion
-    sCase = swat_global.sCase
+    
+    sModel = oModel_in.sModel
+    sRegion = oModel_in.sRegion
+    sCase = oModel_in.sCase
 
-    iYear_start = swat_global.iYear_start
-    iYear_spinup_end = swat_global.iYear_spinup_end
-    iYear_end  = swat_global.iYear_end
+    iYear_start = oModel_in.iYear_start
+    #iYear_spinup_end = oModel_in.iYear_spinup_end
+    iYear_end  = oModel_in.iYear_end
    
-    nstress = swat_global.nstress
-    nsegment = swat_global.nsegment
+    nstress = oModel_in.nstress
+    nsegment = oModel_in.nsegment
     sProject = sModel + slash + sRegion
-    sWorkspace_data_project = swat_global.sWorkspace_data_project  
-    sWorkspace_simulation_case = swat_global.sWorkspace_simulation_case
+    sWorkspace_data_project = oModel_in.sWorkspace_data_project  
+    sWorkspace_simulation_case = oModel_in.sWorkspace_simulation_case
     iFlag_debug = 2
-    if(iFlag_debug == 1 ):
-        sPath_current = sWorkspace_pest_model + slash + 'beopest1'
-    else:
-        if iFlag_debug == 2:
-            #run from the arcswat directory
-            sPath_current = sWorkspace_simulation_case # + slash  + 'TxtInOut'
-        else:
-            sPath_current = os.getcwd()
+   
+    sPath_current = os.getcwd()
+    #sPath_current = '/global/cscratch1/sd/liao313/04model/swat/arw/calibration/swat20210415004/child1'
     print('The current path is: ' + sPath_current)
-    sWorkspace_slave = sPath_current
+    
 
-    sFilename = sWorkspace_slave + slash + 'output.rch'
+    sFilename = sPath_current + slash + 'output.rch'
 
     aData = text_reader_string(sFilename, iSkipline_in=9)
     aData_all = array( aData )
     nrow_dummy = len(aData_all)
     ncolumn_dummy = len(aData_all[0,:])
 
-    aData_discharge = aData_all[:, 6].astype(float) 
+    aData_discharge = aData_all[:, 5].astype(float) 
 
     aIndex = np.arange(nsegment-1 , nstress * nsegment + 1, nsegment)
-    aIndex = np.arange(nsegment-2 , nstress * nsegment + 1, nsegment)
+    #aIndex = np.arange(nsegment , nstress * nsegment + 1, nsegment)
     
     aDischarge_simulation = aData_discharge[aIndex]
 
     #save it to a text file
-    sFilename_out = sWorkspace_slave + slash + 'stream_discharge_22.txt'
+    sFilename_out = sPath_current + slash + 'stream_discharge.txt'
 
     np.savetxt(sFilename_out, aDischarge_simulation, delimiter=",")
+
+    sTime  = datetime.datetime.now().strftime("%m%d%Y%H%M%S")
+
+    sFilename_new = sPath_current + slash + 'stream_discharge' + sTime + '.txt'
+    copy2(sFilename_out, sFilename_new)
     
-    print('finished extracting stream discharge')
+    print('Finished extracting stream discharge: ' + sFilename_out)
 
 
 
-if __name__ == '__main__':
-   
-    sRegion = 'tinpan'
-    sModel ='swat'
-    iCase = 0
-    
-    sTask = 'simulation'
-    iFlag_simulation = 1
-    iFlag_pest = 0
-    if iFlag_pest == 1:
-        sTask = 'calibration'
-    sFilename_configuration = sWorkspace_configuration  + slash \
-              + sModel + slash + sRegion + slash \
-              + sTask  + slash + 'marianas_configuration.txt'
-    swat_extract_stream_discharge(sFilename_configuration, iCase)
+
+
 

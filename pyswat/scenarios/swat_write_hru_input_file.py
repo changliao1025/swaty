@@ -45,7 +45,7 @@ def swat_write_hru_input_file(oModel_in):
     if os.path.isfile(sFilename_watershed_configuration):
         pass
     else:
-        print('The file does not exist!')
+        print('The file does not exist: ' + sFilename_watershed_configuration)
         return
     aSubbasin_hru  = text_reader_string( sFilename_watershed_configuration, cDelimiter_in = ',' )
     
@@ -60,7 +60,7 @@ def swat_write_hru_input_file(oModel_in):
     if os.path.isfile(sFilename_hru_info):
         pass
     else:
-        print('The file does not exist!')
+        print('The file does not exist: ')
         return
     aHru_info = text_reader_string(sFilename_hru_info)
     aHru_info = np.asarray(aHru_info)
@@ -72,7 +72,7 @@ def swat_write_hru_input_file(oModel_in):
     if os.path.isfile(sFilename_hru_combination):
         pass
     else:
-        print('The file does not exist!')
+        print('The file does not exist: ')
         return
     aHru_combination = text_reader_string(sFilename_hru_combination)
     aHru_combination = np.asarray(aHru_combination)
@@ -159,7 +159,7 @@ def swat_write_hru_input_file(oModel_in):
     if os.path.isfile(sFilename_parameter):
         pass
     else:
-        print('The file does not exist!')
+        print('The file does not exist: '+sFilename_parameter)
         return
 
     aData_all = text_reader_string(sFilename_parameter, cDelimiter_in =',')
@@ -197,10 +197,10 @@ def swat_write_hru_input_file(oModel_in):
         sPath_current = os.getcwd()
         
         if (os.path.normpath(sPath_current)  == os.path.normpath(sWorkspace_pest_model)):
-            print('this is the master, no need to copy anything')
+            print('this is the parent, no need to copy anything')
             return
         else:
-            print('this is the slave')
+            print('this is a child')
             sWorkspace_source_case = sWorkspace_simulation_copy
             sWorkspace_target_case = sWorkspace_simulation_case
 

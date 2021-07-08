@@ -23,14 +23,15 @@ def swat_copy_executable_file(oModel_in):
 
     #copy swat
     sFilename_swat_source = sWorkspace_bin + slash + sFilename_swat
-    sFilename_swat_new = sWorkspace_simulation_case + slash + 'swat'
-    if not os.path.exists(sWorkspace_simulation_case):
-        print("The simiulation folder is missing")
-        return
-    else:
-        pass    
+
+    sPath_current = os.getcwd()
+    sFilename_swat_new = sPath_current + slash + 'swat'
 
     
+      
+
+    print(sFilename_swat_source)
+    print(sFilename_swat_new)
     copy2(sFilename_swat_source, sFilename_swat_new)
 
     

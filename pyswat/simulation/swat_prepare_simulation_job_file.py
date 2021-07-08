@@ -20,11 +20,11 @@ def swat_prepare_simulation_job_file(oModel_in):
     #end of example
     sLine = '#!/bin/bash' + '\n'
     ifs.write(sLine)
-    sLine = '#SBATCH -A br20_liao313' + '\n'
+    sLine = '#SBATCH -A m1800' + '\n'
     ifs.write(sLine)
     sLine = '#SBATCH -t 0:10:00' + '\n'
     ifs.write(sLine)
-    sLine = '#SBATCH -p short' + '\n'
+    sLine = '#SBATCH -q debug' + '\n'
     ifs.write(sLine)
     sLine = '#SBATCH -N 1' + '\n'
     ifs.write(sLine)
@@ -32,6 +32,11 @@ def swat_prepare_simulation_job_file(oModel_in):
     ifs.write(sLine)
     sLine = '#SBATCH -J ' + sJob + '' + '\n'
     ifs.write(sLine)
+    sLine = '#SBATCH -C haswell' + '\n'
+    ifs.write(sLine)
+    sLine = '#SBATCH -L SCRATCH' + '\n'
+    ifs.write(sLine)
+    
     sLine = '#SBATCH -o out.out' + '\n'
     ifs.write(sLine)
     sLine = '#SBATCH -e err.err' + '\n'

@@ -41,12 +41,7 @@
         The scratch workspace
       </desc>
     </entry>
-    <entry id="sWorkspace_models" value="/global/cscratch1/sd/liao313/04model">
-      <type>char</type>
-      <desc>
-        The scratch workspace
-      </desc>
-    </entry>
+ 
     <entry id="sWorkspace_project" value="/swat/arw">
       <type>char</type>
       <desc>
@@ -129,7 +124,7 @@
         The scratch workspace
       </desc>
     </entry>
-     <entry id="iCase_index" value="2">
+     <entry id="iCase_index" value="3">
       <type>int</type>
       <desc>
         The scratch workspace

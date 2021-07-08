@@ -3,7 +3,7 @@ import sys #used to add system path
 from jdcal import gcal2jd, jd2gcal
 import datetime
 
-
+import numpy as np
 
 from pyearth.system.define_global_variables import *
 from pyearth.toolbox.reader.parse_xml_file import parse_xml_file
@@ -39,15 +39,25 @@ def swat_read_model_configuration_file(sFilename_configuration_in,\
     else:
         iFlag_mode = 1
     if aVariable_in is not None:
-        aVariable = aVariable_in
+        aVariable = aVariable_in        
+        config['aVariable'] =  aVariable_in.split(',')
     else:
-        aVariable = None
+        if 'aVariable' in config:
+            config['aVariable'] =   config['aVariable'].split(',')
+            pass
+        else:
+            aVariable = None
         pass
 
     if aValue_in is not None:
         aValue = aValue_in
+        config['aValue'] =  np.array( aValue ).astype(float)
     else:
-        aValue = None
+        if 'aValue' in config:
+            config['aValue'] =  np.array( config['aValue'].split(',')  ).astype(float)
+            pass
+        else:
+            aValue = None
         pass
 
     if sDate_in is not None:
@@ -91,8 +101,7 @@ def swat_read_model_configuration_file(sFilename_configuration_in,\
     config['lJulian_end'] =  lJulian_end[1]
     config['nstress'] =   nstress 
 
-    config['aValue'] =   aValue 
-    config['aVariable'] =   aVariable 
+    
    
     sFilename_swat = config['sFilename_swat']   
     

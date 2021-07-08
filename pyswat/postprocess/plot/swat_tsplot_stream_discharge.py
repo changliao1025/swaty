@@ -26,13 +26,9 @@ from pyearth.visual.plot.plot_time_series_data import plot_time_series_data
 #plt.rcParams['axes.titlesize']=ftsz 
 
 
-sPath_swat_python = sWorkspace_code +  slash + 'python' + slash + 'swat' + slash + 'swat_python'
-sys.path.append(sPath_swat_python)
-from swat.shared.swat_read_configuration_file import swat_read_configuration_file
-from swat.shared import swat_global
 
 
-from swat.plot.swat_convert_data_daily_2_monthly import swat_convert_data_daily_2_monthly
+from pyswat.plot.swat_convert_data_daily_2_monthly import swat_convert_data_daily_2_monthly
 
 
 def swat_plot_stream_discharge(sFilename_configuration_in, iCase_index_in = None, sJob_in = None, sModel_in = None):
