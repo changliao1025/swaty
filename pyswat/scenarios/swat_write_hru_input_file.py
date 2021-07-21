@@ -83,8 +83,7 @@ def swat_write_hru_input_file(oModel_in):
     # we need to identify a list of files that are HRU defined, you can add others later
     aExtension = ('.chm','.gw','.hru','.mgt','.sdr', '.sep', '.sol')
     #now we can add corresponding possible variables
-    #aParameter_table[3]= np.array(['cn2'])
-    #aParameter_table[6]= np.array(['awc'])
+    
 
     aCHM =[]
     aGW = []
@@ -192,10 +191,7 @@ def swat_write_hru_input_file(oModel_in):
     if iFlag_simulation == 1:
         pass
     else:
-        
-        
         sPath_current = os.getcwd()
-        
         if (os.path.normpath(sPath_current)  == os.path.normpath(sWorkspace_pest_model)):
             print('this is the parent, no need to copy anything')
             return

@@ -16,6 +16,26 @@
         The scratch workspace
       </desc>
     </entry>
+    <entry id="iFlag_watershed" value="1">
+      <type>int</type>
+      <desc>
+        The scratch workspace
+      </desc>
+    </entry>
+    <entry id="iFlag_subbasin" value="1">
+      <type>int</type>
+      <desc>
+        The scratch workspace
+      </desc>
+    </entry>
+    <entry id="iFlag_hru" value="0">
+      <type>int</type>
+      <desc>
+        The scratch workspace
+      </desc>
+    </entry>
+
+
     <entry id="iFlag_mode" value="1">
       <type>int</type>
       <desc>
@@ -28,7 +48,19 @@
         The scratch workspace
       </desc>
     </entry>
-    
+<entry id="sPython" value="/global/homes/l/liao313/.conda/envs/pypestenv/bin/python">
+      <type>int</type>
+      <desc>
+        The scratch workspace
+      </desc>
+    </entry>
+
+    <entry id="sWorkspace_home" value="/global/homes/l/liao313/">
+      <type>char</type>
+      <desc>
+        The scratch workspace
+      </desc>
+    </entry>
    <entry id="sWorkspace_bin" value="/global/homes/l/liao313/bin">
       <type>char</type>
       <desc>
@@ -82,7 +114,7 @@
         The scratch workspace
       </desc>
     </entry>
-    <entry id="sDate" value="20210415">
+    <entry id="sDate" value="20210720">
       <type>char</type>
       <desc>
         The scratch workspace
@@ -124,7 +156,19 @@
         The scratch workspace
       </desc>
     </entry>
-     <entry id="iCase_index" value="3">
+     <entry id="iCase_index" value="1">
+      <type>int</type>
+      <desc>
+        The scratch workspace
+      </desc>
+    </entry>
+     <entry id="nsegment" value="5">
+      <type>int</type>
+      <desc>
+        The scratch workspace
+      </desc>
+    </entry>
+     <entry id="nbasin" value="5">
       <type>int</type>
       <desc>
         The scratch workspace

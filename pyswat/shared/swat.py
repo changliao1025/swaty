@@ -8,7 +8,11 @@ class pyswat(object):
     __metaclass__ = ABCMeta
     iCase_index=0
     iSiteID=0
+    iFlag_simulation=1
     iFlag_calibration=0
+    iFlag_watershed=0
+    iFlag_subbasin=0
+    iFlag_hru=0
     iFlag_mode=0
     iYear_start=0
     iYear_end=0
@@ -86,6 +90,9 @@ class pyswat(object):
 
         self.iFlag_calibration =  int(aParameter['iFlag_calibration']) 
         self.iFlag_simulation =  int(aParameter['iFlag_simulation']) 
+        self.iFlag_watershed =  int(aParameter['iFlag_watershed']) 
+        self.iFlag_subbasin =  int(aParameter['iFlag_subbasin']) 
+        self.iFlag_hru =  int(aParameter['iFlag_hru']) 
         self.sFilename_observation_discharge = aParameter[ 'sFilename_observation_discharge']
         self.sFilename_swat = aParameter[ 'sFilename_swat']
         
@@ -99,9 +106,10 @@ class pyswat(object):
         self.nstress      = int( aParameter['nstress']     )
         self.iFlag_mode   = int( aParameter['iFlag_mode']) 
         self.iFlag_replace= int( aParameter['iFlag_replace'] ) 
+
         #for replace and calibration
         self.aValue =  aParameter['aValue']
-        self.aVariable =  aParameter['aVariable'] 
+        self.aParameter =  aParameter['aParameter'] 
 
         self.sJob =  aParameter['sJob'] 
 

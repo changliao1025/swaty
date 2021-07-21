@@ -9,7 +9,7 @@ from pyearth.toolbox.reader.text_reader_string import text_reader_string
 
 
 
-def swat_prepare_hru_parameter_file(oModel_in):
+def swat_prepare_subbasin_parameter_file(oModel_in):
     """
     #prepare the pest control file
     """      
@@ -21,52 +21,44 @@ def swat_prepare_hru_parameter_file(oModel_in):
     iFlag_watershed = oModel_in.iFlag_watershed
     iFlag_subbasin = oModel_in.iFlag_subbasin
     iFlag_hru = oModel_in.iFlag_hru
+    nsubbasin = oModel_in.nbasin
     
     aVariable = oModel_in.aVariable
     aValue = oModel_in.aValue
-    
-    #read hru type
-    sFilename_hru_combination = sWorkspace_data_project + slash + 'auxiliary' + slash\
-     + 'hru' + slash   + 'hru_combination.txt'
-    if os.path.isfile(sFilename_hru_combination):
-        pass
-    else:
-        print('The file does not exist!')
-        return
-    aData_all = text_reader_string(sFilename_hru_combination)
-    nhru_type = len(aData_all)
 
     if iFlag_simulation == 1:
-       
-        sFilename_hru_template = sWorkspace_simulation_case + slash + 'hru.para'   
+           
+        sFilename_subbasin_template = sWorkspace_simulation_case + slash + 'subbasin.para'   
+   
     else:
-        
-        sFilename_hru_template = sWorkspace_simulation_case + slash + 'hru.para'    
+         
+        sFilename_subbasin_template = sWorkspace_simulation_case + slash + 'basin.para'   
+      
         pass
     
     
     
-    
-
-    if iFlag_hru ==1:    
-        ofs = open(sFilename_hru_template, 'w')
+    if iFlag_subbasin ==1:    
+        ofs = open(sFilename_subbasin_template, 'w')
         nvariable = len(aVariable)
-        sLine = 'hru'
+        sLine = 'subbasin'
         for i in range(nvariable):
             sVariable = aVariable[i]
             sLine = sLine + ',' + sVariable
         sLine = sLine + '\n'        
         ofs.write(sLine)
-
-        for iHru_type in range(0, nhru_type):
-            sHru_type = "{:03d}".format( iHru_type + 1)
-            sLine = 'hru'+ sHru_type 
+    
+        for iSubbasin in range(0, nsubbasin):
+            sSubbasin = "{:03d}".format( iSubbasin + 1)
+            sLine = 'subbasin' + sSubbasin 
             for iVariable in range(nvariable):
                 sValue =  "{:5.2f}".format( aValue[iVariable] )            
                 sLine = sLine + ', ' + sValue 
             sLine = sLine + '\n'
             ofs.write(sLine)
         ofs.close()
-        print('hru parameter is ready!')
+        print('subbasin parameter is ready!')
+
+    
 
     return
