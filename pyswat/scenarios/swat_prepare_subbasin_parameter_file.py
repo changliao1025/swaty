@@ -23,8 +23,9 @@ def swat_prepare_subbasin_parameter_file(oModel_in):
     iFlag_hru = oModel_in.iFlag_hru
     nsubbasin = oModel_in.nbasin
     
-    aVariable = oModel_in.aVariable
-    aValue = oModel_in.aValue
+  
+    aParameter_subbasin = oModel_in.aParameter_subbasin
+    aValue_subbasin = oModel_in.aValue_subbasin
 
     if iFlag_simulation == 1:
            
@@ -40,10 +41,10 @@ def swat_prepare_subbasin_parameter_file(oModel_in):
     
     if iFlag_subbasin ==1:    
         ofs = open(sFilename_subbasin_template, 'w')
-        nvariable = len(aVariable)
+        nvariable = len(aParameter_subbasin)
         sLine = 'subbasin'
         for i in range(nvariable):
-            sVariable = aVariable[i]
+            sVariable = aParameter_subbasin[i]
             sLine = sLine + ',' + sVariable
         sLine = sLine + '\n'        
         ofs.write(sLine)
@@ -52,7 +53,7 @@ def swat_prepare_subbasin_parameter_file(oModel_in):
             sSubbasin = "{:03d}".format( iSubbasin + 1)
             sLine = 'subbasin' + sSubbasin 
             for iVariable in range(nvariable):
-                sValue =  "{:5.2f}".format( aValue[iVariable] )            
+                sValue =  "{:5.2f}".format( aValue_subbasin[iVariable] )            
                 sLine = sLine + ', ' + sValue 
             sLine = sLine + '\n'
             ofs.write(sLine)

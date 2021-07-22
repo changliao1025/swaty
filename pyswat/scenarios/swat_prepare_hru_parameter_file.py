@@ -22,8 +22,8 @@ def swat_prepare_hru_parameter_file(oModel_in):
     iFlag_subbasin = oModel_in.iFlag_subbasin
     iFlag_hru = oModel_in.iFlag_hru
     
-    aVariable = oModel_in.aVariable
-    aValue = oModel_in.aValue
+    aParameter_hru = oModel_in.aParameter_hru
+    aValue_hru = oModel_in.aValue_hru
     
     #read hru type
     sFilename_hru_combination = sWorkspace_data_project + slash + 'auxiliary' + slash\
@@ -50,10 +50,10 @@ def swat_prepare_hru_parameter_file(oModel_in):
 
     if iFlag_hru ==1:    
         ofs = open(sFilename_hru_template, 'w')
-        nvariable = len(aVariable)
+        nvariable = len(aParameter_hru)
         sLine = 'hru'
         for i in range(nvariable):
-            sVariable = aVariable[i]
+            sVariable = aParameter_hru[i]
             sLine = sLine + ',' + sVariable
         sLine = sLine + '\n'        
         ofs.write(sLine)
@@ -62,7 +62,7 @@ def swat_prepare_hru_parameter_file(oModel_in):
             sHru_type = "{:03d}".format( iHru_type + 1)
             sLine = 'hru'+ sHru_type 
             for iVariable in range(nvariable):
-                sValue =  "{:5.2f}".format( aValue[iVariable] )            
+                sValue =  "{:5.2f}".format( aValue_hru[iVariable] )            
                 sLine = sLine + ', ' + sValue 
             sLine = sLine + '\n'
             ofs.write(sLine)

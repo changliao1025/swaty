@@ -24,7 +24,8 @@ def swat_copy_executable_file(oModel_in):
     #copy swat
     sFilename_swat_source = sWorkspace_bin + slash + sFilename_swat
 
-    sPath_current = os.getcwd()
+    #sPath_current = os.getcwd()
+    sPath_current = sWorkspace_simulation_case
     sFilename_swat_new = sPath_current + slash + 'swat'
 
     

@@ -1,6 +1,9 @@
 from abc import ABCMeta, abstractmethod
 import datetime
 from pyearth.system.define_global_variables import *
+
+
+from pyswat.shared.swat_define_parameter import swat_define_parameter
 pDate = datetime.datetime.today()
 sDate_default = "{:04d}".format(pDate.year) + "{:02d}".format(pDate.month) + "{:02d}".format(pDate.day)
 
@@ -22,6 +25,17 @@ class pyswat(object):
     iDay_end=0
     nstress=0
     nsegment =0
+
+    aParameter=None
+    aParameter_watershed = None
+    aParameter_subbasin = None
+    aParameter_hru = None
+
+    aValue=None
+    aValue_watershed = None
+    aValue_subbasin = None
+    aValue_hru = None
+
     sFilename_model_configuration=''
     sWorkspace_data=''
     sWorkspace_scratch=''    
@@ -108,8 +122,11 @@ class pyswat(object):
         self.iFlag_replace= int( aParameter['iFlag_replace'] ) 
 
         #for replace and calibration
-        self.aValue =  aParameter['aValue']
-        self.aParameter =  aParameter['aParameter'] 
+        self.aValue =  aParameter['aValue'] #this should be a variable sized array
+        self.aParameter =  aParameter['aParameter']  #list
+        self.aParameter_watershed, self.aParameter_subbasin, self.aParameter_hru,\
+          self.aValue_watershed, self.aValue_subbasin, self.aValue_hru  = swat_define_parameter(self.aParameter, self.aValue)
+        
 
         self.sJob =  aParameter['sJob'] 
 

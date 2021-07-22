@@ -16,13 +16,13 @@
         The scratch workspace
       </desc>
     </entry>
-    <entry id="iFlag_watershed" value="1">
+    <entry id="iFlag_watershed" value="0">
       <type>int</type>
       <desc>
         The scratch workspace
       </desc>
     </entry>
-    <entry id="iFlag_subbasin" value="1">
+    <entry id="iFlag_subbasin" value="0">
       <type>int</type>
       <desc>
         The scratch workspace
@@ -156,7 +156,7 @@
         The scratch workspace
       </desc>
     </entry>
-     <entry id="iCase_index" value="1">
+     <entry id="iCase_index" value="2">
       <type>int</type>
       <desc>
         The scratch workspace

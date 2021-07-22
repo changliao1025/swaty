@@ -11,7 +11,6 @@ from pyearth.toolbox.reader.read_configuration_file import read_configuration_fi
 
 
 
-
 pDate = datetime.datetime.today()
 sDate_default = "{:04d}".format(pDate.year) + "{:02d}".format(pDate.month) + "{:02d}".format(pDate.day)
 
@@ -19,7 +18,7 @@ def swat_read_model_configuration_file(sFilename_configuration_in,\
      iCase_index_in=None, \
          sJob_in=None,\
           iFlag_mode_in=None, \
-         aVariable_in = None, \
+         aParameter_in = None, \
              aValue_in = None, \
                  sDate_in = None):
 
@@ -38,23 +37,23 @@ def swat_read_model_configuration_file(sFilename_configuration_in,\
         iFlag_mode = iFlag_mode_in
     else:
         iFlag_mode = 1
-    if aVariable_in is not None:
-        aVariable = aVariable_in        
-        config['aVariable'] =  aVariable_in.split(',')
+    if aParameter_in is not None:
+              
+        config['aParameter'] =  np.array(aParameter_in) #aParameter_in.split(',')
     else:
-        if 'aVariable' in config:
-            config['aVariable'] =   config['aVariable'].split(',')
+        if 'aParameter' in config:
+            config['aParameter'] =  np.array(config['aParameter']) # config['aParameter'].split(',')
             pass
         else:
-            aVariable = None
+            aParameter = None
         pass
 
     if aValue_in is not None:
-        aValue = aValue_in
-        config['aValue'] =  np.array( aValue ).astype(float)
+        
+        config['aValue'] =  np.array( aValue_in ).astype(float)
     else:
         if 'aValue' in config:
-            config['aValue'] =  np.array( config['aValue'].split(',')  ).astype(float)
+            config['aValue'] =  np.array( config['aValue']  ).astype(float)
             pass
         else:
             aValue = None
@@ -75,7 +74,7 @@ def swat_read_model_configuration_file(sFilename_configuration_in,\
 
     config['iCase_index'] = iCase_index
     
-    #swat_global.aVariable = aVariable
+    #swat_global.aParameter = aParameter
     #swat_global.aValue = aValue
     
     
