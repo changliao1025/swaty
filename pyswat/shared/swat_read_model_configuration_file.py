@@ -47,7 +47,7 @@ def swat_read_model_configuration_file(sFilename_configuration_in,\
             config['aParameter'] =  np.array(config['aParameter']) # config['aParameter'].split(',')
             pass
         else:
-            aParameter = None
+            config['aParameter'] = None
         pass
 
     if aParameter_value_in is not None:

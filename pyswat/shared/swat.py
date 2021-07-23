@@ -130,6 +130,25 @@ class pyswat(object):
         self.iDay_start   = int( aParameter['iDay_start']  )
         self.iDay_end     = int( aParameter['iDay_end']    )
         self.nstress      = int( aParameter['nstress']     )
+
+        iMonth_count = 0
+        for iYear in range( self.iYear_start, self.iYear_end +1):
+            if iYear == self.iYear_start:
+                iMonth_start = self.iMonth_start
+            else:
+                iMonth_start = 1
+
+            if iYear == self.iYear_end :
+                iMonth_end = self.iMonth_end
+            else:
+                iMonth_end = 12
+
+            for iMonth in range(iMonth_start, iMonth_end+1):
+                iMonth_count = iMonth_count  + 1
+                pass
+        
+        self.nstress_month = iMonth_count
+
         self.iFlag_mode   = int( aParameter['iFlag_mode']) 
         self.iFlag_replace= int( aParameter['iFlag_replace'] ) 
 
@@ -138,15 +157,18 @@ class pyswat(object):
         self.aParameter_value_lower =  aParameter['aParameter_value_lower'] #this should be a variable sized array
         self.aParameter_value_upper =  aParameter['aParameter_value_upper'] #this should be a variable sized array
         self.aParameter =  aParameter['aParameter']  #list
-        self.aParameter_watershed, self.aParameter_subbasin, self.aParameter_hru,\
-          self.aParameter_value_watershed, self.aParameter_value_subbasin, self.aParameter_value_hru, \
-              self.aParameter_value_lower_watershed, self.aParameter_value_lower_subbasin, self.aParameter_value_lower_hru, \
+
+        if self.aParameter is not None:
+            self.aParameter_watershed, self.aParameter_subbasin, self.aParameter_hru,\
+                self.aParameter_value_watershed, self.aParameter_value_subbasin, self.aParameter_value_hru, \
+                self.aParameter_value_lower_watershed, self.aParameter_value_lower_subbasin, self.aParameter_value_lower_hru, \
                   self.aParameter_value_upper_watershed, self.aParameter_value_upper_subbasin, self.aParameter_value_upper_hru \
                = swat_define_parameter(self.aParameter, self.aParameter_value, self.aParameter_value_lower, self.aParameter_value_upper)
         
-        self.nParameter_watershed = self.aParameter_watershed.size
-        self.nParameter_subbasin = self.aParameter_subbasin.size
-        self.nParameter_hru = self.aParameter_hru.size
+            self.nParameter_watershed = self.aParameter_watershed.size
+            self.nParameter_subbasin = self.aParameter_subbasin.size
+            self.nParameter_hru = self.aParameter_hru.size
+            pass
 
         self.sJob =  aParameter['sJob'] 
 
