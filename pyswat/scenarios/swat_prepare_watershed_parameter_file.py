@@ -22,9 +22,9 @@ def swat_prepare_watershed_parameter_file(oModel_in):
     
     
     aParameter_watershed = oModel_in.aParameter_watershed
-    aValue_watershed = oModel_in.aValue_watershed
+    aParameter_value_watershed = oModel_in.aParameter_value_watershed
     
-    
+    nParameter_watershed = aParameter_watershed.size
 
     if iFlag_simulation == 1:
         sFilename_watershed_template = sWorkspace_simulation_case + slash + 'watershed.para'    
@@ -36,17 +36,17 @@ def swat_prepare_watershed_parameter_file(oModel_in):
     
     if iFlag_watershed ==1:    
         ofs = open(sFilename_watershed_template, 'w')
-        nvariable = len(aParameter_watershed)
+        
         sLine = 'watershed'
-        for i in range(nvariable):
+        for i in range(nParameter_watershed):
             sVariable = aParameter_watershed[i]
             sLine = sLine + ',' + sVariable
         sLine = sLine + '\n'        
         ofs.write(sLine)
         
         sLine = 'watershed'
-        for iVariable in range(nvariable):
-            sValue =  "{:5.2f}".format( aValue_watershed[iVariable] )            
+        for i in range(nParameter_watershed):
+            sValue =  "{:5.2f}".format( aParameter_value_watershed[i] )            
             sLine = sLine + ', ' + sValue 
         sLine = sLine + '\n'
         ofs.write(sLine)

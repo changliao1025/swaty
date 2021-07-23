@@ -19,7 +19,9 @@ def swat_read_model_configuration_file(sFilename_configuration_in,\
          sJob_in=None,\
           iFlag_mode_in=None, \
          aParameter_in = None, \
-             aValue_in = None, \
+             aParameter_value_in = None, \
+                 aParameter_value_lower_in = None, \
+                     aParameter_value_upper_in = None, \
                  sDate_in = None):
 
 
@@ -48,16 +50,39 @@ def swat_read_model_configuration_file(sFilename_configuration_in,\
             aParameter = None
         pass
 
-    if aValue_in is not None:
+    if aParameter_value_in is not None:
         
-        config['aValue'] =  np.array( aValue_in ).astype(float)
+        config['aParameter_value'] =  np.array( aParameter_value_in ).astype(float)
     else:
-        if 'aValue' in config:
-            config['aValue'] =  np.array( config['aValue']  ).astype(float)
+        if 'aParameter_value' in config:
+            config['aParameter_value'] =  np.array( config['aParameter_value']  ).astype(float)
             pass
         else:
-            aValue = None
+            config['aParameter_value'] = None
         pass
+
+    if aParameter_value_lower_in is not None:
+        
+        config['aParameter_value_lower'] =  np.array( aParameter_value_lower_in ).astype(float)
+    else:
+        if 'aParameter_value_lower' in config:
+            config['aParameter_value_lower'] =  np.array( config['aParameter_value_lower']  ).astype(float)
+            pass
+        else:
+            config['aParameter_value_lower'] = None
+        pass
+
+    if aParameter_value_upper_in is not None:
+        
+        config['aParameter_value_upper'] =  np.array( aParameter_value_upper_in ).astype(float)
+    else:
+        if 'aParameter_value_upper' in config:
+            config['aParameter_value_upper'] =  np.array( config['aParameter_value_upper']  ).astype(float)
+            pass
+        else:
+            config['aParameter_value_upper'] = None
+        pass
+
 
     if sDate_in is not None:
         sDate = sDate_in

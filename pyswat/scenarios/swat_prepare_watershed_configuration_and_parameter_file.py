@@ -194,16 +194,5 @@ def swat_prepare_watershed_configuration_and_parameter_file(oModel_in):
     
     print('finished')
 
-if __name__ == '__main__':
-    
 
-    sFilename_model_configuration = '/global/homes/l/liao313/workspace/python/pyswat/pyswat/shared/swat_simulation.xml'
-    aParameter_model = swat_read_model_configuration_file(sFilename_model_configuration)
-    
-    aParameter_model['sFilename_model_configuration'] = sFilename_model_configuration
-    oswat = pyswat(aParameter_model)
-
-      
-    
-    swat_prepare_watershed_configuration_and_parameter_file(oswat)
     

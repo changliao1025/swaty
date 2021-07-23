@@ -9,23 +9,24 @@ from pyearth.toolbox.reader.text_reader_string import text_reader_string
 
 
 
-def swat_prepare_subbasin_parameter_file(oModel_in):
+def swat_prepare_subbasin_parameter_file(oSwat_in):
     """
     #prepare the pest control file
     """      
-    sWorkspace_data_project = oModel_in.sWorkspace_data + slash +  oModel_in.sWorkspace_project
-    sWorkspace_simulation_case = oModel_in.sWorkspace_simulation_case    
-    sWorkspace_calibration_case = oModel_in.sWorkspace_calibration_case 
+    sWorkspace_data_project = oSwat_in.sWorkspace_data + slash +  oSwat_in.sWorkspace_project
+    sWorkspace_simulation_case = oSwat_in.sWorkspace_simulation_case    
+    sWorkspace_calibration_case = oSwat_in.sWorkspace_calibration_case 
     
-    iFlag_simulation = oModel_in.iFlag_simulation
-    iFlag_watershed = oModel_in.iFlag_watershed
-    iFlag_subbasin = oModel_in.iFlag_subbasin
-    iFlag_hru = oModel_in.iFlag_hru
-    nsubbasin = oModel_in.nbasin
+    iFlag_simulation = oSwat_in.iFlag_simulation
+    iFlag_watershed = oSwat_in.iFlag_watershed
+    iFlag_subbasin = oSwat_in.iFlag_subbasin
+    iFlag_hru = oSwat_in.iFlag_hru
+    nsubbasin = oSwat_in.nsubbasin
     
   
-    aParameter_subbasin = oModel_in.aParameter_subbasin
-    aValue_subbasin = oModel_in.aValue_subbasin
+    aParameter_subbasin = oSwat_in.aParameter_subbasin
+    aParameter_value_subbasin = oSwat_in.aParameter_value_subbasin
+    nParameter_subbasin = oSwat_in.nParameter_subbasin
 
     if iFlag_simulation == 1:
            
@@ -41,9 +42,9 @@ def swat_prepare_subbasin_parameter_file(oModel_in):
     
     if iFlag_subbasin ==1:    
         ofs = open(sFilename_subbasin_template, 'w')
-        nvariable = len(aParameter_subbasin)
+        
         sLine = 'subbasin'
-        for i in range(nvariable):
+        for i in range(nParameter_subbasin):
             sVariable = aParameter_subbasin[i]
             sLine = sLine + ',' + sVariable
         sLine = sLine + '\n'        
@@ -52,8 +53,8 @@ def swat_prepare_subbasin_parameter_file(oModel_in):
         for iSubbasin in range(0, nsubbasin):
             sSubbasin = "{:03d}".format( iSubbasin + 1)
             sLine = 'subbasin' + sSubbasin 
-            for iVariable in range(nvariable):
-                sValue =  "{:5.2f}".format( aValue_subbasin[iVariable] )            
+            for i in range(nParameter_subbasin):
+                sValue =  "{:5.2f}".format( aParameter_value_subbasin[i] )            
                 sLine = sLine + ', ' + sValue 
             sLine = sLine + '\n'
             ofs.write(sLine)

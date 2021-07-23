@@ -88,10 +88,10 @@ def swat_write_hru_input_file(oModel_in):
     aCHM =[]
     aGW = []
     aHRU =[]
-    aMGT = ['cn2']
+    aMGT = ['CN2']
     aSDR = []
     aSEP =[]
-    aSOL=['awc']
+    aSOL=['AWC']
 
     aExtension = np.asarray(aExtension)
     nFile_type= len(aExtension)
@@ -242,11 +242,11 @@ def swat_write_hru_input_file(oModel_in):
                         for i in range(0, aParameter_count[iFile_type]):
                             #sKey = aParameter[i]
                             if 'cn2' in sLine.lower() : 
-                                dummy = 'cn2' + "{:02d}".format(iSubbasin) \
+                                dummy = 'CN2' + "{:02d}".format(iSubbasin) \
                                 + "{:02d}".format(iHru) 
                                 dummy1 = np.array(aParameter_index[iFile_type])
                                 dummy2 = np.array(aParameter_user[iFile_type])
-                                dummy_index1 = np.where(dummy2 == 'cn2')
+                                dummy_index1 = np.where(dummy2 == 'CN2')
                                 dummy_index2 = dummy1[dummy_index1][0]
                                 sLine_new = "{:16.2f}".format(  aValue[0][dummy_index2]  )     + '    | pest parameter CN2 \n'
                                 ofs.write(sLine_new)
@@ -260,7 +260,7 @@ def swat_write_hru_input_file(oModel_in):
                                     sLine_new = '{0: <27}'.format(' Ave. AW Incl. Rock: ')
                                     dummy1 = np.array(aParameter_index[iFile_type])
                                     dummy2 = np.array(aParameter_user[iFile_type])
-                                    dummy_index1 = np.where(dummy2 == 'awc')
+                                    dummy_index1 = np.where(dummy2 == 'AWC')
                                     dummy_index2 = dummy1[dummy_index1][0]
                                     for j in range(nSoil_layer):
                                         sLine_new = sLine_new +  "{:12.2f}".format(  aValue[0][dummy_index2]  ) 

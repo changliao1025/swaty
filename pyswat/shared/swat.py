@@ -31,10 +31,22 @@ class pyswat(object):
     aParameter_subbasin = None
     aParameter_hru = None
 
-    aValue=None
-    aValue_watershed = None
-    aValue_subbasin = None
-    aValue_hru = None
+    aParameter_value=None
+    aParameter_value_watershed = None
+    aParameter_value_subbasin = None
+    aParameter_value_hru = None
+
+    aParameter_value_lower_watershed = None
+    aParameter_value_lower_subbasin = None
+    aParameter_value_lower_hru       = None
+
+    aParameter_value_upper_watershed = None
+    aParameter_value_upper_subbasin = None
+    aParameter_value_upper_hru       = None
+
+    nParameter_water=0
+    nParameter_subbasin=0
+    nParameter_hru=0
 
     sFilename_model_configuration=''
     sWorkspace_data=''
@@ -67,7 +79,7 @@ class pyswat(object):
         #self.sDate_start              = aParameter[ 'sDate_start']
         #self.sDate_end                = aParameter[ 'sDate_end']
         self.nsegment = int( aParameter[ 'nsegment'] )
-        self.nbasin = int (aParameter[ 'nbasin'])
+        self.nsubbasin = int (aParameter[ 'nsubbasin'])
 
         self.sWorkspace_project= aParameter[ 'sWorkspace_project']
         self.sWorkspace_bin= aParameter[ 'sWorkspace_bin']
@@ -122,11 +134,19 @@ class pyswat(object):
         self.iFlag_replace= int( aParameter['iFlag_replace'] ) 
 
         #for replace and calibration
-        self.aValue =  aParameter['aValue'] #this should be a variable sized array
+        self.aParameter_value =  aParameter['aParameter_value'] #this should be a variable sized array
+        self.aParameter_value_lower =  aParameter['aParameter_value_lower'] #this should be a variable sized array
+        self.aParameter_value_upper =  aParameter['aParameter_value_upper'] #this should be a variable sized array
         self.aParameter =  aParameter['aParameter']  #list
         self.aParameter_watershed, self.aParameter_subbasin, self.aParameter_hru,\
-          self.aValue_watershed, self.aValue_subbasin, self.aValue_hru  = swat_define_parameter(self.aParameter, self.aValue)
+          self.aParameter_value_watershed, self.aParameter_value_subbasin, self.aParameter_value_hru, \
+              self.aParameter_value_lower_watershed, self.aParameter_value_lower_subbasin, self.aParameter_value_lower_hru, \
+                  self.aParameter_value_upper_watershed, self.aParameter_value_upper_subbasin, self.aParameter_value_upper_hru \
+               = swat_define_parameter(self.aParameter, self.aParameter_value, self.aParameter_value_lower, self.aParameter_value_upper)
         
+        self.nParameter_watershed = self.aParameter_watershed.size
+        self.nParameter_subbasin = self.aParameter_subbasin.size
+        self.nParameter_hru = self.aParameter_hru.size
 
         self.sJob =  aParameter['sJob'] 
 

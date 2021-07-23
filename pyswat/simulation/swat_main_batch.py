@@ -8,11 +8,9 @@ from pyearth.system import define_global_variables
 from pyearth.system.define_global_variables import *
 
 
-#import package
-sPath_swat_python = sWorkspace_code +  slash + 'python' + slash + 'swat' + slash + 'swat_python'
-sys.path.append(sPath_swat_python)
 
-from swat.simulation.swat_main import swat_main
+
+from pyswat.simulation.swat_main import swat_main
 
 iFlag_mode = 0 #just create job file, no run
 sModel = 'swat'
@@ -31,7 +29,7 @@ for i in range(ncase):
     #call the create case function
     dCN2 = aCN2[i]
     sCN2 = "{:03d}".format(i)
-    aVariable = ['cn2']
+    aVariable = ['CN2']
     aValue = [dCN2]
     
     sCase = 'CN2_' + sCN2

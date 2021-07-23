@@ -8,6 +8,7 @@ from numpy  import array
 
 from pyearth.system.define_global_variables import *
 from pyearth.toolbox.reader.text_reader_string import text_reader_string
+from pyearth.toolbox.data.convert_time_series_daily_to_monthly import convert_time_series_daily_to_monthly
 
 def swat_extract_stream_discharge(oModel_in):
     """
@@ -47,12 +48,24 @@ def swat_extract_stream_discharge(oModel_in):
     aIndex = np.arange(nsegment-1 , nstress * nsegment + 1, nsegment)
     #aIndex = np.arange(nsegment , nstress * nsegment + 1, nsegment)
     
-    aDischarge_simulation = aData_discharge[aIndex]
+    aDischarge_simulation_daily = aData_discharge[aIndex]
+
+    iYear_start_in = oModel_in.iYear_start
+    iMonth_start_in = oModel_in.iMonth_start
+    iDay_start_in = oModel_in.iDay_start
+
+    iYear_end_in = oModel_in.iYear_end
+    iMonth_end_in = oModel_in.iMonth_end
+    iDay_end_in = oModel_in.iDay_end
+    
+    aDischarge_simulation_monthly = convert_time_series_daily_to_monthly(aDischarge_simulation_daily,\
+        iYear_start_in, iMonth_start_in, iDay_start_in, \
+      iYear_end_in, iMonth_end_in, iDay_end_in , sType_in = 'sum'  )
 
     #save it to a text file
     sFilename_out = sPath_current + slash + 'stream_discharge.txt'
 
-    np.savetxt(sFilename_out, aDischarge_simulation, delimiter=",")
+    np.savetxt(sFilename_out, aDischarge_simulation_monthly, delimiter=",")
 
     sTime  = datetime.datetime.now().strftime("%m%d%Y%H%M%S")
 

@@ -168,7 +168,7 @@
         The scratch workspace
       </desc>
     </entry>
-     <entry id="nbasin" value="5">
+     <entry id="nsubbasin" value="5">
       <type>int</type>
       <desc>
         The scratch workspace

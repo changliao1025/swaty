@@ -31,7 +31,7 @@ def swat_write_subbasin_input_file(oModel_in):
 
     sWorkspace_data_project = oModel_in.sWorkspace_data_project
    
-    nsubbasin = oModel_in.nbasin
+    nsubbasin = oModel_in.nsubbasin
  
     # we need to identify a list of files that are HRU defined, you can add others later
     aExtension = ['.rte', '.sub']
