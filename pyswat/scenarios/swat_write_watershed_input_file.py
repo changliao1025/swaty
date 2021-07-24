@@ -5,6 +5,8 @@ import numpy as np
 import glob, os
 
 from pyearth.system.define_global_variables import *
+
+from pyearth.toolbox.reader.line_count import line_count
 from pyearth.toolbox.reader.text_reader_string import text_reader_string
 def swat_write_watershed_input_file(oSwat_in):
     """
@@ -29,7 +31,7 @@ def swat_write_watershed_input_file(oSwat_in):
 
     sWorkspace_calibration_case = oSwat_in.sWorkspace_calibration_case
     sWorkspace_pest_model = sWorkspace_calibration_case
-
+    print('sWorkspace_simulation_copy: ' + sWorkspace_simulation_copy)
 
 
     # we need to identify a list of files that are HRU defined, you can add others later
@@ -81,6 +83,8 @@ def swat_write_watershed_input_file(oSwat_in):
         iFlag_debug = 0
         sPath_current = os.getcwd()
         sFilename_parameter = sPath_current + slash + 'watershed.para'
+
+    print(sFilename_parameter)
     #check whetheher the file exist or not
     if os.path.isfile(sFilename_parameter):
         pass
@@ -113,9 +117,10 @@ def swat_write_watershed_input_file(oSwat_in):
                         aParameter_user[i] = np.append(aParameter_user[i],[para])
                     continue
 
-    sWorkspace_source_case = sWorkspace_simulation_copy
-    sWorkspace_target_case = sWorkspace_simulation_case
+    
     if iFlag_simulation == 1:
+        sWorkspace_source_case = sWorkspace_simulation_copy
+        sWorkspace_target_case = sWorkspace_simulation_case
         pass
     else:
         sPath_current = os.getcwd()
@@ -125,25 +130,27 @@ def swat_write_watershed_input_file(oSwat_in):
         else:
             print('this is a child')
             sWorkspace_source_case = sWorkspace_simulation_copy
-            sWorkspace_target_case = sWorkspace_simulation_case
+            sWorkspace_target_case = sPath_current
     
     for iFile_type in range(0, nFile_type):
         sExtension = aExtension[iFile_type]
         iFlag = aParameter_flag[iFile_type]
         if( iFlag == 1):
             #there should be only one for each extension
-            sFolder_watershed = sWorkspace_source_case + 'TxtInOut' 
+            sFolder_watershed = sWorkspace_source_case 
             os.chdir(sFolder_watershed)
             sReg = '*'+sExtension
             for sFilename in glob.glob(sReg):
                 sFilename_watershed = sFilename
                 break
             #open the file to read
+
+            nline = line_count(sFilename_watershed)
             ifs=open(sFilename_watershed, 'rb')   
-            sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')
+            
             #open the new file to write out
             sFilename_watershed_out = sWorkspace_target_case + slash + sFilename
-            #do we need to remove linnk first, i guess it's better to do so
+            #do we need to remove link first, i guess it's better to do so
             if os.path.isfile(sFilename_watershed_out):
                 #remove it 
                 os.remove(sFilename_watershed_out)
@@ -152,9 +159,15 @@ def swat_write_watershed_input_file(oSwat_in):
 
             ofs=open(sFilename_watershed_out, 'w') 
             aValue = aParameter_value[:]
-            while sLine:
+            for iLine in range(nline):
+                sLine0=(ifs.readline())
+                if len(sLine0) < 1:
+                    continue
+                sLine0=sLine0.rstrip()
+                #print(sLine0)
+                sLine= sLine0.decode("utf-8", 'ignore')
                 
-                       
+                
                 for i in range(0, aParameter_count[iFile_type]):
                     if 'sftmp' in sLine.lower() : 
                         dummy = 'SFTMP' 
@@ -180,9 +193,7 @@ def swat_write_watershed_input_file(oSwat_in):
                             ofs.write(sLine)
                             break
 
-                sLine0=(ifs.readline()).rstrip()
-                print(sLine0)
-                sLine= sLine0.decode("utf-8", 'ignore')
+                
             
             ifs.close()
             ofs.close()

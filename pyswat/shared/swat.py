@@ -44,7 +44,8 @@ class pyswat(object):
     aParameter_value_upper_subbasin = None
     aParameter_value_upper_hru       = None
 
-    nParameter_water=0
+    nParameter=0
+    nParameter_watershed=0
     nParameter_subbasin=0
     nParameter_hru=0
 
@@ -168,14 +169,16 @@ class pyswat(object):
             self.nParameter_watershed = self.aParameter_watershed.size
             self.nParameter_subbasin = self.aParameter_subbasin.size
             self.nParameter_hru = self.aParameter_hru.size
+
+            self.nParameter = self.nParameter_watershed + self.nParameter_subbasin+ self.nParameter_hru
             pass
 
         self.sJob =  aParameter['sJob'] 
 
         self.sWorkspace_data_project = self.sWorkspace_data +  slash + self.sWorkspace_project
 
-        self.sWorkspace_simulation_copy = self.sWorkspace_data  + aParameter['sWorkspace_simulation_copy']
-
+        #self.sWorkspace_simulation_copy = self.sWorkspace_data  + aParameter['sWorkspace_simulation_copy']
+        self.sWorkspace_simulation_copy = self.sWorkspace_calibration + slash + 'TxtInOut'
                 
         return
         

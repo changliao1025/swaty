@@ -126,7 +126,7 @@
         The scratch workspace
       </desc>
     </entry>
-    <entry id="iYear_end" value="2017">
+    <entry id="iYear_end" value="2009">
       <type>int</type>
       <desc>
         The scratch workspace
@@ -138,7 +138,7 @@
         The scratch workspace
       </desc>
     </entry>
-    <entry id="iMonth_end" value="9">
+    <entry id="iMonth_end" value="12">
       <type>int</type>
       <desc>
         The scratch workspace
@@ -150,13 +150,13 @@
         The scratch workspace
       </desc>
     </entry>
-    <entry id="iDay_end" value="30">
+    <entry id="iDay_end" value="31">
       <type>int</type>
       <desc>
         The scratch workspace
       </desc>
     </entry>
-     <entry id="iCase_index" value="2">
+     <entry id="iCase_index" value="1">
       <type>int</type>
       <desc>
         The scratch workspace
@@ -194,6 +194,30 @@
     </entry>
   <entry id="sJob" value="test">
       <type>char</type>
+      <desc>
+        The scratch workspace
+      </desc>
+    </entry>
+    <entry id="aParameter" value="SFTMP,SMTMP">
+      <type>char</type>
+      <desc>
+        The scratch workspace
+      </desc>
+    </entry>
+    <entry id="aParameter_value" value="1.0,0.5">
+      <type>int</type>
+      <desc>
+        The scratch workspace
+      </desc>
+    </entry>
+    <entry id="aParameter_value_lower" value="-5,-5">
+      <type>int</type>
+      <desc>
+        The scratch workspace
+      </desc>
+    </entry>
+    <entry id="aParameter_value_upper" value="5,5">
+      <type>int</type>
       <desc>
         The scratch workspace
       </desc>

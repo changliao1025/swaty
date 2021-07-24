@@ -32,7 +32,7 @@ def swat_extract_stream_discharge(oModel_in):
     iFlag_debug = 2
    
     sPath_current = os.getcwd()
-    #sPath_current = '/global/cscratch1/sd/liao313/04model/swat/arw/calibration/swat20210415004/child1'
+    #sPath_current = '/global/cscratch1/sd/liao313/04model/swat/arw/simulation/swat20210723001/'
     print('The current path is: ' + sPath_current)
     
 
@@ -47,7 +47,7 @@ def swat_extract_stream_discharge(oModel_in):
 
     aIndex = np.arange(nsegment-1 , nstress * nsegment + 1, nsegment)
     #aIndex = np.arange(nsegment , nstress * nsegment + 1, nsegment)
-    
+     
     aDischarge_simulation_daily = aData_discharge[aIndex]
 
     iYear_start_in = oModel_in.iYear_start
@@ -63,7 +63,7 @@ def swat_extract_stream_discharge(oModel_in):
       iYear_end_in, iMonth_end_in, iDay_end_in , sType_in = 'sum'  )
 
     #save it to a text file
-    sFilename_out = sPath_current + slash + 'stream_discharge.txt'
+    sFilename_out = sPath_current + slash + 'stream_discharge_monthly.txt'
 
     np.savetxt(sFilename_out, aDischarge_simulation_monthly, delimiter=",")
 

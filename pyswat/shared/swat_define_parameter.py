@@ -21,7 +21,10 @@ def swat_define_parameter(aParameter_in, aValue_in, aValue_lower_in, aValue_uppe
     aParameter_value_lower_hru  = list()
     aParameter_value_upper_hru  = list()
 
+    aParameter_in= np.array(aParameter_in)
     nParameter  = aParameter_in.size
+    
+
     for i in range(nParameter):
         sParameter  = aParameter_in[i]
         aValue = aValue_in[i]

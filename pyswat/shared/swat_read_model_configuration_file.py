@@ -14,15 +14,7 @@ from pyearth.toolbox.reader.read_configuration_file import read_configuration_fi
 pDate = datetime.datetime.today()
 sDate_default = "{:04d}".format(pDate.year) + "{:02d}".format(pDate.month) + "{:02d}".format(pDate.day)
 
-def swat_read_model_configuration_file(sFilename_configuration_in,\
-     iCase_index_in=None, \
-         sJob_in=None,\
-          iFlag_mode_in=None, \
-         aParameter_in = None, \
-             aParameter_value_in = None, \
-                 aParameter_value_lower_in = None, \
-                     aParameter_value_upper_in = None, \
-                 sDate_in = None):
+def swat_read_model_configuration_file(sFilename_configuration_in):
 
 
     config = parse_xml_file(sFilename_configuration_in)
@@ -35,69 +27,29 @@ def swat_read_model_configuration_file(sFilename_configuration_in,\
 
 
     
-    if iFlag_mode_in is not None:
-        iFlag_mode = iFlag_mode_in
-    else:
-        iFlag_mode = 1
-    if aParameter_in is not None:
-              
-        config['aParameter'] =  np.array(aParameter_in) #aParameter_in.split(',')
-    else:
-        if 'aParameter' in config:
-            config['aParameter'] =  np.array(config['aParameter']) # config['aParameter'].split(',')
-            pass
-        else:
-            config['aParameter'] = None
-        pass
+    sLine = config['aParameter']
+    dummy = sLine.split(',')
+    config['aParameter'] =  np.array(dummy) # config['aParameter'].split(',')
+            
 
-    if aParameter_value_in is not None:
-        
-        config['aParameter_value'] =  np.array( aParameter_value_in ).astype(float)
-    else:
-        if 'aParameter_value' in config:
-            config['aParameter_value'] =  np.array( config['aParameter_value']  ).astype(float)
-            pass
-        else:
-            config['aParameter_value'] = None
-        pass
+    sLine = config['aParameter_value']
+    dummy = sLine.split(',')
+    config['aParameter_value'] =  np.array( dummy  ).astype(float)
+            
 
-    if aParameter_value_lower_in is not None:
-        
-        config['aParameter_value_lower'] =  np.array( aParameter_value_lower_in ).astype(float)
-    else:
-        if 'aParameter_value_lower' in config:
-            config['aParameter_value_lower'] =  np.array( config['aParameter_value_lower']  ).astype(float)
-            pass
-        else:
-            config['aParameter_value_lower'] = None
-        pass
+    sLine = config['aParameter_value_lower']
+    dummy = sLine.split(',')
+    config['aParameter_value_lower'] =  np.array( dummy  ).astype(float)
+           
 
-    if aParameter_value_upper_in is not None:
-        
-        config['aParameter_value_upper'] =  np.array( aParameter_value_upper_in ).astype(float)
-    else:
-        if 'aParameter_value_upper' in config:
-            config['aParameter_value_upper'] =  np.array( config['aParameter_value_upper']  ).astype(float)
-            pass
-        else:
-            config['aParameter_value_upper'] = None
-        pass
-
-
-    if sDate_in is not None:
-        sDate = sDate_in
-    else:
-        sDate = sDate_default
-        pass
-
-    if iCase_index_in is not None:        
-        iCase_index = iCase_index_in
-    else:       
-        iCase_index = int( config['iCase_index'])
+    sLine = config['aParameter_value_upper']
+    dummy = sLine.split(',')
+    config['aParameter_value_upper'] =  np.array( dummy  ).astype(float)
+            
 
     
 
-    config['iCase_index'] = iCase_index
+    config['iCase_index'] = int( config['iCase_index'])
     
     #swat_global.aParameter = aParameter
     #swat_global.aValue = aValue

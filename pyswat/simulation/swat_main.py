@@ -45,15 +45,7 @@ def swat_main(oSwat_in):
     #step 8 submit
     iFlag_mode = oSwat_in.iFlag_mode
     print('Finished')
-    return
-    if( iFlag_mode == 1):
-        #run local
-        subprocess.call(sFilename_bash, shell=True, executable=sFilename_interactive_bash )
-
-    else:
-        #run job
-        sLine = 'sbatch ' + sFilename_job
-        # cannot run on marianas
-        subprocess.call(sLine, shell=True, executable=sFilename_interactive_bash )  
+    
+     
 
  

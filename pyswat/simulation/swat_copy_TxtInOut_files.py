@@ -12,20 +12,21 @@ from pyearth.system.define_global_variables import *
 
 #from pyearth.toolbox.reader.read_configuration_file import read_configuration_file
 
-def swat_copy_TxtInOut_files(oModel_in):
+def swat_copy_TxtInOut_files(oSwat_in):
     """
     sFilename_configuration_in
     sModel
     """
-    sWorkspace_data= oModel_in.sWorkspace_data
-    sWorkspace_data_project = sWorkspace_data+ slash+ oModel_in.sWorkspace_project
-    sWorkspace_simulation_copy = sWorkspace_data_project + slash + 'copy' + slash + 'TxtInOut'
+    sWorkspace_data= oSwat_in.sWorkspace_data
+    sWorkspace_data_project = sWorkspace_data+ slash+ oSwat_in.sWorkspace_project
+    sWorkspace_simulation_copy = oSwat_in.sWorkspace_simulation_copy
     
     
-    sWorkspace_simulation_case = oModel_in.sWorkspace_simulation_case  
-    sWorkspace_calibration_case = oModel_in.sWorkspace_calibration_case  
-    if oModel_in.iFlag_calibration ==1:
-        sWorkspace_target_case = sWorkspace_calibration_case   + slash + 'TxtInOut'
+    sWorkspace_simulation_case = oSwat_in.sWorkspace_simulation_case  
+    sWorkspace_calibration_case = oSwat_in.sWorkspace_calibration_case  
+
+    if oSwat_in.iFlag_calibration ==1:
+        sWorkspace_target_case = os.getcwd()
         
     else:
         sWorkspace_target_case = sWorkspace_simulation_case   

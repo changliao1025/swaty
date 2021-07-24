@@ -219,7 +219,7 @@ def swat_write_hru_input_file(oModel_in):
                 iFlag = aParameter_flag[iFile_type]
                 if( iFlag == 1):
                     sFilename = sSubbasin + sHru + sExtension
-                    sFilename_hru = sWorkspace_source_case + 'TxtInOut' + slash + sFilename 
+                    sFilename_hru = sWorkspace_source_case +  slash + sFilename 
                     #open the file to read
                     ifs=open(sFilename_hru, 'rb')   
                     sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')
@@ -272,7 +272,7 @@ def swat_write_hru_input_file(oModel_in):
                                     ofs.write(sLine)
                                     break
                         sLine0=(ifs.readline()).rstrip()
-                        print(sLine0)
+                        #print(sLine0)
                         sLine= sLine0.decode("utf-8", 'ignore')
                     #close files
                     ifs.close()
