@@ -15,9 +15,8 @@ def swat_write_watershed_input_file(oSwat_in):
     aParameter_watershed = oSwat_in.aParameter_watershed
     
     nParameter_watershed = oSwat_in.nParameter_watershed
-    if(nParameter_watershed<1):
-        #there is nothing to be replaced at all
-        print("There is nothing to be updated!")
+    if(nParameter_watershed<1):        
+        print("There is no watershed parameter to be updated!")
         return
     else:
         pass    
@@ -136,26 +135,21 @@ def swat_write_watershed_input_file(oSwat_in):
         sExtension = aExtension[iFile_type]
         iFlag = aParameter_flag[iFile_type]
         if( iFlag == 1):
-            #there should be only one for each extension
-            sFolder_watershed = sWorkspace_source_case 
-            os.chdir(sFolder_watershed)
-            sReg = '*'+sExtension
-            for sFilename in glob.glob(sReg):
-                sFilename_watershed = sFilename
-                break
+            #there should be only one for each extension       
+            
+            sFilename = 'basins' + sExtension
+            sFilename_watershed = sWorkspace_source_case + slash + sFilename
+                
             #open the file to read
 
             nline = line_count(sFilename_watershed)
             ifs=open(sFilename_watershed, 'rb')   
             
             #open the new file to write out
-            sFilename_watershed_out = sWorkspace_target_case + slash + sFilename
-            #do we need to remove link first, i guess it's better to do so
-            if os.path.isfile(sFilename_watershed_out):
-                #remove it 
+            sFilename_watershed_out = sWorkspace_target_case + slash + sFilename            
+
+            if os.path.exists(sFilename_watershed_out):                
                 os.remove(sFilename_watershed_out)
-            else:
-                pass
 
             ofs=open(sFilename_watershed_out, 'w') 
             aValue = aParameter_value[:]
@@ -169,22 +163,20 @@ def swat_write_watershed_input_file(oSwat_in):
                 
                 
                 for i in range(0, aParameter_count[iFile_type]):
-                    if 'sftmp' in sLine.lower() : 
-                        dummy = 'SFTMP' 
-                        dummy1 = np.array(aParameter_index[iFile_type])
-                        dummy2 = np.array(aParameter_user[iFile_type])
-                        dummy_index1 = np.where(dummy2 == dummy)
-                        dummy_index2 = dummy1[dummy_index1][0]
+                    aParameter_indices = np.array(aParameter_index[iFile_type])
+                    aParameter_filetype = np.array(aParameter_user[iFile_type])
+                    if 'sftmp' in sLine.lower() and 'SFTMP' in aParameter_filetype : 
+                        dummy = 'SFTMP'   
+                        dummy_index1 = np.where(aParameter_filetype == dummy)
+                        dummy_index2 = aParameter_indices[dummy_index1][0]
                         sLine_new = "{:16.2f}".format(  aValue[dummy_index2]  )     + '    | pest parameter SFTMP' + '\n'
                         ofs.write(sLine_new)
                         break
                     else:
-                        if 'smtmp' in sLine.lower() : 
-                            dummy = 'SMTMP' 
-                            dummy1 = np.array(aParameter_index[iFile_type])
-                            dummy2 = np.array(aParameter_user[iFile_type])
-                            dummy_index1 = np.where(dummy2 == dummy)
-                            dummy_index2 = dummy1[dummy_index1][0]
+                        if 'smtmp' in sLine.lower() and 'SMTMP' in aParameter_filetype: 
+                            dummy = 'SMTMP'                             
+                            dummy_index1 = np.where(aParameter_filetype == dummy)
+                            dummy_index2 = aParameter_indices[dummy_index1][0]
                             sLine_new = "{:16.2f}".format(  aValue[dummy_index2]  )     + '    | pest parameter SMTMP' + '\n'
                             ofs.write(sLine_new)
                             break
@@ -198,6 +190,7 @@ def swat_write_watershed_input_file(oSwat_in):
             ifs.close()
             ofs.close()
 
+    print('Finished writing watershed file!')
     return    
 
     

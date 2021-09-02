@@ -19,7 +19,7 @@ def swat_write_hru_input_file(oModel_in):
     nvariable = aParameter_hru.size
     if(nvariable<1):
         #there is nothing to be replaced at all
-        print("There is nothing to be updated!")
+        print("There is no hru parameter to be updated!")
         return
     else:
         pass    
@@ -227,11 +227,9 @@ def swat_write_hru_input_file(oModel_in):
                     #open the new file to write out
                     sFilename_hru_out = sWorkspace_target_case + slash + sFilename
                     #do we need to remove linnk first, i guess it's better to do so
-                    if os.path.isfile(sFilename_hru_out):
-                        #remove it 
+                    if os.path.exists(sFilename_hru_out):                
                         os.remove(sFilename_hru_out)
-                    else:
-                        pass
+
                     ofs=open(sFilename_hru_out, 'w') 
                     #because of the python interface, pest will no longer interact with model files directly
                     #starting from here we will                             
@@ -282,4 +280,5 @@ def swat_write_hru_input_file(oModel_in):
                     pass
 
     print('Finished writing hru file!')
+    return
 

@@ -8,7 +8,7 @@ import numpy as np
 from pyearth.system.define_global_variables import *
 from pyearth.toolbox.reader.parse_xml_file import parse_xml_file
 from pyearth.toolbox.reader.read_configuration_file import read_configuration_file
-
+from pyearth.toolbox.reader.text_reader_string import text_reader_string
 
 
 pDate = datetime.datetime.today()
@@ -51,9 +51,7 @@ def swat_read_model_configuration_file(sFilename_configuration_in):
 
     config['iCase_index'] = int( config['iCase_index'])
     
-    #swat_global.aParameter = aParameter
-    #swat_global.aValue = aValue
-    
+
     
     iYear_start  = int( config['iYear_start'])
     iMonth_start  = int(  config['iMonth_start'])
@@ -80,6 +78,9 @@ def swat_read_model_configuration_file(sFilename_configuration_in):
     
    
     sFilename_swat = config['sFilename_swat']   
+
+    if 'nhru' in config:
+        pass
     
     #data
     

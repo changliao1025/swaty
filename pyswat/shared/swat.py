@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 import datetime
 from pyearth.system.define_global_variables import *
-
+from pyearth.toolbox.reader.text_reader_string import text_reader_string
 
 from pyswat.shared.swat_define_parameter import swat_define_parameter
 pDate = datetime.datetime.today()
@@ -25,8 +25,9 @@ class pyswat(object):
     iDay_end=0
     nstress=0
     nsegment =0
+    nhru=0
 
-    aParameter=None
+    aConfig_in=None
     aParameter_watershed = None
     aParameter_subbasin = None
     aParameter_hru = None
@@ -66,24 +67,24 @@ class pyswat(object):
     sSiteID=''
     sDate_start =''
     sDate_end=''
-    def __init__(self, aParameter):
-        self.sFilename_model_configuration    = aParameter[ 'sFilename_model_configuration']
-        self.sWorkspace_home = aParameter[ 'sWorkspace_home']
-        self.sWorkspace_data = aParameter[ 'sWorkspace_data']
+    def __init__(self, aConfig_in):
+        self.sFilename_model_configuration    = aConfig_in[ 'sFilename_model_configuration']
+        self.sWorkspace_home = aConfig_in[ 'sWorkspace_home']
+        self.sWorkspace_data = aConfig_in[ 'sWorkspace_data']
        
-        self.sWorkspace_scratch    = aParameter[ 'sWorkspace_scratch']
+        self.sWorkspace_scratch    = aConfig_in[ 'sWorkspace_scratch']
         sWorkspace_scratch = self.sWorkspace_scratch
         sWorkspace_data=self.sWorkspace_data
-        self.sRegion               = aParameter[ 'sRegion']
-        self.sModel                = aParameter[ 'sModel']
-        self.sPython               = aParameter[ 'sPython']
-        #self.sDate_start              = aParameter[ 'sDate_start']
-        #self.sDate_end                = aParameter[ 'sDate_end']
-        self.nsegment = int( aParameter[ 'nsegment'] )
-        self.nsubbasin = int (aParameter[ 'nsubbasin'])
+        self.sRegion               = aConfig_in[ 'sRegion']
+        self.sModel                = aConfig_in[ 'sModel']
+        self.sPython               = aConfig_in[ 'sPython']
+        #self.sDate_start              = aConfig_in[ 'sDate_start']
+        #self.sDate_end                = aConfig_in[ 'sDate_end']
+        self.nsegment = int( aConfig_in[ 'nsegment'] )
+        self.nsubbasin = int (aConfig_in[ 'nsubbasin'])
 
-        self.sWorkspace_project= aParameter[ 'sWorkspace_project']
-        self.sWorkspace_bin= aParameter[ 'sWorkspace_bin']
+        self.sWorkspace_project= aConfig_in[ 'sWorkspace_project']
+        self.sWorkspace_bin= aConfig_in[ 'sWorkspace_bin']
 
         self.sWorkspace_simulation = sWorkspace_scratch + slash + '04model' + slash \
             + self.sModel + slash + self.sRegion +  slash + 'simulation'
@@ -95,9 +96,9 @@ class pyswat(object):
         sPath = self.sWorkspace_calibration
         Path(sPath).mkdir(parents=True, exist_ok=True)
 
-        iCase_index = int(aParameter['iCase_index'])
+        iCase_index = int(aConfig_in['iCase_index'])
         sCase_index = "{:03d}".format( iCase_index )
-        sDate   = aParameter[ 'sDate']
+        sDate   = aConfig_in[ 'sDate']
         if sDate is not None:
             self.sDate= sDate
         else:
@@ -115,22 +116,22 @@ class pyswat(object):
         sPath = self.sWorkspace_calibration_case
         Path(sPath).mkdir(parents=True, exist_ok=True)
 
-        self.iFlag_calibration =  int(aParameter['iFlag_calibration']) 
-        self.iFlag_simulation =  int(aParameter['iFlag_simulation']) 
-        self.iFlag_watershed =  int(aParameter['iFlag_watershed']) 
-        self.iFlag_subbasin =  int(aParameter['iFlag_subbasin']) 
-        self.iFlag_hru =  int(aParameter['iFlag_hru']) 
-        self.sFilename_observation_discharge = aParameter[ 'sFilename_observation_discharge']
-        self.sFilename_swat = aParameter[ 'sFilename_swat']
+        self.iFlag_calibration =  int(aConfig_in['iFlag_calibration']) 
+        self.iFlag_simulation =  int(aConfig_in['iFlag_simulation']) 
+        self.iFlag_watershed =  int(aConfig_in['iFlag_watershed']) 
+        self.iFlag_subbasin =  int(aConfig_in['iFlag_subbasin']) 
+        self.iFlag_hru =  int(aConfig_in['iFlag_hru']) 
+        self.sFilename_observation_discharge = aConfig_in[ 'sFilename_observation_discharge']
+        self.sFilename_swat = aConfig_in[ 'sFilename_swat']
         
 
-        self.iYear_start  = int( aParameter['iYear_start'] )
-        self.iYear_end    = int( aParameter['iYear_end']   )
-        self.iMonth_start = int( aParameter['iMonth_start'])
-        self.iMonth_end   = int( aParameter['iMonth_end']  ) 
-        self.iDay_start   = int( aParameter['iDay_start']  )
-        self.iDay_end     = int( aParameter['iDay_end']    )
-        self.nstress      = int( aParameter['nstress']     )
+        self.iYear_start  = int( aConfig_in['iYear_start'] )
+        self.iYear_end    = int( aConfig_in['iYear_end']   )
+        self.iMonth_start = int( aConfig_in['iMonth_start'])
+        self.iMonth_end   = int( aConfig_in['iMonth_end']  ) 
+        self.iDay_start   = int( aConfig_in['iDay_start']  )
+        self.iDay_end     = int( aConfig_in['iDay_end']    )
+        self.nstress      = int( aConfig_in['nstress']     )
 
         iMonth_count = 0
         for iYear in range( self.iYear_start, self.iYear_end +1):
@@ -148,16 +149,27 @@ class pyswat(object):
                 iMonth_count = iMonth_count  + 1
                 pass
         
+        self.sWorkspace_data_project = self.sWorkspace_data +  slash + self.sWorkspace_project
+        #read hru type
+        if 'nhru' in aConfig_in:
+            nhru = int( aConfig_in['nhru']) 
+            if nhru > 1:
+                self.nhru = nhru
+            else:
+                self.nhru=9
+        
+        
+
         self.nstress_month = iMonth_count
 
-        self.iFlag_mode   = int( aParameter['iFlag_mode']) 
-        self.iFlag_replace= int( aParameter['iFlag_replace'] ) 
+        self.iFlag_mode   = int( aConfig_in['iFlag_mode']) 
+        self.iFlag_replace= int( aConfig_in['iFlag_replace'] ) 
 
         #for replace and calibration
-        self.aParameter_value =  aParameter['aParameter_value'] #this should be a variable sized array
-        self.aParameter_value_lower =  aParameter['aParameter_value_lower'] #this should be a variable sized array
-        self.aParameter_value_upper =  aParameter['aParameter_value_upper'] #this should be a variable sized array
-        self.aParameter =  aParameter['aParameter']  #list
+        self.aParameter_value =  aConfig_in['aParameter_value'] #this should be a variable sized array
+        self.aParameter_value_lower =  aConfig_in['aParameter_value_lower'] #this should be a variable sized array
+        self.aParameter_value_upper =  aConfig_in['aParameter_value_upper'] #this should be a variable sized array
+        self.aParameter =  aConfig_in['aParameter']  #list
 
         if self.aParameter is not None:
             self.aParameter_watershed, self.aParameter_subbasin, self.aParameter_hru,\
@@ -170,14 +182,16 @@ class pyswat(object):
             self.nParameter_subbasin = self.aParameter_subbasin.size
             self.nParameter_hru = self.aParameter_hru.size
 
-            self.nParameter = self.nParameter_watershed + self.nParameter_subbasin+ self.nParameter_hru
+            self.nParameter = self.nParameter_watershed \
+                + self.nParameter_subbasin * self.nsubbasin \
+                    + self.nParameter_hru  *  self.nhru
             pass
 
-        self.sJob =  aParameter['sJob'] 
+        self.sJob =  aConfig_in['sJob'] 
 
-        self.sWorkspace_data_project = self.sWorkspace_data +  slash + self.sWorkspace_project
+        
 
-        #self.sWorkspace_simulation_copy = self.sWorkspace_data  + aParameter['sWorkspace_simulation_copy']
+        #self.sWorkspace_simulation_copy = self.sWorkspace_data  + aConfig_in['sWorkspace_simulation_copy']
         self.sWorkspace_simulation_copy = self.sWorkspace_calibration + slash + 'TxtInOut'
                 
         return

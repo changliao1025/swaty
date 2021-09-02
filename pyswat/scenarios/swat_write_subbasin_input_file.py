@@ -14,7 +14,7 @@ def swat_write_subbasin_input_file(oSwat_in):
     nvariable = aParameter_subbasin.size
     if(nvariable<1):
         #there is nothing to be replaced at all
-        print("There is nothing to be updated!")
+        print("There is no subbasin parameter to be updated!")
         return
     else:
         pass    
@@ -71,15 +71,17 @@ def swat_write_subbasin_input_file(oSwat_in):
     #this list should include all possible parameters in the parameter file
   
     #read parameter file
+    #os.chdir('/global/cscratch1/sd/liao313/04model/swat/arw/calibration/swat20210723011/child3')
+    #iFlag_simulation=0
+
     if iFlag_simulation == 1:
         sFilename_parameter = sWorkspace_simulation_case + slash + 'subbasin.para'
     else:
-        iFlag_debug = 0
-        
+        iFlag_debug = 0        
         sPath_current = os.getcwd()
-
-
         sFilename_parameter = sPath_current + slash + 'subbasin.para'
+
+    print(sFilename_parameter)
     #check whetheher the file exist or not
     if os.path.isfile(sFilename_parameter):
         pass
@@ -112,8 +114,7 @@ def swat_write_subbasin_input_file(oSwat_in):
                         aParameter_user[i] = np.append(aParameter_user[i],[para])
                     continue
 
-    sWorkspace_source_case = sWorkspace_simulation_copy
-    sWorkspace_target_case = sWorkspace_simulation_case
+    
     if iFlag_simulation == 1:
         pass
     else:
@@ -124,7 +125,7 @@ def swat_write_subbasin_input_file(oSwat_in):
         else:
             print('this is a child')
             sWorkspace_source_case = sWorkspace_simulation_copy
-            sWorkspace_target_case = sWorkspace_simulation_case
+            sWorkspace_target_case = sPath_current
 
     #iHru_index = 0 
     for iSubbasin in range(0, nsubbasin):
@@ -137,20 +138,22 @@ def swat_write_subbasin_input_file(oSwat_in):
             #check whether these is parameter chanage or not
             sExtension = aExtension[iFile_type]
             iFlag = aParameter_flag[iFile_type]
+            sFilename = sSubbasin + '0000' + sExtension
+            
+
             if( iFlag == 1):
-                sFilename = sSubbasin + '0000' + sExtension
+                
                 sFilename_subbasin = sWorkspace_source_case  + slash + sFilename 
                 #open the file to read
                 ifs=open(sFilename_subbasin, 'rb')   
                 sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')
                 #open the new file to write out
-                sFilename_subbasin_out = sWorkspace_target_case + slash + sFilename
-                #do we need to remove linnk first, i guess it's better to do so
-                if os.path.isfile(sFilename_subbasin_out):
-                    #remove it 
+                sFilename_subbasin_out = sWorkspace_target_case + slash + sFilename     
+                if os.path.exists(sFilename_subbasin_out):                 
                     os.remove(sFilename_subbasin_out)
-                else:
-                    pass
+
+                print(sFilename_subbasin_out)
+
                 ofs=open(sFilename_subbasin_out, 'w') 
                 #because of the python interface, pest will no longer interact with model files directly
                 #starting from here we will                             
@@ -158,28 +161,21 @@ def swat_write_subbasin_input_file(oSwat_in):
                 while sLine:
                    
                     for i in range(0, aParameter_count[iFile_type]):
-                        #sKey = aParameter[i]
-                        if 'ch_k2' in sLine.lower() : 
-                            
-                            
-                            dummy1 = np.array(aParameter_index[iFile_type])
-                            dummy2 = np.array(aParameter_user[iFile_type])
-                            dummy_index1 = np.where(dummy2 == 'CH_K2')
-                            dummy_index2 = dummy1[dummy_index1][0]
-                            sLine_new = "{:16.2f}".format(  aValue[dummy_index2]  )     + '    | pest parameter ch_k2 \n'
-                            ofs.write(sLine_new)
-                            break
-                            
+                        aParameter_indices = np.array(aParameter_index[iFile_type])
+                        aParameter_filetype = np.array(aParameter_user[iFile_type])
+                        if 'ch_k2' in sLine.lower()  and 'CH_K2' in aParameter_filetype:    
+                            dummy_index1 = np.where(aParameter_filetype == 'CH_K2')                            
+                            dummy_index2 = aParameter_indices[dummy_index1][0]
+                            sLine_new = "{:14.5f}".format(  aValue[dummy_index2]  )     + '    | pest parameter ch_k2 \n'
+                            ofs.write(sLine_new)                            
+                            break                            
                         else:
-                            if 'ch_n2' in sLine.lower() :
-                                dummy1 = np.array(aParameter_index[iFile_type])
-                                dummy2 = np.array(aParameter_user[iFile_type])
-                                dummy_index1 = np.where(dummy2 == 'CH_N2')
-                                dummy_index2 = dummy1[dummy_index1][0]
-                                sLine_new = "{:16.2f}".format(  aValue[dummy_index2]  )     + '    | pest parameter ch_n2 \n'
-                                ofs.write(sLine_new)
+                            if 'ch_n2' in sLine.lower() and 'CH_N2' in aParameter_filetype:                                
+                                dummy_index1 = np.where(aParameter_filetype == 'CH_N2')                               
+                                dummy_index2 = aParameter_indices[dummy_index1][0]
+                                sLine_new = "{:14.5f}".format(  aValue[dummy_index2]  )     + '    | pest parameter ch_n2 \n'
+                                ofs.write(sLine_new)    
                                 break
-                                
                             else:
                                 sLine = sLine + '\n'
                                 ofs.write(sLine)
@@ -195,4 +191,5 @@ def swat_write_subbasin_input_file(oSwat_in):
                 #this file does not need to changed
                 pass
 
-    print('Finished writing hru file!')
+    print('Finished writing subbasin file!')
+    return
