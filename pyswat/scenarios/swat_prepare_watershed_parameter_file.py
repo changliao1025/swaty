@@ -4,10 +4,6 @@ import sys
 
 import numpy as np
 from pyearth.system.define_global_variables import *
-from pyearth.toolbox.reader.text_reader_string import text_reader_string
-
-
-
 
 def swat_prepare_watershed_parameter_file(oModel_in):
     """
@@ -48,6 +44,8 @@ def swat_prepare_watershed_parameter_file(oModel_in):
         for i in range(nParameter_watershed):
             sValue =  "{:5.2f}".format( aParameter_value_watershed[i] )            
             sLine = sLine + ', ' + sValue 
+            print('watershed parameter: '+ sLine)
+
         sLine = sLine + '\n'
         ofs.write(sLine)
         ofs.close()

@@ -9,14 +9,14 @@ from pyearth.system.define_global_variables import *
 
 #from pyearth.toolbox.reader.read_configuration_file import read_configuration_file
     
-def swat_copy_executable_file(oModel_in):
+def swat_copy_executable_file(oSwat_in):
     """    
     prepare executable file
     """    
-    sWorkspace_bin = oModel_in.sWorkspace_bin 
-    sFilename_swat = oModel_in.sFilename_swat   
-    sWorkspace_simulation_case = oModel_in.sWorkspace_simulation_case
-    sWorkspace_calibration_case = oModel_in.sWorkspace_calibration_case
+    sWorkspace_bin = oSwat_in.sWorkspace_bin 
+    sFilename_swat = oSwat_in.sFilename_swat   
+    sWorkspace_simulation_case = oSwat_in.sWorkspace_simulation_case
+    sWorkspace_calibration_case = oSwat_in.sWorkspace_calibration_case
    
     sWorkspace_pest_model = sWorkspace_calibration_case
 

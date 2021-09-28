@@ -16,13 +16,13 @@
         The scratch workspace
       </desc>
     </entry>
-    <entry id="iFlag_watershed" value="0">
+    <entry id="iFlag_watershed" value="1">
       <type>int</type>
       <desc>
         The scratch workspace
       </desc>
     </entry>
-    <entry id="iFlag_subbasin" value="1">
+    <entry id="iFlag_subbasin" value="0">
       <type>int</type>
       <desc>
         The scratch workspace
@@ -81,7 +81,7 @@
       </desc>
     </entry>
 
-    <entry id="sWorkspace_scratch" value="/global/cscratch1/sd/liao313/">
+    <entry id="sWorkspace_scratch" value="/global/homes/l/liao313/">
       <type>char</type>
       <desc>
         The scratch workspace
@@ -114,7 +114,7 @@
         The scratch workspace
       </desc>
     </entry>
-    <entry id="sDate" value="20210723">
+    <entry id="sDate" value="20210902">
       <type>char</type>
       <desc>
         The scratch workspace
@@ -156,7 +156,7 @@
         The scratch workspace
       </desc>
     </entry>
-     <entry id="iCase_index" value="1">
+     <entry id="iCase_index" value="2">
       <type>int</type>
       <desc>
         The scratch workspace
@@ -198,25 +198,25 @@
         The scratch workspace
       </desc>
     </entry>
-    <entry id="aParameter" value="SFTMP,SMTMP,CH_N2">
+    <entry id="aParameter" value="SFTMP,SMTMP">
       <type>char</type>
       <desc>
         The scratch workspace
       </desc>
     </entry>
-    <entry id="aParameter_value" value="0.5,1.0,0.02">
+    <entry id="aParameter_value" value="0.5,1.0">
       <type>int</type>
       <desc>
         The scratch workspace
       </desc>
     </entry>
-    <entry id="aParameter_value_lower" value="-5,-5,0.01">
+    <entry id="aParameter_value_lower" value="-5,-5">
       <type>int</type>
       <desc>
         The scratch workspace
       </desc>
     </entry>
-    <entry id="aParameter_value_upper" value="5,5,0.15">
+    <entry id="aParameter_value_upper" value="5,5">
       <type>int</type>
       <desc>
         The scratch workspace

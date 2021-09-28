@@ -98,6 +98,7 @@ def swat_write_watershed_input_file(oSwat_in):
 
     aParameter_value = (aData_all[1,1: nParameter+1]).astype(float)
     aParameter_value = np.array(aParameter_value)
+    print(aParameter_value)
     
     for p in range(0, nParameter):
         para = aParameter_list[p]
@@ -169,21 +170,24 @@ def swat_write_watershed_input_file(oSwat_in):
                         dummy = 'SFTMP'   
                         dummy_index1 = np.where(aParameter_filetype == dummy)
                         dummy_index2 = aParameter_indices[dummy_index1][0]
-                        sLine_new = "{:16.2f}".format(  aValue[dummy_index2]  )     + '    | pest parameter SFTMP' + '\n'
+                        sLine_new = "{:16.3f}".format(  aValue[dummy_index2]  )     + '    | pest parameter SFTMP' + '\n'
                         ofs.write(sLine_new)
-                        break
+                        print(sLine_new)
+                        break #important
                     else:
                         if 'smtmp' in sLine.lower() and 'SMTMP' in aParameter_filetype: 
                             dummy = 'SMTMP'                             
                             dummy_index1 = np.where(aParameter_filetype == dummy)
                             dummy_index2 = aParameter_indices[dummy_index1][0]
-                            sLine_new = "{:16.2f}".format(  aValue[dummy_index2]  )     + '    | pest parameter SMTMP' + '\n'
+                            sLine_new = "{:16.3f}".format(  aValue[dummy_index2]  )     + '    | pest parameter SMTMP' + '\n'
                             ofs.write(sLine_new)
-                            break
+                            print(sLine_new)
+                            break  #important
                         else:
                             sLine = sLine + '\n'
                             ofs.write(sLine)
-                            break
+                            break  #important
+                            
 
                 
             

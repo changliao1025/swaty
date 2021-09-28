@@ -10,34 +10,24 @@ from pyearth.system.define_global_variables import *
 from pyearth.toolbox.reader.text_reader_string import text_reader_string
 from pyearth.toolbox.data.convert_time_series_daily_to_monthly import convert_time_series_daily_to_monthly
 
-def swat_extract_stream_discharge(oModel_in):
+def swat_extract_stream_discharge(oSwat_in):
     """
     extract discharge from swat model simulation
-    """
-  
-    
-    sModel = oModel_in.sModel
-    sRegion = oModel_in.sRegion
-    sCase = oModel_in.sCase
-
-    iYear_start = oModel_in.iYear_start
-    #iYear_spinup_end = oModel_in.iYear_spinup_end
-    iYear_end  = oModel_in.iYear_end
-   
-    nstress = oModel_in.nstress
-    nsegment = oModel_in.nsegment
+    """     
+    sModel = oSwat_in.sModel
+    sRegion = oSwat_in.sRegion
+    sCase = oSwat_in.sCase
+    iYear_start = oSwat_in.iYear_start    
+    iYear_end  = oSwat_in.iYear_end   
+    nstress = oSwat_in.nstress
+    nsegment = oSwat_in.nsegment
     sProject = sModel + slash + sRegion
-    sWorkspace_data_project = oModel_in.sWorkspace_data_project  
-    sWorkspace_simulation_case = oModel_in.sWorkspace_simulation_case
-    iFlag_debug = 2
-   
+    sWorkspace_data_project = oSwat_in.sWorkspace_data_project  
+    sWorkspace_simulation_case = oSwat_in.sWorkspace_simulation_case   
     sPath_current = os.getcwd()
-    #sPath_current = '/global/cscratch1/sd/liao313/04model/swat/arw/simulation/swat20210723001/'
-    print('The current path is: ' + sPath_current)
-    
-
+    #sPath_current = sWorkspace_simulation_case #'/global/cscratch1/sd/liao313/04model/swat/arw/simulation/swat20210723001/'
+    print('The current path is: ' + sPath_current)    
     sFilename = sPath_current + slash + 'output.rch'
-
     aData = text_reader_string(sFilename, iSkipline_in=9)
     aData_all = array( aData )
     nrow_dummy = len(aData_all)
@@ -50,13 +40,13 @@ def swat_extract_stream_discharge(oModel_in):
      
     aDischarge_simulation_daily = aData_discharge[aIndex]
 
-    iYear_start_in = oModel_in.iYear_start
-    iMonth_start_in = oModel_in.iMonth_start
-    iDay_start_in = oModel_in.iDay_start
+    iYear_start_in = oSwat_in.iYear_start
+    iMonth_start_in = oSwat_in.iMonth_start
+    iDay_start_in = oSwat_in.iDay_start
 
-    iYear_end_in = oModel_in.iYear_end
-    iMonth_end_in = oModel_in.iMonth_end
-    iDay_end_in = oModel_in.iDay_end
+    iYear_end_in = oSwat_in.iYear_end
+    iMonth_end_in = oSwat_in.iMonth_end
+    iDay_end_in = oSwat_in.iDay_end
     
     aDischarge_simulation_monthly = convert_time_series_daily_to_monthly(aDischarge_simulation_daily,\
         iYear_start_in, iMonth_start_in, iDay_start_in, \

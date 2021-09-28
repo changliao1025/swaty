@@ -12,12 +12,14 @@ import matplotlib.dates as mdates
 
 from matplotlib.ticker import FuncFormatter
 
-sSystem_paths = os.environ['PATH'].split(os.pathsep)
-sys.path.extend(sSystem_paths)
 
+from pyswat.shared.swat_read_model_configuration_file import swat_read_model_configuration_file
+from pyswat.shared.swat import pyswat
 from pyearth.system.define_global_variables import *
 from pyearth.toolbox.reader.text_reader_string import text_reader_string
-from pyearth.visual.plot.plot_time_series_data import plot_time_series_data
+from pyearth.visual.timeseries.plot_time_series_data import plot_time_series_data
+
+from pyearth.visual.scatter.scatter_plot_data import scatter_plot_data
 
 #ftsz = 18
 #plt.rcParams['xtick.labelsize']=ftsz
@@ -28,62 +30,97 @@ from pyearth.visual.plot.plot_time_series_data import plot_time_series_data
 
 
 
-from pyswat.plot.swat_convert_data_daily_2_monthly import swat_convert_data_daily_2_monthly
+#from pyswat.plot.swat_convert_data_daily_2_monthly import swat_convert_data_daily_2_monthly
 
 
-def swat_plot_stream_discharge(sFilename_configuration_in, iCase_index_in = None, sJob_in = None, sModel_in = None):
+def swat_tsplot_stream_discharge(oSwat_in):
   
-    config = swat_read_configuration_file(sFilename_configuration_in, \
-        iCase_index_in = iCase_index_in,\
-         sDate_in = '20191219')
-    sModel = swat_global.sModel
-    sRegion = swat_global.sRegion
-   
-    iYear_start = swat_global.iYear_start
-    iYear_spinup_end = swat_global.iYear_spinup_end
-    iYear_end  = swat_global.iYear_end
-   
-    dSimulation_start = swat_global.lJulian_start
-    nstress = swat_global.nstress
+    iYear_start = oSwat_in.iYear_start
+    iYear_end = oSwat_in.iYear_end
+    nstress_month = oSwat_in.nstress_month
     
-    sWorkspace_simulation_case = swat_global.sWorkspace_simulation_case
-    
-    iFlag_debug = 2
-    if(iFlag_debug == 1 ):
-        sPath_current = sWorkspace_pest_model + slash + 'beopest1'
-    else:
-        if iFlag_debug == 2:
-            #run from the arcswat directory
-            sPath_current = sWorkspace_simulation_case #+ slash  + 'TxtInOut'
-        else:
-            sPath_current = os.getcwd()
-    print('The current path is: ' + sPath_current)
-    sWorkspace_slave = sPath_current
-    sFilename = sWorkspace_slave + slash + 'stream_discharge_22.txt'
-    aData = text_reader_string(sFilename)
-    aDischarge_simulation = array( aData ).astype(float)  
-    aDischarge_simulation = aDischarge_simulation * cms2cmd
+    sWorkspace_simulation_case = oSwat_in.sWorkspace_simulation_case
 
-    dummy1 = np.percentile(aDischarge_simulation, 99)
-    dummy2 = np.where( aDischarge_simulation > dummy1 )
-    dSimulation_start = datetime.datetime(iYear_start, 1, 1)  #year, month, day
+
+    sFilename1 = '/global/u1/l/liao313/data/swat/arw/auxiliary/usgs/discharge/stream_discharge_monthly.txt'
+    
+    aData = text_reader_string(sFilename1)
+    aDischarge_obs = np.array( aData ).astype(float)  
+    aDischarge_obs = aDischarge_obs.flatten() * cms2cmd
+
+    sFilename2 = sWorkspace_simulation_case + slash + 'stream_discharge_monthly.txt'
+    
+    aData = text_reader_string(sFilename2)
+    aDischarge_simulation1 = np.array( aData ).astype(float)  
+    aDischarge_simulation1 = aDischarge_simulation1.flatten() * cms2cmd
+
+    sFilename3 =  '/global/u1/l/liao313/data/swat/arw/auxiliary/usgs/discharge/stream_discharge_monthly_opt.txt'
+    
+    aData = text_reader_string(sFilename3)
+    aDischarge_simulation2 = array( aData ).astype(float)  
+    aDischarge_simulation2 = aDischarge_simulation2.flatten() * cms2cmd
+
+    #dummy1 = np.percentile(aDischarge_simulation, 99)
+    #dummy2 = np.where( aDischarge_simulation > dummy1 )
+
+    
     #plot simulation
     dates = list()
-    for days in range(nstress):
-        dates.append(dSimulation_start + datetime.timedelta(days))
+    for iYear in range(iYear_start, iYear_end+1):
+        for iMonth in range(1,13):
+            dSimulation = datetime.datetime(iYear, iMonth, 1)
+            dates.append(dSimulation)
    
-    sFilename_out = sWorkspace_simulation_case + slash + 'discharge_daily.png'
+    
     
     sLabel_Y =r'Stream discharge ($m^{3} \, day^{-1}$)' 
     sLabel_legend = 'Simulated stream discharge'
 
-    plot_time_series_data(dates, aDischarge_simulation,\
+
+    aDate= np.tile( dates , (3,1))
+    aData = np.array([aDischarge_obs , aDischarge_simulation1,aDischarge_simulation2])
+
+    aLabel_legend = ['Default','Initial','Calibrated']
+    aColor_in = ['black', 'red', 'blue']
+
+    sFilename_out = sWorkspace_simulation_case + slash + 'discharge_monthly_scatter1.png'
+
+    scatter_plot_data(aDischarge_obs,aDischarge_simulation1,sFilename_out,\
+        iFlag_scientific_notation_x_in=1,\
+                      iFlag_scientific_notation_y_in=1,\
+                          dMin_x_in = 0.0, \
+                              dMax_x_in = 1E7, \
+                                   dMin_y_in = 0.0, \
+                              dMax_y_in = 1E7, \
+     iSize_x_in = 8, \
+                      iSize_y_in = 8,\
+                          sLabel_legend_in = 'Initial',\
+                               sLabel_x_in = r'Observed discharge ($m^{3} \, day^{-1}$)',\
+                      sLabel_y_in = r'Simulated discharge ($m^{3} \, day^{-1}$)' )
+
+    sFilename_out = sWorkspace_simulation_case + slash + 'discharge_monthly_scatter2.png'
+    scatter_plot_data(aDischarge_obs,aDischarge_simulation2,sFilename_out,\
+         iFlag_scientific_notation_x_in=1,\
+                      iFlag_scientific_notation_y_in=1,\
+                           dMin_x_in = 0.0, \
+                              dMax_x_in = 1E7, \
+                                   dMin_y_in = 0.0, \
+                              dMax_y_in = 1E7, \
+         iSize_x_in = 8, \
+                      iSize_y_in = 8,\
+                          sLabel_legend_in = 'Calibrated',\
+                               sLabel_x_in =r'Observed discharge ($m^{3} \, day^{-1}$)',\
+                      sLabel_y_in = r'Calibrated discharge ($m^{3} \, day^{-1}$)' )
+
+    sFilename_out = sWorkspace_simulation_case + slash + 'discharge_monthly.png'
+    plot_time_series_data(aDate, aData,\
          sFilename_out,\
          sTitle_in = '', \
-             sLabel_Y_in= sLabel_Y,\
-              sLabel_legend_in = sLabel_legend, \
-            iSize_X_in = 12,\
-                 iSize_Y_in = 5)
+             sLabel_y_in= sLabel_Y,\
+                 aColor_in =aColor_in,\
+              aLabel_legend_in = aLabel_legend, \
+            iSize_x_in = 12,\
+                 iSize_y_in = 5)
     
 
 
@@ -93,19 +130,13 @@ def swat_plot_stream_discharge(sFilename_configuration_in, iCase_index_in = None
 
 
 if __name__ == '__main__':
+
     
-    sModel ='swat'
-    
-    sRegion = 'tinpan'
-    iCase = 0
+    sFilename_configuration_in = '/global/homes/l/liao313/workspace/python/pyswat/pyswat/shared/swat_simulation.xml'
+    aConfig = swat_read_model_configuration_file(sFilename_configuration_in)
    
-    sTask = 'simulation'
-    iFlag_simulation = 1
-    iFlag_pest = 0
-    if iFlag_pest == 1:
-        sTask = 'calibration'
-    sFilename_configuration = sWorkspace_configuration+ slash \
-              + sModel + slash + sRegion + slash \
-              + sTask  + slash + 'marianas_configuration.txt'
-    swat_tsplot_stream_discharge(sFilename_configuration, iCase)
+    # iCase_index_in=iCase_index_in, sJob_in=sJob_in, iFlag_mode_in=iFlag_mode_in)
+    aConfig['sFilename_model_configuration'] = sFilename_configuration_in
+    oSwat = pyswat(aConfig)
+    swat_tsplot_stream_discharge(oSwat)
 

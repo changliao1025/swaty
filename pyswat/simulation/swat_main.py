@@ -21,7 +21,7 @@ from pyswat.simulation.swat_prepare_simulation_job_file import swat_prepare_simu
 
 def swat_main(oSwat_in):        
     
-    swat_copy_TxtInOut_files(oSwat_in)
+    #swat_copy_TxtInOut_files(oSwat_in)
 
     #step 3 and 4 are optional
     iFlag_replace = oSwat_in.iFlag_replace
