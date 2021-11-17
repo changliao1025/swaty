@@ -1,4 +1,4 @@
-# PyEarth
+# PSWAT
 PySWAT is a Python library to support SWAT simulation.
 
 # Content
