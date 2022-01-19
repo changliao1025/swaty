@@ -13,8 +13,8 @@ import matplotlib.dates as mdates
 from matplotlib.ticker import FuncFormatter
 
 
-from pyswat.shared.swat_read_model_configuration_file import swat_read_model_configuration_file
-from pyswat.shared.swat import pyswat
+from pyswat.pyswat_read_model_configuration_file import swat_read_model_configuration_file
+from pyswat.classes.pycase import pyswat
 from pyearth.system.define_global_variables import *
 from pyearth.toolbox.reader.text_reader_string import text_reader_string
 from pyearth.visual.timeseries.plot_time_series_data import plot_time_series_data

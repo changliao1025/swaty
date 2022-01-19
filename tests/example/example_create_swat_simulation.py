@@ -1,7 +1,7 @@
 from pyswat.simulation.swat_main import swat_main
 
-from pyswat.shared.swat_read_model_configuration_file import swat_read_model_configuration_file
-from pyswat.shared.swat import pyswat
+from pyswat.pyswat_read_model_configuration_file import swat_read_model_configuration_file
+from pyswat.classes.pycase import pyswat
 
 
 aParameter_watershed = ['SFTMP','SMTMP']

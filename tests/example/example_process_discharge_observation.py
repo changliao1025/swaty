@@ -1,7 +1,7 @@
 from pyswat.simulation.swat_main import swat_main
 
-from pyswat.shared.swat_read_model_configuration_file import swat_read_model_configuration_file
-from pyswat.shared.swat import pyswat
+from pyswat.pyswat_read_model_configuration_file import swat_read_model_configuration_file
+from pyswat.classes.pycase import pyswat
 from pyswat.preprocess.auxiliary.swat_prepare_observation_discharge_file import swat_prepare_observation_discharge_file
 sFilename_configuration_in = '/global/homes/l/liao313/workspace/python/pyswat/pyswat/shared/swat_simulation.xml'
 #step 1

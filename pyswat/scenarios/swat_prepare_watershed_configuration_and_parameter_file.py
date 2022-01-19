@@ -8,9 +8,9 @@ from pyearth.system.define_global_variables import *
 
 from pyearth.toolbox.reader.text_reader_string import text_reader_string
 
-from pyswat.shared.swat import pyswat
+from pyswat.classes.pycase import pyswat
 
-from pyswat.shared.swat_read_model_configuration_file import swat_read_model_configuration_file
+from pyswat.pyswat_read_model_configuration_file import swat_read_model_configuration_file
 
 #global variables
 feet2meter = 0.3048

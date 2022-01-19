@@ -4,7 +4,7 @@ import subprocess
 
 from pyearth.system.define_global_variables import *
 
-from pyswat.shared.swat import pyswat
+from pyswat.classes.pycase import pyswat
 
 from pyswat.simulation.swat_copy_TxtInOut_files import swat_copy_TxtInOut_files
 from pyswat.scenarios.swat_prepare_watershed_parameter_file import swat_prepare_watershed_parameter_file
