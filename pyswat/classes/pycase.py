@@ -7,8 +7,10 @@ from pathlib import Path
 from shutil import copyfile
 from abc import ABCMeta, abstractmethod
 import datetime
+from shutil import copy2
 
 from pyswat.auxiliary.text_reader_string import text_reader_string
+from pyswat.auxiliary.line_count import line_count
 
 
 pDate = datetime.datetime.today()
@@ -205,6 +207,9 @@ class swatcase(object):
         #self.sFilename_hru_combination = self.sWorkspace_data_project + slash + 'auxiliary' + slash\
         # + 'hru' + slash   + 'hru_combination.txt'       
         self.sFilename_hru_combination =   aConfig_in['hru_combination_file'] 
+        self.sFilename_watershed_configuration = aConfig_in['sFilename_watershed_configuration'] 
+        self.sFilename_hru_info = aConfig_in['sFilename_hru_info'] 
+
         return
 
     def define_parameter(self, aParameter_in, aValue_in, aValue_lower_in, aValue_upper_in):
@@ -605,11 +610,13 @@ class swatcase(object):
     
         #read parameter file
         if iFlag_simulation == 1:
-            sFilename_parameter = sWorkspace_simulation_case + slash + 'watershed.para'
+            sFilename_parameter = os.path.join(str(Path(sWorkspace_simulation_case)) ,  'watershed.para' )  
+            #sFilename_parameter = sWorkspace_simulation_case + slash + 'watershed.para'
         else:
             iFlag_debug = 0
             sPath_current = os.getcwd()
-            sFilename_parameter = sPath_current + slash + 'watershed.para'
+            sFilename_parameter = os.path.join(str(Path(sPath_current)) ,  'watershed.para' )  
+            #sFilename_parameter = sPath_current + slash + 'watershed.para'
 
         print(sFilename_parameter)
         #check whetheher the file exist or not
@@ -667,7 +674,8 @@ class swatcase(object):
                 #there should be only one for each extension       
 
                 sFilename = 'basins' + sExtension
-                sFilename_watershed = sWorkspace_source_case + slash + sFilename
+                sFilename_watershed = os.path.join(str(Path(sWorkspace_source_case)) ,  sFilename )  
+                #sFilename_watershed = sWorkspace_source_case + slash + sFilename
 
                 #open the file to read
 
@@ -675,7 +683,8 @@ class swatcase(object):
                 ifs=open(sFilename_watershed, 'rb')   
 
                 #open the new file to write out
-                sFilename_watershed_out = sWorkspace_target_case + slash + sFilename            
+                #sFilename_watershed_out = sWorkspace_target_case + slash + sFilename    
+                sFilename_watershed_out = os.path.join(str(Path(sWorkspace_target_case)) ,  sFilename )         
 
                 if os.path.exists(sFilename_watershed_out):                
                     os.remove(sFilename_watershed_out)
@@ -794,11 +803,13 @@ class swatcase(object):
         #iFlag_simulation=0
 
         if iFlag_simulation == 1:
-            sFilename_parameter = sWorkspace_simulation_case + slash + 'subbasin.para'
+            #sFilename_parameter = sWorkspace_simulation_case + slash + 'subbasin.para'
+            sFilename_parameter = os.path.join(str(Path(sWorkspace_simulation_case)) ,  'subbasin.para' )   
         else:
             iFlag_debug = 0        
             sPath_current = os.getcwd()
-            sFilename_parameter = sPath_current + slash + 'subbasin.para'
+            #sFilename_parameter = sPath_current + slash + 'subbasin.para'
+            sFilename_parameter = os.path.join(str(Path(sPath_current)) ,  'subbasin.para' )   
 
         print(sFilename_parameter)
         #check whetheher the file exist or not
@@ -862,12 +873,14 @@ class swatcase(object):
 
                 if( iFlag == 1):
 
-                    sFilename_subbasin = sWorkspace_source_case  + slash + sFilename 
+                    #sFilename_subbasin = sWorkspace_source_case  + slash + sFilename 
+                    sFilename_subbasin = os.path.join(str(Path(sWorkspace_source_case)) ,  sFilename )   
                     #open the file to read
                     ifs=open(sFilename_subbasin, 'rb')   
                     sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')
                     #open the new file to write out
-                    sFilename_subbasin_out = sWorkspace_target_case + slash + sFilename     
+                    #sFilename_subbasin_out = sWorkspace_target_case + slash + sFilename     
+                    sFilename_subbasin_out = os.path.join(str(Path(sWorkspace_target_case)) ,  sFilename )
                     if os.path.exists(sFilename_subbasin_out):                 
                         os.remove(sFilename_subbasin_out)
 
@@ -938,10 +951,11 @@ class swatcase(object):
 
         sWorkspace_data_project = self.sWorkspace_data_project
     
-
-        sFilename_watershed_configuration = sWorkspace_data_project + slash \
-        + 'auxiliary' + slash  + 'subbasin' + slash \
-        + 'watershed_configuration.txt'
+        sFilename_watershed_configuration = self.sFilename_watershed_configuration
+        sFilename_hru_info = self.sFilename_hru_info
+        #sFilename_watershed_configuration = sWorkspace_data_project + slash \
+        #+ 'auxiliary' + slash  + 'subbasin' + slash \
+        #+ 'watershed_configuration.txt'
 
         #check whether file exist
         if os.path.isfile(sFilename_watershed_configuration):
@@ -957,8 +971,8 @@ class swatcase(object):
         nsubbasin = len(aSubasin)
         nhru = sum(aHru)
 
-        sFilename_hru_info = sWorkspace_data_project + slash + 'auxiliary' + slash \
-          + 'hru' + slash + 'hru_info.txt'
+        #sFilename_hru_info = sWorkspace_data_project + slash + 'auxiliary' + slash \
+        #  + 'hru' + slash + 'hru_info.txt'
         if os.path.isfile(sFilename_hru_info):
             pass
         else:
@@ -969,8 +983,9 @@ class swatcase(object):
         nhru = len(aHru_info)
         aHru_info= aHru_info.reshape(nhru)
 
-        sFilename_hru_combination = sWorkspace_data_project + slash + 'auxiliary' + slash \
-          + 'hru' + slash + 'hru_combination.txt'
+        #sFilename_hru_combination = sWorkspace_data_project + slash + 'auxiliary' + slash \
+        #  + 'hru' + slash + 'hru_combination.txt'
+        sFilename_hru_combination = self.sFilename_hru_combination
         if os.path.isfile(sFilename_hru_combination):
             pass
         else:
@@ -1048,14 +1063,13 @@ class swatcase(object):
     
         #read parameter file
         if iFlag_simulation == 1:
-            sFilename_parameter = sWorkspace_simulation_case + slash + 'hru.para'
+            #sFilename_parameter = sWorkspace_simulation_case + slash + 'hru.para'
+            sFilename_parameter = os.path.join(str(Path(sWorkspace_simulation_case)) ,  'hru.para' )  
         else:
             iFlag_debug = 0
-
             sPath_current = os.getcwd()
-
-
-            sFilename_parameter = sPath_current + slash + 'hru.para'
+            #sFilename_parameter = sPath_current + slash + 'hru.para'
+            sFilename_parameter = os.path.join(str(Path(sPath_current)) ,  'hru.para' )  
         #check whetheher the file exist or not
         if os.path.isfile(sFilename_parameter):
             pass
@@ -1183,3 +1197,45 @@ class swatcase(object):
 
         print('Finished writing hru file!')
         return
+
+    
+       
+    def pyswat_copy_executable_file(self):
+        """    
+        prepare executable file
+        """    
+        sWorkspace_bin = self.sWorkspace_bin 
+        sFilename_swat = self.sFilename_swat   
+        sWorkspace_simulation_case = self.sWorkspace_simulation_case
+        sWorkspace_calibration_case = self.sWorkspace_calibration_case    
+        sWorkspace_pest_model = sWorkspace_calibration_case
+        #copy swat
+        #sFilename_swat_source = sWorkspace_bin + slash + sFilename_swat
+        sFilename_swat_source = os.path.join(str(Path(sWorkspace_bin)) ,  sFilename_swat )
+
+        sPath_current = os.getcwd()
+        #sPath_current = sWorkspace_simulation_case
+        #sFilename_swat_new = sPath_current + slash + 'swat'
+        sFilename_swat_new = os.path.join(str(Path(sPath_current)) ,  'swat' )
+
+        print(sFilename_swat_source)
+        print(sFilename_swat_new)
+        copy2(sFilename_swat_source, sFilename_swat_new)
+
+
+
+    
+
+        #copy ppest
+        #sFilename_beopest_source = sWorkspace_calibration + slash + sFilename_pest
+        #sFilename_beopest_new = sWorkspace_pest_model + slash + 'ppest'       
+        #copy2(sFilename_beopest_source, sFilename_beopest_new)
+
+        #copy run script?
+        #sFilename_run_script = 'run_swat_model'
+        #sFilename_run_script_source = sWorkspace_calibration + slash + sFilename_run_script
+        #sFilename_run_script_new = sWorkspace_pest_model + slash + sFilename_run_script
+        #copy2(sFilename_run_script_source, sFilename_run_script_new)
+
+
+        print('The swat executable file is copied successfully!')
