@@ -11,7 +11,9 @@ else:
     if iFlag_option == 2:
         #an example configuration file is provided with the repository, but you need to update this file based on your own case study
         #linux
-        sFilename_configuration_in = str(Path.cwd()) +  '/configurations/pyswat_susquehanna_hexagon.json' 
+        sPath = str(Path(__file__).parent.resolve())
+        sFilename_configuration_in = sPath +  '/../tests/configurations/arw.json'
+         
         print(sFilename_configuration_in)
         oPyswat = pyswat_read_model_configuration_file(sFilename_configuration_in)
         #print the case information in details
