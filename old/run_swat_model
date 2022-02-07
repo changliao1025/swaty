@@ -1,0 +1,44 @@
+#!/bin/bash
+echo "Started to prepare python scripts"
+
+cat << EOF > pyscript1.py
+#!/share/apps/python/anaconda3.6/bin/python
+from swat_prepare_pest_slave_input_file import *
+sFilename_configuration_in='/pic/scratch/liao313/03model/swat/purgatoire30/calibration/linux_config.txt'
+swat_prepare_pest_slave_input_file(sFilename_configuration_in)
+EOF
+
+cat << EOF > pyscript2.py
+#!/share/apps/python/anaconda3.6/bin/python
+from swat_prepare_input_from_pest import *
+sFilename_configuration_in='/pic/scratch/liao313/03model/swat/purgatoire30/calibration/linux_config.txt'
+swat_prepare_input_from_pest(sFilename_configuration_in)
+EOF
+
+cat << EOF > pyscript3.py
+#!/share/apps/python/anaconda3.6/bin/python
+from swat_extract_output_for_pest import *
+sFilename_configuration_in='/pic/scratch/liao313/03model/swat/purgatoire30/calibration/linux_config.txt'
+swat_extract_output_for_pest(sFilename_configuration_in)
+EOF
+
+chmod 755 pyscript1.py
+chmod 755 pyscript2.py
+chmod 755 pyscript3.py
+echo "Finished preparing python scripts"
+
+echo "Started to prepare SWAT inputs"
+#step 1: prepare inputs
+./pyscript1.py
+./pyscript2.py
+echo "Finished preparing SWAT simulation"
+
+#step 2: run swat model
+echo "Started to run SWAT simulation"
+./swat
+echo "Finished running SWAT simulation"
+
+#step 3: extract SWAT output
+echo "Started to extract SWAT simulation outputs"
+./pyscript3.py
+echo "Finished extracting SWAT simulation outputs"
