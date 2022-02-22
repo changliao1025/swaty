@@ -11,8 +11,8 @@ DESCRIPTION = \
     "Python for SWAT."
 AUTHOR = "Chang Liao"
 AUTHOR_EMAIL = "changliao.climate@gmail.com"
-URL = "https://github.com/changliao1025/pyswat"
-VERSION = "0.1.2"
+URL = "https://github.com/changliao1025/swaty"
+VERSION = "0.1.3"
 REQUIRES_PYTHON = ">=3.6.0"
 KEYWORDS = "Earth Science"
 
