@@ -4,6 +4,7 @@ import sys
 import glob
 import numpy as np
 from pathlib import Path
+import tarfile
 from shutil import copyfile
 from abc import ABCMeta, abstractmethod
 import datetime
@@ -95,7 +96,60 @@ class swatcase(object):
     sDate_start =''
     sDate_end=''
 
-    def __init__(self, aConfig_in):
+    def __init__(self, aConfig_in,sDate_in=None):
+
+        
+
+        if 'iFlag_calibration' in aConfig_in:
+            self.iFlag_calibration =  int(aConfig_in['iFlag_calibration']) 
+        if 'iFlag_simulation' in aConfig_in:
+            self.iFlag_simulation =  int(aConfig_in['iFlag_simulation']) 
+        if 'iFlag_watershed' in aConfig_in:
+            self.iFlag_watershed =  int(aConfig_in['iFlag_watershed']) 
+        if 'iFlag_subbasin' in aConfig_in:
+            self.iFlag_subbasin =  int(aConfig_in['iFlag_subbasin']) 
+        if 'iFlag_hru' in aConfig_in:
+            self.iFlag_hru =  int(aConfig_in['iFlag_hru']) 
+        
+        if 'iFlag_mode' in aConfig_in:
+            self.iFlag_mode   = int( aConfig_in['iFlag_mode']) 
+        if 'iFlag_replace_parameter' in aConfig_in:
+            self.iFlag_replace_parameter= int( aConfig_in['iFlag_replace_parameter'] ) 
+        
+        if 'iYear_start' in aConfig_in:
+            self.iYear_start  = int( aConfig_in['iYear_start'] )
+        if 'iYear_end' in aConfig_in:
+            self.iYear_end    = int( aConfig_in['iYear_end']   )
+        if 'iMonth_start' in aConfig_in:
+            self.iMonth_start = int( aConfig_in['iMonth_start'])
+        if 'iMonth_end' in aConfig_in:
+            self.iMonth_end   = int( aConfig_in['iMonth_end']  ) 
+        if 'iDay_start' in aConfig_in:
+            self.iDay_start   = int( aConfig_in['iDay_start']  )
+        if 'iDay_end' in aConfig_in:
+            self.iDay_end     = int( aConfig_in['iDay_end']    )
+        if 'nstress' in aConfig_in:
+            self.nstress      = int( aConfig_in['nstress']     )
+        else:
+            pass
+
+        if 'nsegment' in aConfig_in:
+            self.nsegment = int( aConfig_in[ 'nsegment'] )
+        if 'nsubbasin' in aConfig_in:
+            self.nsubbasin = int (aConfig_in[ 'nsubbasin'])
+        if 'nhru' in aConfig_in:
+            nhru = int( aConfig_in['nhru']) 
+            if nhru > 1:
+                self.nhru = nhru
+            else:
+                self.nhru=9
+
+        if 'sRegion' in aConfig_in:
+            self.sRegion               = aConfig_in[ 'sRegion']
+        if 'sModel' in aConfig_in:
+            self.sModel                = aConfig_in[ 'sModel']
+        if 'sPython' in aConfig_in:
+            self.sPython               = aConfig_in[ 'sPython']
         if 'sFilename_model_configuration' in aConfig_in:
             self.sFilename_model_configuration    = aConfig_in[ 'sFilename_model_configuration']
         
@@ -106,20 +160,6 @@ class swatcase(object):
        
         if 'sWorkspace_scratch' in aConfig_in:
             self.sWorkspace_scratch    = aConfig_in[ 'sWorkspace_scratch']
-       
-        sWorkspace_scratch = self.sWorkspace_scratch
-        sWorkspace_data=self.sWorkspace_data
-        if 'sRegion' in aConfig_in:
-            self.sRegion               = aConfig_in[ 'sRegion']
-        if 'sModel' in aConfig_in:
-            self.sModel                = aConfig_in[ 'sModel']
-        if 'sPython' in aConfig_in:
-            self.sPython               = aConfig_in[ 'sPython']
-       
-        if 'nsegment' in aConfig_in:
-            self.nsegment = int( aConfig_in[ 'nsegment'] )
-        if 'nsubbasin' in aConfig_in:
-            self.nsubbasin = int (aConfig_in[ 'nsubbasin'])
 
         if 'sWorkspace_project' in aConfig_in:
             self.sWorkspace_project= aConfig_in[ 'sWorkspace_project']
@@ -128,6 +168,8 @@ class swatcase(object):
         
         if 'sWorkspace_simulation' in aConfig_in:
             self.sWorkspace_simulation= aConfig_in[ 'sWorkspace_simulation']
+        else:
+            pass
 
         #self.sWorkspace_simulation = str(Path(self.sWorkspace_scratch ) / self.sModel / self.sRegion / 'simulation')
         
@@ -143,12 +185,20 @@ class swatcase(object):
 
         if 'iCase_index' in aConfig_in:
             iCase_index = int(aConfig_in['iCase_index'])
-        sCase_index = "{:03d}".format( iCase_index )
-        sDate   = aConfig_in[ 'sDate']
-        if sDate is not None:
-            self.sDate= sDate
         else:
-            self.sDate = sDate_default
+            iCase_index=1
+        sCase_index = "{:03d}".format( iCase_index )
+
+        
+        
+        if sDate_in is not None:
+            self.sDate= sDate_in
+        else:
+            if 'sDate' in aConfig_in:
+                self.sDate   = aConfig_in[ 'sDate']
+            else:
+                self.sDate = sDate_default
+
         self.iCase_index =   iCase_index
         sCase = self.sModel + self.sDate + sCase_index
         self.sCase = sCase
@@ -162,36 +212,14 @@ class swatcase(object):
         sPath = self.sWorkspace_calibration_case
         Path(sPath).mkdir(parents=True, exist_ok=True)
 
-        if 'iFlag_calibration' in aConfig_in:
-            self.iFlag_calibration =  int(aConfig_in['iFlag_calibration']) 
-        if 'iFlag_simulation' in aConfig_in:
-            self.iFlag_simulation =  int(aConfig_in['iFlag_simulation']) 
-        if 'iFlag_watershed' in aConfig_in:
-            self.iFlag_watershed =  int(aConfig_in['iFlag_watershed']) 
-        if 'iFlag_subbasin' in aConfig_in:
-            self.iFlag_subbasin =  int(aConfig_in['iFlag_subbasin']) 
-        if 'iFlag_hru' in aConfig_in:
-            self.iFlag_hru =  int(aConfig_in['iFlag_hru']) 
+        
         if 'sFilename_observation_discharge' in aConfig_in:
             self.sFilename_observation_discharge = aConfig_in[ 'sFilename_observation_discharge']
         if 'sFilename_swat' in aConfig_in:
             self.sFilename_swat = aConfig_in[ 'sFilename_swat']
         
 
-        if 'iYear_start' in aConfig_in:
-            self.iYear_start  = int( aConfig_in['iYear_start'] )
-        if 'iYear_end' in aConfig_in:
-            self.iYear_end    = int( aConfig_in['iYear_end']   )
-        if 'iMonth_start' in aConfig_in:
-            self.iMonth_start = int( aConfig_in['iMonth_start'])
-        if 'iMonth_end' in aConfig_in:
-            self.iMonth_end   = int( aConfig_in['iMonth_end']  ) 
-        if 'iDay_start' in aConfig_in:
-            self.iDay_start   = int( aConfig_in['iDay_start']  )
-        if 'iDay_end' in aConfig_in:
-            self.iDay_end     = int( aConfig_in['iDay_end']    )
-        if 'nstress' in aConfig_in:
-            self.nstress      = int( aConfig_in['nstress']     )
+        
 
         iMonth_count = 0
         for iYear in range( self.iYear_start, self.iYear_end +1):
@@ -209,23 +237,15 @@ class swatcase(object):
                 iMonth_count = iMonth_count  + 1
                 pass
         
-        self.sWorkspace_data_project = str(Path(self.sWorkspace_data ) / self.sWorkspace_project )
+        #self.sWorkspace_data_project = str(Path(self.sWorkspace_data ) / self.sWorkspace_project )
         #read hru type
-        if 'nhru' in aConfig_in:
-            nhru = int( aConfig_in['nhru']) 
-            if nhru > 1:
-                self.nhru = nhru
-            else:
-                self.nhru=9
+        
         
         
 
         self.nstress_month = iMonth_count
 
-        if 'iFlag_mode' in aConfig_in:
-            self.iFlag_mode   = int( aConfig_in['iFlag_mode']) 
-        if 'iFlag_replace_parameter' in aConfig_in:
-            self.iFlag_replace_parameter= int( aConfig_in['iFlag_replace_parameter'] ) 
+        
 
         #for replace and calibration
         #self.aParameter_value =  aConfig_in['aParameter_value'] #this should be a variable sized array
@@ -255,102 +275,36 @@ class swatcase(object):
         
         if 'sWorkspace_simulation_copy' in aConfig_in:
             self.sWorkspace_simulation_copy= aConfig_in[ 'sWorkspace_simulation_copy']
-        #self.sWorkspace_simulation_copy = self.sWorkspace_data  + aConfig_in['sWorkspace_simulation_copy']
-            self.sWorkspace_simulation_copy =  str(Path(self.sWorkspace_simulation_copy ) / 'TxtInOut' )
-        #self.sFilename_hru_combination = self.sWorkspace_data_project + slash + 'auxiliary' + slash\
-        # + 'hru' + slash   + 'hru_combination.txt'       
+        else:
+            self.sWorkspace_simulation_copy='TxtInOut.tar'
+        self.sWorkspace_simulation_copy =  os.path.join(self.sWorkspace_data,  self.sWorkspace_simulation_copy )
+        
         if 'sFilename_hru_combination' in aConfig_in:
             self.sFilename_hru_combination =   aConfig_in['sFilename_hru_combination'] 
         else:
-            sPath  = str(Path(self.sWorkspace_data_project ) / 'auxiliary' / 'hru' )
-            self.sFilename_hru_combination = os.path.join(sPath,  'hru_combination.txt' )
+            self.sFilename_hru_combination = 'hru_combination.txt'
+        
+        self.sFilename_hru_combination = os.path.join(self.sWorkspace_data,  self.sFilename_hru_combination )
             
 
         if 'sFilename_watershed_configuration' in aConfig_in:
             self.sFilename_watershed_configuration = aConfig_in['sFilename_watershed_configuration'] 
         else:
-            sPath  = str(Path(self.sWorkspace_data_project ) / 'auxiliary' / 'subbasin' )
-            self.sFilename_watershed_configuration = os.path.join(sPath,  'watershed_configuration.txt' )
+            self.sFilename_watershed_configuration =  'watershed_configuration.txt'
+            
+        self.sFilename_watershed_configuration = os.path.join(self.sWorkspace_data, self.sFilename_watershed_configuration )
 
     
         if 'sFilename_hru_info' in aConfig_in:
             self.sFilename_hru_info = aConfig_in['sFilename_hru_info'] 
         else:
-            sPath  = str(Path(self.sWorkspace_data_project ) / 'auxiliary' / 'hru' )
-            self.sFilename_hru_info = os.path.join(sPath,  'hru_info.txt' )
+            self.sFilename_hru_info = aConfig_in['hru_info.txt'] 
+            
+        self.sFilename_hru_info = os.path.join(self.sWorkspace_data,  self.sFilename_hru_info )
 
         return
 
-    def define_parameter(self, aParameter_in, aValue_in, aValue_lower_in, aValue_upper_in):
-
-        aParameter_watershed_all = np.array(['SFTMP','SMTMP','AI0'])
-        aParameter_subbasin_all = np.array(['CH_K2','CH_N2'])
-        aParameter_hru_all = np.array(['CN2'])
-
-        aParameter_watershed = list()
-        aParameter_subbasin     = list()
-        aParameter_hru       = list()
-        aParameter_value_watershed = list()
-        aParameter_value_lower_watershed = list()
-        aParameter_value_upper_watershed = list()
-
-        aParameter_value_subbasin     = list()
-        aParameter_value_lower_subbasin = list()
-        aParameter_value_upper_subbasin = list()
-        aParameter_value_hru       = list()
-        aParameter_value_lower_hru  = list()
-        aParameter_value_upper_hru  = list()
-
-        aParameter_in= np.array(aParameter_in)
-        nParameter  = aParameter_in.size
-
-
-        for i in range(nParameter):
-            sParameter  = aParameter_in[i]
-            aValue = aValue_in[i]
-            aValue_lower = aValue_lower_in[i]
-            aValue_upper = aValue_upper_in[i]
-            if sParameter in aParameter_watershed_all:
-                aParameter_watershed.append(sParameter)
-                aParameter_value_watershed.append(aValue)
-                aParameter_value_lower_watershed.append(aValue_lower)
-                aParameter_value_upper_watershed.append(aValue_upper)
-            else: 
-                if sParameter in aParameter_subbasin_all:
-                    aParameter_subbasin.append(sParameter)
-                    aParameter_value_subbasin.append(aValue)
-                    aParameter_value_lower_subbasin.append(aValue_lower)
-                    aParameter_value_upper_subbasin.append(aValue_upper)
-                else:
-                    if sParameter in aParameter_hru_all:
-                        aParameter_hru.append(sParameter)
-                        aParameter_value_hru.append(aValue)
-                        aParameter_value_lower_hru.append(aValue_lower)
-                        aParameter_value_upper_hru.append(aValue_upper)
-
-            pass
-
-        aParameter_watershed = np.array(aParameter_watershed)
-        aParameter_subbasin = np.array(aParameter_subbasin)
-        aParameter_hru = np.array(aParameter_hru)
-
-        aParameter_value_watershed = np.array(aParameter_value_watershed)
-        aParameter_value_subbasin =     np.array(aParameter_value_subbasin)
-        aParameter_value_hru =       np.array(aParameter_value_hru)
-
-        aParameter_value_lower_watershed = np.array(aParameter_value_lower_watershed)
-        aParameter_value_lower_subbasin =     np.array(aParameter_value_lower_subbasin)
-        aParameter_value_lower_hru =       np.array(aParameter_value_lower_hru)
-
-        aParameter_value_upper_watershed = np.array(aParameter_value_upper_watershed)
-        aParameter_value_upper_subbasin =     np.array(aParameter_value_upper_subbasin)
-        aParameter_value_upper_hru =       np.array(aParameter_value_upper_hru)
-
-
-        return aParameter_watershed, aParameter_subbasin, aParameter_hru,\
-            aParameter_value_watershed,aParameter_value_subbasin,aParameter_value_hru,\
-                aParameter_value_lower_watershed, aParameter_value_lower_subbasin,  aParameter_value_lower_hru,\
-                aParameter_value_upper_watershed, aParameter_value_upper_subbasin, aParameter_value_upper_hru       
+    
         
 
     def copy_TxtInOut_files(self):
@@ -359,7 +313,7 @@ class swatcase(object):
         sModel
         """
               
-        sWorkspace_simulation_copy = self.sWorkspace_simulation_copy
+        
         sWorkspace_simulation_case = self.sWorkspace_simulation_case      
 
         if self.iFlag_calibration == 1:
@@ -367,15 +321,26 @@ class swatcase(object):
         else:
             sWorkspace_target_case = sWorkspace_simulation_case   
 
+        Path(sWorkspace_target_case).mkdir(parents=True, exist_ok=True)
 
-        if not os.path.exists(sWorkspace_simulation_copy):
-            print(sWorkspace_simulation_copy)
+        if not os.path.exists(self.sWorkspace_simulation_copy):
+            print(self.sWorkspace_simulation_copy)
             print('The simulation copy does not exist!')
             return
         else:      
-            pass
+            #we might need to extract 
+            if os.path.isfile(self.sWorkspace_simulation_copy):  
+                sBasename = Path(self.sWorkspace_simulation_copy).stem
+                #pTar = tarfile.open(self.sWorkspace_simulation_copy)
+                #pTar.extractall(self.sWorkspace_simulation) # specify which folder to extract to
+                #pTar.close()
+                
+                self.sWorkspace_simulation_copy = str(Path(self.sWorkspace_simulation) /sBasename)
         
-        Path(sWorkspace_target_case).mkdir(parents=True, exist_ok=True)
+
+        sWorkspace_simulation_copy= self.sWorkspace_simulation_copy
+        
+        
         #the following file will be copied    
 
         aExtension = ('.pnd','.rte','.sub','.swq','.wgn','.wus',\
@@ -390,7 +355,7 @@ class swatcase(object):
             sDummy = '*' + sExtension
             sRegax = os.path.join(str(Path(sWorkspace_simulation_copy)  ) ,  sDummy  )
 
-            #sRegax = sWorkspace_simulation_copy + slash + '*' + sExtension
+            
 
             if sExtension == '.tmp':
                 for sFilename in glob.glob(sRegax):
@@ -413,7 +378,7 @@ class swatcase(object):
     
     def setup(self):
 
-        #self.copy_TxtInOut_files()
+        self.copy_TxtInOut_files()
         #self.define_parameter()
 
         #replace parameter using parameter files
