@@ -4,20 +4,20 @@ import subprocess
 
 from pyearth.system.define_global_variables import *
 
-from pyswat.classes.pycase import pyswat
+from swaty.classes.pycase import swaty
 
-from pyswat.simulation.swat_copy_TxtInOut_files import swat_copy_TxtInOut_files
-from pyswat.scenarios.swat_prepare_watershed_parameter_file import swat_prepare_watershed_parameter_file
-from pyswat.scenarios.swat_prepare_subbasin_parameter_file import swat_prepare_subbasin_parameter_file
-from pyswat.scenarios.swat_prepare_hru_parameter_file import swat_prepare_hru_parameter_file
+from swaty.simulation.swat_copy_TxtInOut_files import swat_copy_TxtInOut_files
+from swaty.scenarios.swat_prepare_watershed_parameter_file import swat_prepare_watershed_parameter_file
+from swaty.scenarios.swat_prepare_subbasin_parameter_file import swat_prepare_subbasin_parameter_file
+from swaty.scenarios.swat_prepare_hru_parameter_file import swat_prepare_hru_parameter_file
 
-from pyswat.scenarios.swat_write_watershed_input_file import swat_write_watershed_input_file
-from pyswat.scenarios.swat_write_subbasin_input_file import swat_write_subbasin_input_file
-from pyswat.scenarios.swat_write_hru_input_file import swat_write_hru_input_file
+from swaty.scenarios.swat_write_watershed_input_file import swat_write_watershed_input_file
+from swaty.scenarios.swat_write_subbasin_input_file import swat_write_subbasin_input_file
+from swaty.scenarios.swat_write_hru_input_file import swat_write_hru_input_file
 
-from pyswat.simulation.swat_copy_executable_file import swat_copy_executable_file
-from pyswat.simulation.swat_prepare_simulation_bash_file import swat_prepare_simulation_bash_file
-from pyswat.simulation.swat_prepare_simulation_job_file import swat_prepare_simulation_job_file
+from swaty.simulation.swat_copy_executable_file import swat_copy_executable_file
+from swaty.simulation.swat_prepare_simulation_bash_file import swat_prepare_simulation_bash_file
+from swaty.simulation.swat_prepare_simulation_job_file import swat_prepare_simulation_job_file
 
 def swat_main(oSwat_in):        
     

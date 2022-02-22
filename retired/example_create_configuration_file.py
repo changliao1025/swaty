@@ -1,5 +1,5 @@
 
-from pyswat.auxiliary.pyswat_generate_template_configuration_json_file import pyswat_generate_template_configuration_json_file
+from swaty.auxiliary.swaty_generate_template_configuration_json_file import swaty_generate_template_configuration_json_file
 
-sFilename_json = '/global/homes/l/liao313/workspace/python/pyswat/tests/configuration/swat_simulation.json'
-pyswat_generate_template_configuration_json_file(sFilename_json)
+sFilename_json = '/global/homes/l/liao313/workspace/python/swaty/tests/configuration/swat_simulation.json'
+swaty_generate_template_configuration_json_file(sFilename_json)

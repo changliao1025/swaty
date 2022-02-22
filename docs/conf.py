@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# pyswat documentation build configuration file, created by
+# swaty documentation build configuration file, created by
 # sphinx-quickstart.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -41,7 +41,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'pyswat'
+project = u'swaty'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -164,7 +164,7 @@ html_static_path = ['_static']
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'pyswatdoc'
+htmlhelp_basename = 'swatydoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -184,8 +184,8 @@ latex_elements = {
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
     ('index',
-     'pyswat.tex',
-     u'pyswat Documentation',
+     'swaty.tex',
+     u'swaty Documentation',
      u"Chang Liao", 'manual'),
 ]
 
@@ -215,7 +215,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'pyswat', u'pyswat Documentation',
+    ('index', 'swaty', u'swaty Documentation',
      [u"Chang Liao"], 1)
 ]
 
@@ -229,8 +229,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'pyswat', u'pyswat Documentation',
-     u"Chang Liao", 'pyswat',
+    ('index', 'swaty', u'swaty Documentation',
+     u"Chang Liao", 'swaty',
      'SWAT in Python', 'Miscellaneous'),
 ]
 

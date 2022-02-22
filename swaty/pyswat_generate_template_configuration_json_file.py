@@ -4,13 +4,13 @@ from os.path import realpath
 #use this function to generate an initial json file for hexwatershed
 import json
 #once it's generated, you can modify it and use it for different simulations
-from pyswat.classes.pycase import swatcase
-#from pyswat.classes.basin import pybasin
-#from pyswat.classes.basin import pybasin
-from pyswat.classes.swatpara import swatpara
+from swaty.classes.pycase import swatcase
+#from swaty.classes.basin import pybasin
+#from swaty.classes.basin import pybasin
+from swaty.classes.swatpara import swatpara
 sPath = str(Path(__file__).parent.resolve())
 sPath_data = realpath(sPath +  '/../data/arw/' )
-def pyswat_generate_template_configuration_json_file(sFilename_json):
+def swaty_generate_template_configuration_json_file(sFilename_json):
     #use a dict to initialize the class
     aConfig = {}
     aConfig['iFlag_simulation'] = 1

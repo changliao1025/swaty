@@ -9,7 +9,7 @@ import numpy as np
 pDate = datetime.datetime.today()
 sDate_default = "{:04d}".format(pDate.year) + "{:02d}".format(pDate.month) + "{:02d}".format(pDate.day)
 
-def pyswat_read_model_configuration_file(sFilename_configuration_in):
+def swaty_read_model_configuration_file(sFilename_configuration_in):
 
 
     

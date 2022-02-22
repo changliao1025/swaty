@@ -13,8 +13,8 @@ import matplotlib.dates as mdates
 from matplotlib.ticker import FuncFormatter
 
 
-from pyswat.pyswat_read_model_configuration_file import swat_read_model_configuration_file
-from pyswat.classes.pycase import pyswat
+from swaty.swaty_read_model_configuration_file import swat_read_model_configuration_file
+from swaty.classes.pycase import swaty
 from pyearth.system.define_global_variables import *
 from pyearth.toolbox.reader.text_reader_string import text_reader_string
 from pyearth.visual.timeseries.plot_time_series_data import plot_time_series_data
@@ -30,7 +30,7 @@ from pyearth.visual.scatter.scatter_plot_data import scatter_plot_data
 
 
 
-#from pyswat.plot.swat_convert_data_daily_2_monthly import swat_convert_data_daily_2_monthly
+#from swaty.plot.swat_convert_data_daily_2_monthly import swat_convert_data_daily_2_monthly
 
 
 def swat_tsplot_stream_discharge(oSwat_in):
@@ -132,11 +132,11 @@ def swat_tsplot_stream_discharge(oSwat_in):
 if __name__ == '__main__':
 
     
-    sFilename_configuration_in = '/global/homes/l/liao313/workspace/python/pyswat/pyswat/shared/swat_simulation.xml'
+    sFilename_configuration_in = '/global/homes/l/liao313/workspace/python/swaty/swaty/shared/swat_simulation.xml'
     aConfig = swat_read_model_configuration_file(sFilename_configuration_in)
    
     # iCase_index_in=iCase_index_in, sJob_in=sJob_in, iFlag_mode_in=iFlag_mode_in)
     aConfig['sFilename_model_configuration'] = sFilename_configuration_in
-    oSwat = pyswat(aConfig)
+    oSwat = swaty(aConfig)
     swat_tsplot_stream_discharge(oSwat)
 

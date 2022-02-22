@@ -10,7 +10,7 @@ from pyearth.system.define_global_variables import *
 
 
 
-from pyswat.simulation.swat_main import swat_main
+from swaty.simulation.swat_main import swat_main
 
 iFlag_mode = 0 #just create job file, no run
 sModel = 'swat'

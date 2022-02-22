@@ -1,5 +1,5 @@
-# PySWAT
-PySWAT is a Python library to support SWAT simulation.
+# swaty
+swaty is a Python library to support SWAT simulation.
 
 # Content
 
@@ -10,7 +10,7 @@ PySWAT is a Python library to support SWAT simulation.
 
 
 # Install
-1. pip install pyswat
+1. pip install swaty
 
 
 # Contact

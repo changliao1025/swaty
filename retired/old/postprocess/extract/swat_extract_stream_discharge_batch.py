@@ -13,7 +13,7 @@ from pyearth.toolbox.reader.read_configuration_file import read_configuration_fi
 
 
 
-from pyswat.postprocess.extract.swat_extract_stream_discharge import swat_extract_stream_discharge
+from swaty.postprocess.extract.swat_extract_stream_discharge import swat_extract_stream_discharge
 
 
 if __name__ == '__main__':

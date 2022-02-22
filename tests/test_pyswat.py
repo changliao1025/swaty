@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 
-"""Tests for `pyswat` package."""
+"""Tests for `swaty` package."""
 
 
 import unittest
 
-from pyswat import pyswat
+from swaty import swaty
 
 
-class TestPyswat(unittest.TestCase):
-    """Tests for `pyswat` package."""
+class Testswaty(unittest.TestCase):
+    """Tests for `swaty` package."""
 
     def setUp(self):
         """Set up test fixtures, if any."""

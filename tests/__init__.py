@@ -1,1 +1,1 @@
-"""Unit test package for pyswat."""
+"""Unit test package for swaty."""
