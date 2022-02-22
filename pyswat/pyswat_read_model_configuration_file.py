@@ -6,15 +6,13 @@ import json
 import numpy as np
 
 
-
-
 pDate = datetime.datetime.today()
 sDate_default = "{:04d}".format(pDate.year) + "{:02d}".format(pDate.month) + "{:02d}".format(pDate.day)
 
 def pyswat_read_model_configuration_file(sFilename_configuration_in):
 
 
-    #aConfig = parse_xml_file(sFilename_configuration_in)
+    
 
     if not os.path.isfile(sFilename_configuration_in):
         print(sFilename_configuration_in + ' does not exist')
@@ -30,10 +28,7 @@ def pyswat_read_model_configuration_file(sFilename_configuration_in):
 
     sWorkspace_data=  aConfig['sWorkspace_data']
     sWorkspace_scratch=  aConfig['sWorkspace_scratch']
-    
 
-
-    
     sLine = aConfig['aParameter']
     dummy = sLine.split(',')
     aConfig['aParameter'] =  np.array(dummy) # aConfig['aParameter'].split(',')
@@ -62,10 +57,8 @@ def pyswat_read_model_configuration_file(sFilename_configuration_in):
     iMonth_end  = int(  aConfig['iMonth_end'])
     iDay_end  = int(  aConfig['iDay_end'])   
 
-    
     #by default, this system is used to prepare inputs for modflow simulation.
     #however, it can also be used to prepare gsflow simulation inputs.
-    
 
     #based on global variable, a few variables are calculate once
     #calculate the modflow simulation period

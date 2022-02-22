@@ -1,5 +1,5 @@
 
-import os
+import os,stat
 import sys
 import glob
 import numpy as np
@@ -13,7 +13,7 @@ from json import JSONEncoder
 
 from pyswat.auxiliary.text_reader_string import text_reader_string
 from pyswat.auxiliary.line_count import line_count
-
+from pyswat.classes.swatpara import swatpara
 
 pDate = datetime.datetime.today()
 sDate_default = "{:04d}".format(pDate.year) + "{:02d}".format(pDate.month) + "{:02d}".format(pDate.day)
@@ -26,11 +26,12 @@ class CaseClassEncoder(JSONEncoder):
             return float(obj)
         if isinstance(obj, np.ndarray):
             return obj.tolist()
+         
+        if isinstance(obj, swatpara):
+            return json.loads(obj.tojson()) 
+       
         if isinstance(obj, list):
             pass  
-        
-       
-            
         return JSONEncoder.default(self, obj)
 
 class swatcase(object):
@@ -58,18 +59,18 @@ class swatcase(object):
     aParameter_subbasin = None
     aParameter_hru = None
 
-    aParameter_value=None
-    aParameter_value_watershed = None
-    aParameter_value_subbasin = None
-    aParameter_value_hru = None
-
-    aParameter_value_lower_watershed = None
-    aParameter_value_lower_subbasin = None
-    aParameter_value_lower_hru       = None
-
-    aParameter_value_upper_watershed = None
-    aParameter_value_upper_subbasin = None
-    aParameter_value_upper_hru       = None
+    #aParameter_value=None
+    #aParameter_value_watershed = None
+    #aParameter_value_subbasin = None
+    #aParameter_value_hru = None
+#
+    #aParameter_value_lower_watershed = None
+    #aParameter_value_lower_subbasin = None
+    #aParameter_value_lower_hru       = None
+#
+    #aParameter_value_upper_watershed = None
+    #aParameter_value_upper_subbasin = None
+    #aParameter_value_upper_hru       = None
 
     nParameter=0
     nParameter_watershed=0
@@ -95,34 +96,53 @@ class swatcase(object):
     sDate_end=''
 
     def __init__(self, aConfig_in):
-        self.sFilename_model_configuration    = aConfig_in[ 'sFilename_model_configuration']
-        self.sWorkspace_home = aConfig_in[ 'sWorkspace_home']
-        self.sWorkspace_data = aConfig_in[ 'sWorkspace_data']
+        if 'sFilename_model_configuration' in aConfig_in:
+            self.sFilename_model_configuration    = aConfig_in[ 'sFilename_model_configuration']
+        
+        if 'sWorkspace_home' in aConfig_in:
+            self.sWorkspace_home = aConfig_in[ 'sWorkspace_home']
+        if 'sWorkspace_data' in aConfig_in:
+            self.sWorkspace_data = aConfig_in[ 'sWorkspace_data']
        
-        self.sWorkspace_scratch    = aConfig_in[ 'sWorkspace_scratch']
+        if 'sWorkspace_scratch' in aConfig_in:
+            self.sWorkspace_scratch    = aConfig_in[ 'sWorkspace_scratch']
+       
         sWorkspace_scratch = self.sWorkspace_scratch
         sWorkspace_data=self.sWorkspace_data
-        self.sRegion               = aConfig_in[ 'sRegion']
-        self.sModel                = aConfig_in[ 'sModel']
-        self.sPython               = aConfig_in[ 'sPython']
-        #self.sDate_start              = aConfig_in[ 'sDate_start']
-        #self.sDate_end                = aConfig_in[ 'sDate_end']
-        self.nsegment = int( aConfig_in[ 'nsegment'] )
-        self.nsubbasin = int (aConfig_in[ 'nsubbasin'])
+        if 'sRegion' in aConfig_in:
+            self.sRegion               = aConfig_in[ 'sRegion']
+        if 'sModel' in aConfig_in:
+            self.sModel                = aConfig_in[ 'sModel']
+        if 'sPython' in aConfig_in:
+            self.sPython               = aConfig_in[ 'sPython']
+       
+        if 'nsegment' in aConfig_in:
+            self.nsegment = int( aConfig_in[ 'nsegment'] )
+        if 'nsubbasin' in aConfig_in:
+            self.nsubbasin = int (aConfig_in[ 'nsubbasin'])
 
-        self.sWorkspace_project= aConfig_in[ 'sWorkspace_project']
-        self.sWorkspace_bin= aConfig_in[ 'sWorkspace_bin']
+        if 'sWorkspace_project' in aConfig_in:
+            self.sWorkspace_project= aConfig_in[ 'sWorkspace_project']
+        if 'sWorkspace_bin' in aConfig_in:
+            self.sWorkspace_bin= aConfig_in[ 'sWorkspace_bin']
+        
+        if 'sWorkspace_simulation' in aConfig_in:
+            self.sWorkspace_simulation= aConfig_in[ 'sWorkspace_simulation']
 
-        self.sWorkspace_simulation = str(Path(self.sWorkspace_scratch ) / self.sModel / self.sRegion / 'simulation')
+        #self.sWorkspace_simulation = str(Path(self.sWorkspace_scratch ) / self.sModel / self.sRegion / 'simulation')
         
         sPath = self.sWorkspace_simulation
         Path(sPath).mkdir(parents=True, exist_ok=True)
 
-        self.sWorkspace_calibration = str(Path(self.sWorkspace_scratch ) / self.sModel / self.sRegion / 'calibration')
+        if 'sWorkspace_calibration' in aConfig_in:
+            self.sWorkspace_calibration= aConfig_in[ 'sWorkspace_calibration']
+
+        #self.sWorkspace_calibration = str(Path(self.sWorkspace_scratch ) / self.sModel / self.sRegion / 'calibration')
         sPath = self.sWorkspace_calibration
         Path(sPath).mkdir(parents=True, exist_ok=True)
 
-        iCase_index = int(aConfig_in['iCase_index'])
+        if 'iCase_index' in aConfig_in:
+            iCase_index = int(aConfig_in['iCase_index'])
         sCase_index = "{:03d}".format( iCase_index )
         sDate   = aConfig_in[ 'sDate']
         if sDate is not None:
@@ -142,22 +162,36 @@ class swatcase(object):
         sPath = self.sWorkspace_calibration_case
         Path(sPath).mkdir(parents=True, exist_ok=True)
 
-        self.iFlag_calibration =  int(aConfig_in['iFlag_calibration']) 
-        self.iFlag_simulation =  int(aConfig_in['iFlag_simulation']) 
-        self.iFlag_watershed =  int(aConfig_in['iFlag_watershed']) 
-        self.iFlag_subbasin =  int(aConfig_in['iFlag_subbasin']) 
-        self.iFlag_hru =  int(aConfig_in['iFlag_hru']) 
-        self.sFilename_observation_discharge = aConfig_in[ 'sFilename_observation_discharge']
-        self.sFilename_swat = aConfig_in[ 'sFilename_swat']
+        if 'iFlag_calibration' in aConfig_in:
+            self.iFlag_calibration =  int(aConfig_in['iFlag_calibration']) 
+        if 'iFlag_simulation' in aConfig_in:
+            self.iFlag_simulation =  int(aConfig_in['iFlag_simulation']) 
+        if 'iFlag_watershed' in aConfig_in:
+            self.iFlag_watershed =  int(aConfig_in['iFlag_watershed']) 
+        if 'iFlag_subbasin' in aConfig_in:
+            self.iFlag_subbasin =  int(aConfig_in['iFlag_subbasin']) 
+        if 'iFlag_hru' in aConfig_in:
+            self.iFlag_hru =  int(aConfig_in['iFlag_hru']) 
+        if 'sFilename_observation_discharge' in aConfig_in:
+            self.sFilename_observation_discharge = aConfig_in[ 'sFilename_observation_discharge']
+        if 'sFilename_swat' in aConfig_in:
+            self.sFilename_swat = aConfig_in[ 'sFilename_swat']
         
 
-        self.iYear_start  = int( aConfig_in['iYear_start'] )
-        self.iYear_end    = int( aConfig_in['iYear_end']   )
-        self.iMonth_start = int( aConfig_in['iMonth_start'])
-        self.iMonth_end   = int( aConfig_in['iMonth_end']  ) 
-        self.iDay_start   = int( aConfig_in['iDay_start']  )
-        self.iDay_end     = int( aConfig_in['iDay_end']    )
-        self.nstress      = int( aConfig_in['nstress']     )
+        if 'iYear_start' in aConfig_in:
+            self.iYear_start  = int( aConfig_in['iYear_start'] )
+        if 'iYear_end' in aConfig_in:
+            self.iYear_end    = int( aConfig_in['iYear_end']   )
+        if 'iMonth_start' in aConfig_in:
+            self.iMonth_start = int( aConfig_in['iMonth_start'])
+        if 'iMonth_end' in aConfig_in:
+            self.iMonth_end   = int( aConfig_in['iMonth_end']  ) 
+        if 'iDay_start' in aConfig_in:
+            self.iDay_start   = int( aConfig_in['iDay_start']  )
+        if 'iDay_end' in aConfig_in:
+            self.iDay_end     = int( aConfig_in['iDay_end']    )
+        if 'nstress' in aConfig_in:
+            self.nstress      = int( aConfig_in['nstress']     )
 
         iMonth_count = 0
         for iYear in range( self.iYear_start, self.iYear_end +1):
@@ -188,42 +222,62 @@ class swatcase(object):
 
         self.nstress_month = iMonth_count
 
-        self.iFlag_mode   = int( aConfig_in['iFlag_mode']) 
-        self.iFlag_replace_parameter= int( aConfig_in['iFlag_replace_parameter'] ) 
+        if 'iFlag_mode' in aConfig_in:
+            self.iFlag_mode   = int( aConfig_in['iFlag_mode']) 
+        if 'iFlag_replace_parameter' in aConfig_in:
+            self.iFlag_replace_parameter= int( aConfig_in['iFlag_replace_parameter'] ) 
 
         #for replace and calibration
-        self.aParameter_value =  aConfig_in['aParameter_value'] #this should be a variable sized array
-        self.aParameter_value_lower =  aConfig_in['aParameter_value_lower'] #this should be a variable sized array
-        self.aParameter_value_upper =  aConfig_in['aParameter_value_upper'] #this should be a variable sized array
-        self.aParameter =  aConfig_in['aParameter']  #list
+        #self.aParameter_value =  aConfig_in['aParameter_value'] #this should be a variable sized array
+        #self.aParameter_value_lower =  aConfig_in['aParameter_value_lower'] #this should be a variable sized array
+        #self.aParameter_value_upper =  aConfig_in['aParameter_value_upper'] #this should be a variable sized array
+        #self.aParameter =  aConfig_in['aParameter']  #list
 
-        if self.aParameter is not None:
-            self.aParameter_watershed, self.aParameter_subbasin, self.aParameter_hru,\
-                self.aParameter_value_watershed, self.aParameter_value_subbasin, self.aParameter_value_hru, \
-                self.aParameter_value_lower_watershed, self.aParameter_value_lower_subbasin, self.aParameter_value_lower_hru, \
-                  self.aParameter_value_upper_watershed, self.aParameter_value_upper_subbasin, self.aParameter_value_upper_hru \
-               = self.define_parameter(self.aParameter, self.aParameter_value, self.aParameter_value_lower, self.aParameter_value_upper)
+        #if self.aParameter is not None:
+        #    self.aParameter_watershed, self.aParameter_subbasin, self.aParameter_hru,\
+        #        self.aParameter_value_watershed, self.aParameter_value_subbasin, self.aParameter_value_hru, \
+        #        self.aParameter_value_lower_watershed, self.aParameter_value_lower_subbasin, self.aParameter_value_lower_hru, \
+        #          self.aParameter_value_upper_watershed, self.aParameter_value_upper_subbasin, self.aParameter_value_upper_hru \
+        #       = self.define_parameter(self.aParameter, self.aParameter_value, self.aParameter_value_lower, self.#aParameter_value_upper)
+        #    self.nParameter_watershed = self.aParameter_watershed.size
+        #    self.nParameter_subbasin = self.aParameter_subbasin.size
+        #    self.nParameter_hru = self.aParameter_hru.size
+        #    self.nParameter = self.nParameter_watershed \
+        #        + self.nParameter_subbasin * self.nsubbasin \
+        #            + self.nParameter_hru  *  self.nhru
+        #    pass
+
+        if 'sJob' in aConfig_in:
+            self.sJob =  aConfig_in['sJob'] 
+        else:
+            self.sJob = 'swat'
+
         
-            self.nParameter_watershed = self.aParameter_watershed.size
-            self.nParameter_subbasin = self.aParameter_subbasin.size
-            self.nParameter_hru = self.aParameter_hru.size
-
-            self.nParameter = self.nParameter_watershed \
-                + self.nParameter_subbasin * self.nsubbasin \
-                    + self.nParameter_hru  *  self.nhru
-            pass
-
-        self.sJob =  aConfig_in['sJob'] 
-
-        
-
+        if 'sWorkspace_simulation_copy' in aConfig_in:
+            self.sWorkspace_simulation_copy= aConfig_in[ 'sWorkspace_simulation_copy']
         #self.sWorkspace_simulation_copy = self.sWorkspace_data  + aConfig_in['sWorkspace_simulation_copy']
-        self.sWorkspace_simulation_copy =  str(Path(self.sWorkspace_calibration ) / 'TxtInOut' )
+            self.sWorkspace_simulation_copy =  str(Path(self.sWorkspace_simulation_copy ) / 'TxtInOut' )
         #self.sFilename_hru_combination = self.sWorkspace_data_project + slash + 'auxiliary' + slash\
         # + 'hru' + slash   + 'hru_combination.txt'       
-        self.sFilename_hru_combination =   aConfig_in['hru_combination_file'] 
-        self.sFilename_watershed_configuration = aConfig_in['sFilename_watershed_configuration'] 
-        self.sFilename_hru_info = aConfig_in['sFilename_hru_info'] 
+        if 'sFilename_hru_combination' in aConfig_in:
+            self.sFilename_hru_combination =   aConfig_in['sFilename_hru_combination'] 
+        else:
+            sPath  = str(Path(self.sWorkspace_data_project ) / 'auxiliary' / 'hru' )
+            self.sFilename_hru_combination = os.path.join(sPath,  'hru_combination.txt' )
+            
+
+        if 'sFilename_watershed_configuration' in aConfig_in:
+            self.sFilename_watershed_configuration = aConfig_in['sFilename_watershed_configuration'] 
+        else:
+            sPath  = str(Path(self.sWorkspace_data_project ) / 'auxiliary' / 'subbasin' )
+            self.sFilename_watershed_configuration = os.path.join(sPath,  'watershed_configuration.txt' )
+
+    
+        if 'sFilename_hru_info' in aConfig_in:
+            self.sFilename_hru_info = aConfig_in['sFilename_hru_info'] 
+        else:
+            sPath  = str(Path(self.sWorkspace_data_project ) / 'auxiliary' / 'hru' )
+            self.sFilename_hru_info = os.path.join(sPath,  'hru_info.txt' )
 
         return
 
@@ -359,8 +413,8 @@ class swatcase(object):
     
     def setup(self):
 
-        self.copy_TxtInOut_files()
-        self.define_parameter()
+        #self.copy_TxtInOut_files()
+        #self.define_parameter()
 
         #replace parameter using parameter files
         if (self.iFlag_replace_parameter == 1) :
@@ -403,9 +457,8 @@ class swatcase(object):
 
 
         aParameter_watershed = self.aParameter_watershed
-        aParameter_value_watershed = self.aParameter_value_watershed
 
-        nParameter_watershed = aParameter_watershed.size
+        nParameter_watershed = self.nParameter_watershed
 
         if iFlag_simulation == 1:
             sFilename_watershed_template = os.path.join(str(Path(sWorkspace_simulation_case)) ,  'watershed.para' )     
@@ -418,14 +471,14 @@ class swatcase(object):
 
             sLine = 'watershed'
             for i in range(nParameter_watershed):
-                sVariable = aParameter_watershed[i]
+                sVariable = aParameter_watershed[i].sName
                 sLine = sLine + ',' + sVariable
             sLine = sLine + '\n'        
             ofs.write(sLine)
 
             sLine = 'watershed'
             for i in range(nParameter_watershed):
-                sValue =  "{:5.2f}".format( aParameter_value_watershed[i] )            
+                sValue =  "{:5.2f}".format( aParameter_watershed[i].dValue_init )            
                 sLine = sLine + ', ' + sValue 
                 print('watershed parameter: '+ sLine)
 
@@ -454,7 +507,6 @@ class swatcase(object):
 
     
         aParameter_subbasin = self.aParameter_subbasin
-        aParameter_value_subbasin = self.aParameter_value_subbasin
         nParameter_subbasin = self.nParameter_subbasin
 
         if iFlag_simulation == 1:
@@ -503,12 +555,11 @@ class swatcase(object):
         sWorkspace_calibration_case = self.sWorkspace_calibration_case 
 
         iFlag_simulation = self.iFlag_simulation
-        iFlag_watershed = self.iFlag_watershed
-        iFlag_subbasin = self.iFlag_subbasin
+     
         iFlag_hru = self.iFlag_hru
 
         aParameter_hru = self.aParameter_hru
-        aParameter_value_hru = self.aParameter_value_hru
+
         nParameter_hru = self.nParameter_hru
 
         #read hru type
@@ -544,7 +595,7 @@ class swatcase(object):
                 sHru_type = "{:03d}".format( iHru_type + 1)
                 sLine = 'hru'+ sHru_type 
                 for i in range(nParameter_hru):
-                    sValue =  "{:5.2f}".format( aParameter_value_hru[i] )            
+                    sValue =  "{:5.2f}".format( aParameter_hru[i].dValue_init )            
                     sLine = sLine + ', ' + sValue 
                 sLine = sLine + '\n'
                 ofs.write(sLine)
@@ -593,7 +644,7 @@ class swatcase(object):
 
         #need a better way to control this 
         for iVariable in range(nParameter_watershed):
-            sParameter_watershed = aParameter_watershed[iVariable]
+            sParameter_watershed = aParameter_watershed[iVariable].sName
 
             if sParameter_watershed in aBSN:
                 if( aParameter_table[0] is None  ):
@@ -751,7 +802,7 @@ class swatcase(object):
         write the input files from the new parameter generated by PEST to each hru file
         """
         aParameter_subbasin = self.aParameter_subbasin
-        nvariable = aParameter_subbasin.size
+        nvariable = self.nParameter_subbasin
         if(nvariable<1):
             #there is nothing to be replaced at all
             print("There is no subbasin parameter to be updated!")
@@ -943,7 +994,7 @@ class swatcase(object):
         write the input files from the new parameter generated by PEST to each hru file
         """
         aParameter_hru = self.aParameter_hru
-        nvariable = aParameter_hru.size
+        nvariable = self.nParameter_hru
         if(nvariable<1):
             #there is nothing to be replaced at all
             print("There is no hru parameter to be updated!")
@@ -1220,12 +1271,16 @@ class swatcase(object):
         sWorkspace_calibration_case = self.sWorkspace_calibration_case    
         sWorkspace_pest_model = sWorkspace_calibration_case
         #copy swat
-        #sFilename_swat_source = sWorkspace_bin + slash + sFilename_swat
+        
         sFilename_swat_source = os.path.join(str(Path(sWorkspace_bin)) ,  sFilename_swat )
 
-        sPath_current = os.getcwd()
-        #sPath_current = sWorkspace_simulation_case
-        #sFilename_swat_new = sPath_current + slash + 'swat'
+        
+        if self.iFlag_simulation ==1:
+            sPath_current = sWorkspace_simulation_case
+        else:
+            sPath_current = os.getcwd()
+        
+     
         sFilename_swat_new = os.path.join(str(Path(sPath_current)) ,  'swat' )
 
         print(sFilename_swat_source)
@@ -1250,9 +1305,101 @@ class swatcase(object):
 
         print('The swat executable file is copied successfully!')
     
-    def export_to_json(self, sFilename_output):
+
+    def pyswat_prepare_simulation_bash_file(self):
+
+        sWorkspace_simulation_case = self.sWorkspace_simulation_case
+
+        sFilename_bash = os.path.join(sWorkspace_simulation_case,  'run_swat.sh' )
+        
+        ifs = open(sFilename_bash, 'w')       
+        #end of example
+        sLine = '#!/bin/bash' + '\n'
+        ifs.write(sLine)    
+        sLine = 'module purge' + '\n'
+        ifs.write(sLine)    
+        sLine = 'module load gcc/6.1.0' + '\n'
+        ifs.write(sLine)
+        sLine = 'cd ' + sWorkspace_simulation_case + '\n'
+        ifs.write(sLine)
+        sLine = './swat' + '\n'
+        ifs.write(sLine)
+        ifs.close()
+        #change mod
+        os.chmod(sFilename_bash, stat.S_IRWXU )
+        print('Bash file is prepared.')
+        return sFilename_bash
+    def pyswat_prepare_simulation_job_file(self):
+
+        sWorkspace_simulation_case = self.sWorkspace_simulation_case
+        sJob = self.sJob
+        sFilename_job = os.path.join(sWorkspace_simulation_case,  'submit_swat.job' )
+      
+        ifs = open(sFilename_job, 'w')   
+
+        #end of example
+        sLine = '#!/bin/bash' + '\n'
+        ifs.write(sLine)
+        sLine = '#SBATCH -A m1800' + '\n'
+        ifs.write(sLine)
+        sLine = '#SBATCH -t 0:10:00' + '\n'
+        ifs.write(sLine)
+        sLine = '#SBATCH -q debug' + '\n'
+        ifs.write(sLine)
+        sLine = '#SBATCH -N 1' + '\n'
+        ifs.write(sLine)
+        sLine = '#SBATCH -n 2' + '\n'
+        ifs.write(sLine)
+        sLine = '#SBATCH -J ' + sJob + '' + '\n'
+        ifs.write(sLine)
+        sLine = '#SBATCH -C haswell' + '\n'
+        ifs.write(sLine)
+        sLine = '#SBATCH -L SCRATCH' + '\n'
+        ifs.write(sLine)
+
+        sLine = '#SBATCH -o out.out' + '\n'
+        ifs.write(sLine)
+        sLine = '#SBATCH -e err.err' + '\n'
+        ifs.write(sLine)
+        sLine = '#SBATCH --mail-type=ALL' + '\n'
+        ifs.write(sLine)
+        sLine = '#SBATCH --mail-user=chang.liao@pnnl.gov' + '\n'
+        ifs.write(sLine)
+        sLine = 'cd $SLURM_SUBMIT_DIR' + '\n'
+        ifs.write(sLine)
+        sLine = 'module purge' + '\n'
+        ifs.write(sLine)    
+        sLine = 'module load gcc/6.1.0' + '\n'
+        ifs.write(sLine)
+        sLine = 'cd ' + sWorkspace_simulation_case+ '\n'
+        ifs.write(sLine)
+        sLine = './swat' + '\n'
+        ifs.write(sLine)
+        ifs.close()
+        os.chmod(sFilename_job, stat.S_IRWXU )
+
+        #alaso need sbatch to submit it
+
+        print('Job file is prepared.')
+        return sFilename_job
+    def export_config_to_json(self, sFilename_output):
         with open(sFilename_output, 'w', encoding='utf-8') as f:
             json.dump(self.__dict__, f,sort_keys=True, \
                 ensure_ascii=False, \
                 indent=4, cls=CaseClassEncoder)
         return
+
+    def tojson(self):
+        aSkip = ['aBasin', \
+                'aFlowline_simplified','aFlowline_conceptual','aCellID_outlet',
+                'aCell']      
+
+        obj = self.__dict__.copy()
+        for sKey in aSkip:
+            obj.pop(sKey, None)
+        sJson = json.dumps(obj,\
+            sort_keys=True, \
+                indent = 4, \
+                    ensure_ascii=True, \
+                        cls=CaseClassEncoder)
+        return sJson

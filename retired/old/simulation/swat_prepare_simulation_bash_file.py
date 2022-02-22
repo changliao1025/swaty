@@ -1,10 +1,6 @@
 import os , stat
 import sys #used to add system path
 
-sSystem_paths = os.environ['PATH'].split(os.pathsep)
-sys.path.extend(sSystem_paths)
-
-from pyearth.system.define_global_variables import *
 
 
 
