@@ -1,5 +1,5 @@
 # swaty
-swaty is a Python library to support SWAT simulation.
+SWATy is a Python library to support SWAT simulation.
 
 # Content
 
@@ -14,6 +14,6 @@ swaty is a Python library to support SWAT simulation.
 
 
 # Contact
-Please contact Chang Liao (chang.liao@pnnl.gov) if you have any questions.
+Please contact Chang Liao (changliao.climate@gmail.com) if you have any questions.
 
 
