@@ -23,11 +23,11 @@ requirements:
     - adjustText
 
 about:
-  home: https://github.com/changliao1025/pyearth
+  home: https://github.com/changliao1025/swaty
   license: MIT
   license_familY: MIT
   license_file: LICENSE
-  summary: "Python for Earth"
+  summary: "Python for SWAT"
 
 extra:
   recipe-maintainers:

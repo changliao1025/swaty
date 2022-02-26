@@ -1294,6 +1294,7 @@ class swatcase(object):
         os.chmod(sFilename_bash, stat.S_IRWXU )
         print('Bash file is prepared.')
         return sFilename_bash
+    
     def swaty_prepare_simulation_job_file(self):
 
         sWorkspace_simulation_case = self.sWorkspace_simulation_case
@@ -1347,6 +1348,7 @@ class swatcase(object):
 
         print('Job file is prepared.')
         return sFilename_job
+    
     def export_config_to_json(self, sFilename_output):
         with open(sFilename_output, 'w', encoding='utf-8') as f:
             json.dump(self.__dict__, f,sort_keys=True, \
