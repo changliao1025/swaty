@@ -12,11 +12,12 @@ DESCRIPTION = \
 AUTHOR = "Chang Liao"
 AUTHOR_EMAIL = "changliao.climate@gmail.com"
 URL = "https://github.com/changliao1025/swaty"
-VERSION = "0.1.5"
+VERSION = "0.1.6"
 REQUIRES_PYTHON = ">=3.6.0"
 KEYWORDS = "Earth Science"
 
 REQUIRED = ["numpy", 
+    "julian",
     "matplotlib",
     "pyearth"
     ]
