@@ -7,7 +7,7 @@ for handler in logging.root.handlers[:]:
     logging.root.removeHandler(handler)
 
 logging.basicConfig(format='%(asctime)s %(message)s')
-logging.warning('is the time Pyflowline simulation started.')
+logging.warning('is the time swaty simulation started.')
 from swaty.classes.pycase import swatcase
 from swaty.swaty_generate_template_configuration_json_file import swaty_generate_template_configuration_json_file
 from swaty.swaty_read_model_configuration_file import swaty_read_model_configuration_file

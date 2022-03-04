@@ -8,7 +8,7 @@ from setuptools import setup, find_packages, Command
 
 NAME = "swaty"
 DESCRIPTION = \
-    "Python for SWAT."
+    "Python for SWAT"
 AUTHOR = "Chang Liao"
 AUTHOR_EMAIL = "changliao.climate@gmail.com"
 URL = "https://github.com/changliao1025/swaty"
@@ -17,7 +17,6 @@ REQUIRES_PYTHON = ">=3.6.0"
 KEYWORDS = "Earth Science"
 
 REQUIRED = ["numpy", 
-    "julian",
     "matplotlib",
     "pyearth"
     ]

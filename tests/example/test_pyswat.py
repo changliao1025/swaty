@@ -4,8 +4,8 @@
 
 
 import unittest
+from swaty.classes.pycase import swatcase
 
-from swaty import swaty
 
 
 class Testswaty(unittest.TestCase):
