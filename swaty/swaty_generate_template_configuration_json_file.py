@@ -6,14 +6,14 @@ import json
 #once it's generated, you can modify it and use it for different simulations
 from swaty.classes.pycase import swatcase
 #from swaty.classes.basin import pybasin
-#from swaty.classes.basin import pybasin
+
 from swaty.classes.swatpara import swatpara
-sPath = str(Path(__file__).parent.resolve())
-sPath_data = realpath(sPath +  '/../data/arw/' )
-sPath_bin = realpath(sPath +  '/../bin/' )
-def swaty_generate_template_configuration_json_file(sFilename_json):
+
+def swaty_generate_template_configuration_json_file(sFilename_json, sPath_data, sPath_bin):
     #use a dict to initialize the class
     aConfig = {}
+    aConfig['iFlag_run'] = 1
+    
     aConfig['iFlag_simulation'] = 1
     aConfig['iFlag_calibration'] = 0
     
@@ -28,15 +28,12 @@ def swaty_generate_template_configuration_json_file(sFilename_json):
     
     #the python bin on your system
     aConfig['sPython']  = '/global/homes/l/liao313/.conda/envs/swatenv/bin/python'
-    #aConfig['sWorkspace_home'] = '/global/homes/l/liao313'
-
+    
     aConfig['sWorkspace_bin'] = sPath_bin 
-    #'/global/homes/l/liao313/bin'
  
-    aConfig['sWorkspace_data'] = sPath_data
-    #'/global/homes/l/liao313/data'
+ 
+    aConfig['sWorkspace_data'] = sPath_data  
     aConfig['sWorkspace_project'] = '/swat/arw'
-    #some output path, should not be within this repository
     aConfig['sWorkspace_scratch'] = '/global/homes/l/liao313/'
     aConfig['sWorkspace_simulation'] = '/global/homes/l/liao313/04model/swat/arw/simulation'
     aConfig['sWorkspace_calibration'] = '/global/homes/l/liao313/04model/swat/arw/calibration'
@@ -44,9 +41,7 @@ def swaty_generate_template_configuration_json_file(sFilename_json):
     aConfig['sModel'] = 'swat'
     aConfig['sDate'] = '20210902'
     aConfig['sJob'] = 'swat'
-
     aConfig['iCase_index'] = 1
-
     aConfig['iYear_start'] = 1997
     aConfig['iYear_end'] = 2009
     aConfig['iMonth_start'] = 1
@@ -60,7 +55,7 @@ def swaty_generate_template_configuration_json_file(sFilename_json):
   
     aConfig['sFilename_observation_discharge'] = 'obs.flow_am.csv'
     aConfig['sWorkspace_simulation_copy'] = 'TxtInOut.tar'
-    #'/global/homes/l/liao313/04model/swat/arw'
+    aConfig['sFilename_HRULandUseSoilsReport'] = 'sFilename_HRULandUseSoilsReport.txt'
 
     aConfig['sFilename_hru_combination'] = 'hru_combination.txt'
     aConfig['sFilename_hru_info'] = 'hru_info.txt'
@@ -93,6 +88,10 @@ def swaty_generate_template_configuration_json_file(sFilename_json):
     for iPara in range(nParameter_subbasin):
         aPara_in = {}
         aPara_in['iParameter_type']=2
+        aPara_in['sName']=aName[iPara]
+        aPara_in['dValue_init']=aValue_init[iPara]
+        aPara_in['dValue_lower']=aValue_lower[iPara]
+        aPara_in['dValue_upper']=aValue_upper[iPara]
         pPara_subbasin = swatpara(aPara_in)
         aParameter_subbasin.append(pPara_subbasin)
 
@@ -104,6 +103,10 @@ def swaty_generate_template_configuration_json_file(sFilename_json):
     for iPara in range(nParameter_hru):
         aPara_in = {}
         aPara_in['iParameter_type']=3
+        aPara_in['sName']=aName[iPara]
+        aPara_in['dValue_init']=aValue_init[iPara]
+        aPara_in['dValue_lower']=aValue_lower[iPara]
+        aPara_in['dValue_upper']=aValue_upper[iPara]
         pPara_hru = swatpara(aPara_in)
         aParameter_hru.append(pPara_hru)
 

@@ -1,18 +1,24 @@
 import os 
 import sys #used to add system path
-import julian
+
 import datetime
 import json
 import numpy as np
-
+import pyearth.toolbox.date.julian as julian
+from swaty.classes.pycase import swatcase
 
 pDate = datetime.datetime.today()
 sDate_default = "{:04d}".format(pDate.year) + "{:02d}".format(pDate.month) + "{:02d}".format(pDate.day)
 
-def swaty_read_model_configuration_file(sFilename_configuration_in):
-
-
-    
+def swaty_read_model_configuration_file(sFilename_configuration_in , \
+    iCase_index_in = None,\
+        iYear_start_in = None,\
+            iMonth_start_in = None,\
+                iDay_start_in = None, \
+        iYear_end_in = None,\
+            iMonth_end_in = None,\
+                iDay_end_in = None, \
+            ):
 
     if not os.path.isfile(sFilename_configuration_in):
         print(sFilename_configuration_in + ' does not exist')
@@ -22,40 +28,47 @@ def swaty_read_model_configuration_file(sFilename_configuration_in):
     with open(sFilename_configuration_in) as json_file:
         aConfig = json.load(json_file)   
 
-
-    sModel = aConfig['sModel']  
+    sModel = aConfig['sModel'] 
     sRegion = aConfig['sRegion']
 
     sWorkspace_data=  aConfig['sWorkspace_data']
     sWorkspace_scratch=  aConfig['sWorkspace_scratch']
-
-    sLine = aConfig['aParameter']
-    dummy = sLine.split(',')
-    aConfig['aParameter'] =  np.array(dummy) # aConfig['aParameter'].split(',')
-            
-
-    sLine = aConfig['aParameter_value']
-    dummy = sLine.split(',')
-    aConfig['aParameter_value'] =  np.array( dummy  ).astype(float)
-            
-
-    sLine = aConfig['aParameter_value_lower']
-    dummy = sLine.split(',')
-    aConfig['aParameter_value_lower'] =  np.array( dummy  ).astype(float)
-           
-
-    sLine = aConfig['aParameter_value_upper']
-    dummy = sLine.split(',')
-    aConfig['aParameter_value_upper'] =  np.array( dummy  ).astype(float)      
-
-    aConfig['iCase_index'] = int( aConfig['iCase_index'])
+         
+    if iCase_index_in is not None:        
+        iCase_index = iCase_index_in
+    else:       
+        iCase_index = int( aConfig['iCase_index'])
+        #aConfig['iCase_index'] = int( aConfig['iCase_index'])
     
-    iYear_start  = int( aConfig['iYear_start'])
-    iMonth_start  = int(  aConfig['iMonth_start'])
-    iDay_start  = int(  aConfig['iDay_start'] )
-    iYear_end  = int( aConfig['iYear_end'])
-    iMonth_end  = int(  aConfig['iMonth_end'])
-    iDay_end  = int(  aConfig['iDay_end'])   
+    if iYear_start_in is not None:        
+        iYear_start = iYear_start_in
+    else:       
+        iYear_start  = int( aConfig['iYear_start'])
+
+    if iMonth_start_in is not None:        
+        iMonth_start = iYear_end_in
+    else:       
+        iMonth_start  = int( aConfig['iMonth_start'])
+
+    if iDay_start_in is not None:        
+        iDay_start = iDay_start_in
+    else:       
+        iDay_start  = int( aConfig['iDay_start'])
+    
+    if iYear_end_in is not None:        
+        iYear_end = iYear_end_in
+    else:       
+        iYear_end  = int( aConfig['iYear_end'])
+    
+    if iMonth_end_in is not None:        
+        iMonth_end = iMonth_end_in
+    else:       
+        iMonth_end  = int( aConfig['iMonth_end'])
+
+    if iDay_end_in is not None:
+        iDay_end = iDay_end_in
+    else:       
+        iDay_end  = int( aConfig['iDay_end'])
 
     #by default, this system is used to prepare inputs for modflow simulation.
     #however, it can also be used to prepare gsflow simulation inputs.
@@ -82,7 +95,7 @@ def swaty_read_model_configuration_file(sFilename_configuration_in):
     
     #data
     
-    #simulation 
-      
+    oSwat = swatcase(aConfig)
+   
     
-    return aConfig
+    return oSwat

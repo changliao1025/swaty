@@ -23,7 +23,6 @@ def swat_prepare_watershed_configuration_and_parameter_file(oModel_in):
     
     #retrieve the data
     
-    sWorkspace_scratch = oModel_in.sWorkspace_scratch
     
     sWorkspace_data = oModel_in.sWorkspace_data
 

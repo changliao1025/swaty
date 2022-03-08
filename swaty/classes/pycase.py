@@ -5,12 +5,15 @@ import glob
 import numpy as np
 from pathlib import Path
 import tarfile
+import subprocess
 from shutil import copyfile
 from abc import ABCMeta, abstractmethod
 import datetime
 from shutil import copy2
 import json
 from json import JSONEncoder
+
+from pyearth.system.define_global_variables import *
 
 from swaty.auxiliary.text_reader_string import text_reader_string
 from swaty.auxiliary.line_count import line_count
@@ -39,6 +42,7 @@ class swatcase(object):
     __metaclass__ = ABCMeta
     iCase_index=0
     iSiteID=0
+    iFlag_run =0
     iFlag_simulation=1
     iFlag_calibration=0
     iFlag_watershed=0
@@ -60,23 +64,13 @@ class swatcase(object):
     aParameter_subbasin = None
     aParameter_hru = None
 
-    #aParameter_value=None
-    #aParameter_value_watershed = None
-    #aParameter_value_subbasin = None
-    #aParameter_value_hru = None
-#
-    #aParameter_value_lower_watershed = None
-    #aParameter_value_lower_subbasin = None
-    #aParameter_value_lower_hru       = None
-#
-    #aParameter_value_upper_watershed = None
-    #aParameter_value_upper_subbasin = None
-    #aParameter_value_upper_hru       = None
 
     nParameter=0
     nParameter_watershed=0
     nParameter_subbasin=0
     nParameter_hru=0
+
+    sFilename_swat_current = ''
 
     sFilename_model_configuration=''
     sWorkspace_data=''
@@ -86,8 +80,11 @@ class swatcase(object):
     sWorkspace_simulation_case=''
     sWorkspace_calibration=''
     sWorkspace_calibration_case=''
+
     sFilename_model_configuration=''
     sFilename_observation_discharge=''
+
+    sFilename_HRULandUseSoilsReport=''
     sRegion=''
     sModel=''
     sCase=''
@@ -97,7 +94,8 @@ class swatcase(object):
     sDate_end=''
 
     def __init__(self, aConfig_in,sDate_in=None):
-
+        if 'iFlag_run' in aConfig_in:
+            self.iFlag_run =  int(aConfig_in['iFlag_run']) 
         
 
         if 'iFlag_calibration' in aConfig_in:
@@ -189,8 +187,6 @@ class swatcase(object):
             iCase_index=1
         sCase_index = "{:03d}".format( iCase_index )
 
-        
-        
         if sDate_in is not None:
             self.sDate= sDate_in
         else:
@@ -212,15 +208,16 @@ class swatcase(object):
         sPath = self.sWorkspace_calibration_case
         Path(sPath).mkdir(parents=True, exist_ok=True)
 
-        
+
+        if 'sFilename_HRULandUseSoilsReport' in aConfig_in:
+            self.sFilename_HRULandUseSoilsReport = aConfig_in[ 'sFilename_HRULandUseSoilsReport']
+        self.sFilename_HRULandUseSoilsReport =  os.path.join(self.sWorkspace_data,  self.sFilename_HRULandUseSoilsReport )
+          
         if 'sFilename_observation_discharge' in aConfig_in:
             self.sFilename_observation_discharge = aConfig_in[ 'sFilename_observation_discharge']
         if 'sFilename_swat' in aConfig_in:
             self.sFilename_swat = aConfig_in[ 'sFilename_swat']
         
-
-        
-
         iMonth_count = 0
         for iYear in range( self.iYear_start, self.iYear_end +1):
             if iYear == self.iYear_start:
@@ -235,37 +232,9 @@ class swatcase(object):
 
             for iMonth in range(iMonth_start, iMonth_end+1):
                 iMonth_count = iMonth_count  + 1
-                pass
-        
-        #self.sWorkspace_data_project = str(Path(self.sWorkspace_data ) / self.sWorkspace_project )
-        #read hru type
-        
-        
-        
+                pass     
 
-        self.nstress_month = iMonth_count
-
-        
-
-        #for replace and calibration
-        #self.aParameter_value =  aConfig_in['aParameter_value'] #this should be a variable sized array
-        #self.aParameter_value_lower =  aConfig_in['aParameter_value_lower'] #this should be a variable sized array
-        #self.aParameter_value_upper =  aConfig_in['aParameter_value_upper'] #this should be a variable sized array
-        #self.aParameter =  aConfig_in['aParameter']  #list
-
-        #if self.aParameter is not None:
-        #    self.aParameter_watershed, self.aParameter_subbasin, self.aParameter_hru,\
-        #        self.aParameter_value_watershed, self.aParameter_value_subbasin, self.aParameter_value_hru, \
-        #        self.aParameter_value_lower_watershed, self.aParameter_value_lower_subbasin, self.aParameter_value_lower_hru, \
-        #          self.aParameter_value_upper_watershed, self.aParameter_value_upper_subbasin, self.aParameter_value_upper_hru \
-        #       = self.define_parameter(self.aParameter, self.aParameter_value, self.aParameter_value_lower, self.#aParameter_value_upper)
-        #    self.nParameter_watershed = self.aParameter_watershed.size
-        #    self.nParameter_subbasin = self.aParameter_subbasin.size
-        #    self.nParameter_hru = self.aParameter_hru.size
-        #    self.nParameter = self.nParameter_watershed \
-        #        + self.nParameter_subbasin * self.nsubbasin \
-        #            + self.nParameter_hru  *  self.nhru
-        #    pass
+        self.nstress_month = iMonth_count        
 
         if 'sJob' in aConfig_in:
             self.sJob =  aConfig_in['sJob'] 
@@ -302,6 +271,26 @@ class swatcase(object):
             
         self.sFilename_hru_info = os.path.join(self.sWorkspace_data,  self.sFilename_hru_info )
 
+        if 'nParameter_watershed' in aConfig_in:
+            self.nParameter_watershed = int(aConfig_in['nParameter_watershed'] )
+        else:
+            self.nParameter_watershed = 0
+        if 'nParameter_basin' in aConfig_in:
+            self.nParameter_basin = int(aConfig_in['nParameter_basin'] )
+        else:
+            self.nParameter_basin = 0
+        if 'nParameter_hru' in aConfig_in:
+            self.nParameter_hru = int(aConfig_in['nParameter_hru'] )
+        else:
+            self.nParameter_hru = 0
+
+        self.aParameter_watershed=list()
+        for i in range(self.nParameter_watershed):
+            watershed_dummy = aConfig_in['aParameter_watershed'][i]
+            pParameter_watershed = swatpara(watershed_dummy)
+            self.aParameter_watershed.append(pParameter_watershed)
+
+        
         return
 
     
@@ -377,12 +366,12 @@ class swatcase(object):
 
     
     def setup(self):
-
+        
         self.copy_TxtInOut_files()
-        #self.define_parameter()
+        self.swaty_prepare_watershed_configuration()      
 
         #replace parameter using parameter files
-        if (self.iFlag_replace_parameter == 1) :
+        if (self.iFlag_replace_parameter == 1):
             self.swaty_prepare_watershed_parameter_file()
             self.swaty_write_watershed_input_file()    
             self.swaty_prepare_subbasin_parameter_file()
@@ -403,12 +392,141 @@ class swatcase(object):
         return
 
     def run(self):
+        if (self.iFlag_run ==1):            
+            sFilename_bash = os.path.join(self.sWorkspace_simulation_case,  'run_swat.sh' )
+            if (os.path.exists(sFilename_bash)):
+                os.chdir(self.sWorkspace_simulation_case)
+                sCommand = './run_swat.sh '
+                print(sCommand)
+                p = subprocess.Popen(sCommand, shell= True)
+                p.wait()
+            pass
+        else:
+            pass
+
         
 
         return    
 
+    def analyze(self):
+        
+        return
     def evaluate(self):
         return
+
+    def swaty_prepare_watershed_configuration(self):
+        #process hru report if needed
+        if(os.path.isfile(self.sFilename_hru_info) \
+            and os.path.isfile(self.sFilename_hru_combination) \
+                and os.path.isfile(self.sFilename_watershed_configuration)):
+            return
+      
+
+        sWorkspace_data = self.sWorkspace_data
+        sWorkspace_project = self.sWorkspace_project
+        sWorkspace_data_project = sWorkspace_data + slash + sWorkspace_project
+        sWorkspace_simulation = self.sWorkspace_simulation
+
+        sFilename_hru_report = self.sFilename_HRULandUseSoilsReport
+        print(sFilename_hru_report)
+        if os.path.isfile(sFilename_hru_report):
+            pass
+        else:
+            print('The HRU report file does not exist!')
+            return
+        ifs=open(sFilename_hru_report,'r')
+
+        #we also need to record the number of subbasin and hru
+        #this file will store how many hru are in each subbasin
+        #this file will be used to generate model imput files in the calibration process
+        
+        ofs = open( self.sFilename_watershed_configuration, 'w' )  
+
+        sLine=ifs.readline()
+        while(sLine):
+            print(sLine)
+            if "Number of Subbasins" in sLine:
+                sLine = sLine.rstrip()
+                aDummy = sLine.split()
+                nsubbasin = int(aDummy[3])
+                print(nsubbasin)
+                break
+            else:
+                sLine=ifs.readline()
+        #keep reading the hru within each subbasin
+        lookup_table1=list()
+        lookup_table2=list()
+        #let's define subbasin starts with one
+        iSubbasin = 1
+        while( sLine ):
+            print(sLine)
+            if "SUBBASIN #" in sLine:                
+                iHru = 0
+                sLine=ifs.readline()
+                while(sLine):
+                    if "HRUs" in sLine:
+                        break
+                    else:
+                        sLine=ifs.readline()
+                #we found the hru index now
+                sLine=(ifs.readline()).rstrip()
+                aDummy = sLine.split() #this is invalid if the line is too long               
+                sLast=aDummy[ len(aDummy)-1 ]
+                while( sLast.isdigit() ):
+                    #print(aDummy)
+                    if(len(aDummy)>0):
+                        print(aDummy)
+                        iHru = iHru + 1
+
+                        index = aDummy.index("-->")
+                        sKey = aDummy[index+1] 
+
+                        if sKey in lookup_table1:
+                            pass
+                        else:
+                            lookup_table1.append(sKey)
+
+                        #lookup table 2    
+                        lookup_table2.append(sKey)                        
+                        #next line
+                        sLine=(ifs.readline()).rstrip()
+                        aDummy = sLine.split()
+
+                        if( len(aDummy) > 0) :
+                            #sFirst = aDummy[ len(aDummy)-1 ]
+                            sLast = aDummy[ len(aDummy)-1 ]
+                        else:
+                            break
+                    else:
+                        break
+                    
+                #now save the count out
+                sLine = "{:02d}".format( iSubbasin ) + ', ' + "{:03d}".format( iHru )  + '\n'
+                ofs.write(sLine)
+                iSubbasin = iSubbasin+1
+
+                continue
+            else:
+                sLine=ifs.readline()
+
+
+
+        ifs.close() #close hru report file
+        ofs.close() #save watershed configuration file
+        #save it to a file
+        #this file store all the existing unique hru type        
+        ofs = open(self.sFilename_hru_combination, 'w')
+        for item in lookup_table1:
+            ofs.write("%s\n" % item)
+        ofs.close()
+
+        #this file store all the hru information, some hru belong to the same type        
+        ofs = open(self.sFilename_hru_info, 'w')
+        for item in lookup_table2:
+            ofs.write("%s\n" % item)
+        ofs.close()       
+
+        print('finished')
     
     def swaty_prepare_watershed_parameter_file(self):
         """
@@ -1251,6 +1369,7 @@ class swatcase(object):
         print(sFilename_swat_source)
         print(sFilename_swat_new)
         copy2(sFilename_swat_source, sFilename_swat_new)
+        self.sFilename_swat_current = sFilename_swat_new
 
 
 

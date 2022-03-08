@@ -18,7 +18,7 @@ class swatpara(object):
     iParameter_type=1
     dValue_init=0.0
     dValue_lower=-1
-    dValue__upper=1
+    dValue_upper=1
     def __init__(self, aConfig_in):
 
         if 'iParameter_type' in aConfig_in:
@@ -32,8 +32,8 @@ class swatpara(object):
         if 'dValue_lower' in aConfig_in:
             self.dValue_lower = float(aConfig_in['dValue_lower'])
 
-        if 'dValue__upper' in aConfig_in:
-            self.dValue__upper = float(aConfig_in['dValue__upper'])
+        if 'dValue_upper' in aConfig_in:
+            self.dValue_upper = float(aConfig_in['dValue_upper'])
 
         return
     def tojson(self):
