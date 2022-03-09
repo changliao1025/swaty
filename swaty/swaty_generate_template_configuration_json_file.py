@@ -9,7 +9,7 @@ from swaty.classes.pycase import swatcase
 
 from swaty.classes.swatpara import swatpara
 
-def swaty_generate_template_configuration_json_file(sFilename_json, sPath_data, sPath_bin):
+def swaty_generate_template_configuration_json_file(sFilename_json, sWorkspace_input, sWorkspace_output ,sPath_bin):
     #use a dict to initialize the class
     aConfig = {}
     aConfig['iFlag_run'] = 1
@@ -32,14 +32,12 @@ def swaty_generate_template_configuration_json_file(sFilename_json, sPath_data, 
     aConfig['sWorkspace_bin'] = sPath_bin 
  
  
-    aConfig['sWorkspace_data'] = sPath_data  
-    aConfig['sWorkspace_project'] = '/swat/arw'
-    aConfig['sWorkspace_scratch'] = '/global/homes/l/liao313/'
+    aConfig['sWorkspace_input'] = sWorkspace_input  
     aConfig['sWorkspace_simulation'] = '/global/homes/l/liao313/04model/swat/arw/simulation'
     aConfig['sWorkspace_calibration'] = '/global/homes/l/liao313/04model/swat/arw/calibration'
     aConfig['sRegion'] = 'arw'
     aConfig['sModel'] = 'swat'
-    aConfig['sDate'] = '20210902'
+    aConfig['sDate'] = '20220308'
     aConfig['sJob'] = 'swat'
     aConfig['iCase_index'] = 1
     aConfig['iYear_start'] = 1997
@@ -49,14 +47,15 @@ def swaty_generate_template_configuration_json_file(sFilename_json, sPath_data, 
     aConfig['iDay_start'] = 1
     aConfig['iDay_end'] = 31
    
-    aConfig['nsegment'] = 5
-    aConfig['nsubbasin']= 5
-    aConfig['sFilename_swat'] = 'swat670'
+    aConfig['nsegment'] = 1
+    aConfig['nsubbasin']= 1
+    aConfig['sFilename_swat'] = 'swat670_static.exe'
   
     aConfig['sFilename_observation_discharge'] = 'obs.flow_am.csv'
     aConfig['sWorkspace_simulation_copy'] = 'TxtInOut.tar'
-    aConfig['sFilename_HRULandUseSoilsReport'] = 'sFilename_HRULandUseSoilsReport.txt'
-
+    aConfig['sFilename_LandUseSoilsReport'] = 'LandUseSoilsReport.txt'
+    aConfig['sFilename_HRULandUseSoilsReport'] = 'HRULandUseSoilsReport.txt'
+    
     aConfig['sFilename_hru_combination'] = 'hru_combination.txt'
     aConfig['sFilename_hru_info'] = 'hru_info.txt'
     aConfig['sFilename_watershed_configuration'] = 'watershed_configuration.txt'

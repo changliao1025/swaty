@@ -1,0 +1,596 @@
+__________________________________________________________________________________________________________________________
+
+SWAT   model  simulation   Date: 10/23/2020 12:00:00 AM   Time: 00:00:00
+MULTIPLE HRUs  LandUse/Soil/Slope OPTION              THRESHOLDS : 0 / 0 / 0 [%]
+Number of HRUs: 401
+Number of Subbasins: 5
+
+__________________________________________________________________________________________________________________________
+                                                                Area [ha]          Area[acres]
+
+Watershed                                                      20520.0333           50706.0282
+
+__________________________________________________________________________________________________________________________
+                                                                Area [ha]          Area[acres] %Wat.Area
+LANDUSE:
+                                       Water --> WATR             26.6663              65.8938      0.13
+                     Residential-Low Density --> URLD            114.3118             282.4702      0.56
+                  Residential-Medium Density --> URMD            106.0870             262.1464      0.52
+                Southwestern US (Arid) Range --> SWRN            204.3348             504.9215      1.00
+                            Forest-Deciduous --> FRSD             15.2930              37.7897      0.07
+                            Forest-Evergreen --> FRSE          16561.1429           40923.4121     80.71
+                                 Range-Brush --> RNGB           1990.1439            4917.7450      9.70
+                               Range-Grasses --> RNGE           1130.5883            2793.7402      5.51
+                                          Hay --> HAY             57.5736             142.2672      0.28
+                           Wetlands-Forested --> WETF            268.2055             662.7492      1.31
+                       Wetlands-Non-Forested --> WETN             26.7948              66.2114      0.13
+                    Residential-High Density --> URHD             11.0521              27.3102      0.05
+                                  Industrial --> UIDU              1.7349               4.2871      0.01
+                                Forest-Mixed --> FRST              6.1043              15.0841      0.03
+
+SOILS:
+                                                WA229           7831.9345           19353.1016     38.17
+                                                WA325           4802.5746           11867.4021     23.40
+                                                WA243           6177.1439           15264.0313     30.10
+                                                WA276           1708.3803            4221.4931      8.33
+
+SLOPE:
+                                                23-45           6234.7174           15406.2985     30.38
+                                                 0-23           3923.3567            9694.8106     19.12
+                                                45-66           5965.6124           14741.3264     29.07
+                                              96-9999            546.2422            1349.7917      2.66
+                                                66-96           3850.1046            9513.8010     18.76
+__________________________________________________________________________________________________________________________
+__________________________________________________________________________________________________________________________
+                                                                Area [ha]          Area[acres] %Wat.Area %Sub.Area
+
+SUBBASIN #                                          1           2988.4928            7384.7153     14.56
+
+LANDUSE:
+                                       Water --> WATR              1.6064               3.9695      0.01      0.05
+                     Residential-Low Density --> URLD              1.2851               3.1756      0.01      0.04
+                  Residential-Medium Density --> URMD              1.3494               3.3344      0.01      0.05
+                Southwestern US (Arid) Range --> SWRN             20.3050              50.1746      0.10      0.68
+                            Forest-Deciduous --> FRSD              0.7068               1.7466      0.00      0.02
+                            Forest-Evergreen --> FRSE           2162.0293            5342.4824     10.54     72.35
+                                 Range-Brush --> RNGB            386.6940             955.5401      1.88     12.94
+                               Range-Grasses --> RNGE            385.7944             953.3172      1.88     12.91
+                                          Hay --> HAY             24.0318              59.3839      0.12      0.80
+                           Wetlands-Forested --> WETF              4.6907              11.5910      0.02      0.16
+
+SOILS:
+                                                WA229           2834.3422            7003.8012     13.81     94.84
+                                                WA325            154.1507             380.9141      0.75      5.16
+
+SLOPE:
+                                                23-45            891.1054            2201.9659      4.34     29.82
+                                                 0-23            312.6708             772.6252      1.52     10.46
+                                                45-66           1018.1399            2515.8746      4.96     34.07
+                                              96-9999             90.6655             224.0391      0.44      3.03
+                                                66-96            675.9112            1670.2105      3.29     22.62
+HRUs
+ 1                         Water --> WATR/WA229/23-45              0.1285               0.3176      0.00      0.00    1
+ 2                          Water --> WATR/WA229/0-23              1.4779               3.6519      0.01      0.05    2
+ 3        Residential-Low Density --> URLD/WA325/0-23              0.3855               0.9527      0.00      0.01    3
+ 4       Residential-Low Density --> URLD/WA325/23-45              0.5140               1.2702      0.00      0.02    4
+ 5       Residential-Low Density --> URLD/WA325/45-66              0.3855               0.9527      0.00      0.01    5
+ 6     Residential-Medium Density --> URMD/WA325/0-23              1.3494               3.3344      0.01      0.05    6
+ 7Southwestern US (Arid) Range --> SWRN/WA229/96-9999              3.4698               8.5741      0.02      0.12    7
+ 8   Southwestern US (Arid) Range --> SWRN/WA229/0-23              0.2570               0.6351      0.00      0.01    8
+ 9  Southwestern US (Arid) Range --> SWRN/WA229/23-45              1.4779               3.6519      0.01      0.05    9
+ 10 Southwestern US (Arid) Range --> SWRN/WA229/66-96              9.8312              24.2934      0.05      0.33   10
+ 11 Southwestern US (Arid) Range --> SWRN/WA229/45-66              5.2048              12.8612      0.03      0.17   11
+ 12 Southwestern US (Arid) Range --> SWRN/WA325/66-96              0.0643               0.1588      0.00      0.00   12
+ 13              Forest-Deciduous --> FRSD/WA229/0-23              0.4498               1.1115      0.00      0.02   13
+ 14              Forest-Deciduous --> FRSD/WA325/0-23              0.2570               0.6351      0.00      0.01   14
+ 15           Forest-Evergreen --> FRSE/WA229/96-9999             47.5496             117.4975      0.23      1.59   15
+ 16             Forest-Evergreen --> FRSE/WA229/66-96            417.7297            1032.2311      2.04     13.98   16
+ 17              Forest-Evergreen --> FRSE/WA229/0-23            211.7885             523.3400      1.03      7.09   17
+ 18             Forest-Evergreen --> FRSE/WA229/23-45            671.7346            1659.8898      3.27     22.48   18
+ 19             Forest-Evergreen --> FRSE/WA229/45-66            693.1962            1712.9224      3.38     23.20   19
+ 20             Forest-Evergreen --> FRSE/WA325/66-96             10.9236              26.9927      0.05      0.37   20
+ 21           Forest-Evergreen --> FRSE/WA325/96-9999              0.8996               2.2229      0.00      0.03   21
+ 22             Forest-Evergreen --> FRSE/WA325/45-66             50.3126             124.3250      0.25      1.68   22
+ 23              Forest-Evergreen --> FRSE/WA325/0-23             16.7709              41.4417      0.08      0.56   23
+ 24             Forest-Evergreen --> FRSE/WA325/23-45             41.1240             101.6194      0.20      1.38   24
+ 25                  Range-Brush --> RNGB/WA229/45-66            120.7375             298.3483      0.59      4.04   25
+ 26                Range-Brush --> RNGB/WA229/96-9999             19.4054              47.9517      0.09      0.65   26
+ 27                  Range-Brush --> RNGB/WA229/23-45             89.7659             221.8161      0.44      3.00   27
+ 28                  Range-Brush --> RNGB/WA229/66-96            105.7657             261.3525      0.52      3.54   28
+ 29                   Range-Brush --> RNGB/WA229/0-23             44.0798             108.9233      0.21      1.47   29
+ 30                Range-Brush --> RNGB/WA325/96-9999              0.1285               0.3176      0.00      0.00   30
+ 31                  Range-Brush --> RNGB/WA325/45-66              2.7630               6.8276      0.01      0.09   31
+ 32                  Range-Brush --> RNGB/WA325/66-96              1.4136               3.4932      0.01      0.05   32
+ 33                  Range-Brush --> RNGB/WA325/23-45              1.3494               3.3344      0.01      0.05   33
+ 34                   Range-Brush --> RNGB/WA325/0-23              1.2851               3.1756      0.01      0.04   34
+ 35                Range-Grasses --> RNGE/WA229/23-45             73.7019             182.1211      0.36      2.47   35
+ 36              Range-Grasses --> RNGE/WA229/96-9999             18.7628              46.3639      0.09      0.63   36
+ 37                Range-Grasses --> RNGE/WA229/66-96            117.6532             290.7268      0.57      3.94   37
+ 38                 Range-Grasses --> RNGE/WA229/0-23             26.9234              66.5290      0.13      0.90   38
+ 39                Range-Grasses --> RNGE/WA229/45-66            125.8779             311.0507      0.61      4.21   39
+ 40                Range-Grasses --> RNGE/WA325/23-45              6.1686              15.2429      0.03      0.21   40
+ 41                Range-Grasses --> RNGE/WA325/45-66              8.9959              22.2292      0.04      0.30   41
+ 42                 Range-Grasses --> RNGE/WA325/0-23              4.2409              10.4795      0.02      0.14   42
+ 43                Range-Grasses --> RNGE/WA325/66-96              3.4698               8.5741      0.02      0.12   43
+ 44                           Hay --> HAY/WA229/23-45              3.0200               7.4627      0.01      0.10   44
+ 45                         Hay --> HAY/WA229/96-9999              0.4498               1.1115      0.00      0.02   45
+ 46                           Hay --> HAY/WA229/45-66              9.9597              24.6110      0.05      0.33   46
+ 47                           Hay --> HAY/WA229/66-96              8.9959              22.2292      0.04      0.30   47
+ 48                            Hay --> HAY/WA229/0-23              0.2570               0.6351      0.00      0.01   48
+ 49                           Hay --> HAY/WA325/66-96              0.0643               0.1588      0.00      0.00   49
+ 50                           Hay --> HAY/WA325/23-45              0.7711               1.9054      0.00      0.03   50
+ 51                           Hay --> HAY/WA325/45-66              0.5140               1.2702      0.00      0.02   51
+ 52            Wetlands-Forested --> WETF/WA229/45-66              0.1928               0.4763      0.00      0.01   52
+ 53            Wetlands-Forested --> WETF/WA229/23-45              1.3494               3.3344      0.01      0.05   53
+ 54             Wetlands-Forested --> WETF/WA229/0-23              3.1486               7.7802      0.02      0.11   54
+__________________________________________________________________________________________________________________________
+__________________________________________________________________________________________________________________________
+                                                                Area [ha]          Area[acres] %Wat.Area %Sub.Area
+
+SUBBASIN #                                          2           8289.7601           20484.4116     40.40
+
+LANDUSE:
+                     Residential-Low Density --> URLD             44.9794             111.1462      0.22      0.54
+                  Residential-Medium Density --> URMD             59.1800             146.2367      0.29      0.71
+                Southwestern US (Arid) Range --> SWRN             52.8186             130.5174      0.26      0.64
+                            Forest-Deciduous --> FRSD              4.8835              12.0673      0.02      0.06
+                            Forest-Evergreen --> FRSE           7289.6119           18012.9955     35.52     87.94
+                                 Range-Brush --> RNGB            437.6492            1081.4530      2.13      5.28
+                               Range-Grasses --> RNGE            253.4908             626.3885      1.24      3.06
+                                          Hay --> HAY              5.5260              13.6551      0.03      0.07
+                           Wetlands-Forested --> WETF            136.9943             338.5197      0.67      1.65
+                       Wetlands-Non-Forested --> WETN              4.6264              11.4322      0.02      0.06
+
+SOILS:
+                                                WA325           2265.2248            5597.4837     11.04     27.33
+                                                WA229            650.5300            1607.4923      3.17      7.85
+                                                WA243           3665.6250            9057.9426     17.86     44.22
+                                                WA276           1708.3803            4221.4931      8.33     20.61
+
+SLOPE:
+                                                23-45           2476.6277            6119.8710     12.07     29.88
+                                                45-66           2554.9561            6313.4242     12.45     30.82
+                                                66-96           1489.3308            3680.2109      7.26     17.97
+                                                 0-23           1546.7759            3822.1606      7.54     18.66
+                                              96-9999            222.0695             548.7449      1.08      2.68
+HRUs
+ 55      Residential-Low Density --> URLD/WA325/23-45             13.0440              32.2324      0.06      0.16    1
+ 56      Residential-Low Density --> URLD/WA325/45-66              5.9116              14.6078      0.03      0.07    2
+ 57      Residential-Low Density --> URLD/WA325/66-96              1.3494               3.3344      0.01      0.02    3
+ 58       Residential-Low Density --> URLD/WA325/0-23             24.6744              60.9717      0.12      0.30    4
+ 59 Residential-Medium Density --> URMD/WA325/96-9999              0.7068               1.7466      0.00      0.01    5
+ 60   Residential-Medium Density --> URMD/WA325/23-45              5.9758              14.7666      0.03      0.07    6
+ 61   Residential-Medium Density --> URMD/WA325/45-66              5.5260              13.6551      0.03      0.07    7
+ 62   Residential-Medium Density --> URMD/WA325/66-96              3.3413               8.2566      0.02      0.04    8
+ 63    Residential-Medium Density --> URMD/WA325/0-23             43.6300             107.8119      0.21      0.53    9
+ 64 Southwestern US (Arid) Range --> SWRN/WA229/45-66              1.1566               2.8580      0.01      0.01   10
+ 65 Southwestern US (Arid) Range --> SWRN/WA229/23-45              0.1285               0.3176      0.00      0.00   11
+ 66 Southwestern US (Arid) Range --> SWRN/WA229/66-96              3.7911               9.3680      0.02      0.05   12
+ 67 Southwestern US (Arid) Range --> SWRN/WA229/96-9999              2.6988               6.6688      0.01      0.03   13
+ 68 Southwestern US (Arid) Range --> SWRN/WA243/23-45              0.6426               1.5878      0.00      0.01   14
+ 69 Southwestern US (Arid) Range --> SWRN/WA243/96-9999              2.1205               5.2398      0.01      0.03   15
+ 70 Southwestern US (Arid) Range --> SWRN/WA243/66-96              3.9196               9.6856      0.02      0.05   16
+ 71 Southwestern US (Arid) Range --> SWRN/WA243/45-66              2.1205               5.2398      0.01      0.03   17
+ 72  Southwestern US (Arid) Range --> SWRN/WA276/0-23              0.1928               0.4763      0.00      0.00   18
+ 73 Southwestern US (Arid) Range --> SWRN/WA276/23-45              0.7711               1.9054      0.00      0.01   19
+ 74 Southwestern US (Arid) Range --> SWRN/WA276/96-9999              4.2409              10.4795      0.02      0.05   20
+ 75 Southwestern US (Arid) Range --> SWRN/WA276/66-96              7.7750              19.2124      0.04      0.09   21
+ 76 Southwestern US (Arid) Range --> SWRN/WA276/45-66              4.4337              10.9558      0.02      0.05   22
+ 77 Southwestern US (Arid) Range --> SWRN/WA325/23-45              3.4698               8.5741      0.02      0.04   23
+ 78 Southwestern US (Arid) Range --> SWRN/WA325/66-96              1.4779               3.6519      0.01      0.02   24
+ 79 Southwestern US (Arid) Range --> SWRN/WA325/96-9999              0.0643               0.1588      0.00      0.00   25
+ 80 Southwestern US (Arid) Range --> SWRN/WA325/45-66              5.2048              12.8612      0.03      0.06   26
+ 81  Southwestern US (Arid) Range --> SWRN/WA325/0-23              8.6103              21.2766      0.04      0.10   27
+ 82              Forest-Deciduous --> FRSD/WA276/0-23              0.0643               0.1588      0.00      0.00   28
+ 83             Forest-Deciduous --> FRSD/WA276/66-96              0.0643               0.1588      0.00      0.00   29
+ 84             Forest-Deciduous --> FRSD/WA276/45-66              0.1285               0.3176      0.00      0.00   30
+ 85              Forest-Deciduous --> FRSD/WA325/0-23              4.1767              10.3207      0.02      0.05   31
+ 86             Forest-Deciduous --> FRSD/WA325/23-45              0.2570               0.6351      0.00      0.00   32
+ 87             Forest-Deciduous --> FRSD/WA325/45-66              0.1928               0.4763      0.00      0.00   33
+ 88             Forest-Evergreen --> FRSE/WA229/66-96            133.1389             328.9929      0.65      1.61   34
+ 89             Forest-Evergreen --> FRSE/WA229/45-66            172.5922             426.4840      0.84      2.08   35
+ 90           Forest-Evergreen --> FRSE/WA229/96-9999             16.7709              41.4417      0.08      0.20   36
+ 91             Forest-Evergreen --> FRSE/WA229/23-45            113.8620             281.3588      0.55      1.37   37
+ 92              Forest-Evergreen --> FRSE/WA229/0-23             36.6903              90.6636      0.18      0.44   38
+ 93             Forest-Evergreen --> FRSE/WA243/45-66           1204.6757            2976.8140      5.87     14.53   39
+ 94             Forest-Evergreen --> FRSE/WA243/66-96            562.3062            1389.4868      2.74      6.78   40
+ 95             Forest-Evergreen --> FRSE/WA243/23-45           1287.4378            3181.3231      6.27     15.53   41
+ 96              Forest-Evergreen --> FRSE/WA243/0-23            406.5491            1004.6033      1.98      4.90   42
+ 97           Forest-Evergreen --> FRSE/WA243/96-9999             60.0153             148.3008      0.29      0.72   43
+ 98           Forest-Evergreen --> FRSE/WA276/96-9999             43.8870             108.4470      0.21      0.53   44
+ 99             Forest-Evergreen --> FRSE/WA276/66-96            365.2324             902.5075      1.78      4.41   45
+ 100             Forest-Evergreen --> FRSE/WA276/0-23            111.8058             276.2778      0.54      1.35   46
+ 101            Forest-Evergreen --> FRSE/WA276/45-66            554.2742            1369.6393      2.70      6.69   47
+ 102            Forest-Evergreen --> FRSE/WA276/23-45            335.6103             829.3098      1.64      4.05   48
+ 103            Forest-Evergreen --> FRSE/WA325/66-96            152.8656             377.7385      0.74      1.84   49
+ 104            Forest-Evergreen --> FRSE/WA325/23-45            598.6753            1479.3565      2.92      7.22   50
+ 105          Forest-Evergreen --> FRSE/WA325/96-9999             10.9236              26.9927      0.05      0.13   51
+ 106            Forest-Evergreen --> FRSE/WA325/45-66            380.0756             939.1858      1.85      4.58   52
+ 107             Forest-Evergreen --> FRSE/WA325/0-23            742.2237            1834.0718      3.62      8.95   53
+ 108                 Range-Brush --> RNGB/WA229/45-66             25.3170              62.5595      0.12      0.31   54
+ 109                  Range-Brush --> RNGB/WA229/0-23              2.1205               5.2398      0.01      0.03   55
+ 110                 Range-Brush --> RNGB/WA229/23-45              8.4176              20.8002      0.04      0.10   56
+ 111                 Range-Brush --> RNGB/WA229/66-96             31.5498              77.9612      0.15      0.38   57
+ 112               Range-Brush --> RNGB/WA229/96-9999              7.1967              17.7834      0.04      0.09   58
+ 113                 Range-Brush --> RNGB/WA243/66-96             21.4616              53.0326      0.10      0.26   59
+ 114                  Range-Brush --> RNGB/WA243/0-23              6.6826              16.5132      0.03      0.08   60
+ 115                 Range-Brush --> RNGB/WA243/23-45             21.3973              52.8739      0.10      0.26   61
+ 116               Range-Brush --> RNGB/WA243/96-9999              2.5702               6.3512      0.01      0.03   62
+ 117                 Range-Brush --> RNGB/WA243/45-66             27.1804              67.1641      0.13      0.33   63
+ 118               Range-Brush --> RNGB/WA276/96-9999             27.2446              67.3229      0.13      0.33   64
+ 119                 Range-Brush --> RNGB/WA276/66-96             79.4850             196.4113      0.39      0.96   65
+ 120                 Range-Brush --> RNGB/WA276/23-45             22.1684              54.7792      0.11      0.27   66
+ 121                 Range-Brush --> RNGB/WA276/45-66             56.8025             140.3618      0.28      0.69   67
+ 122                  Range-Brush --> RNGB/WA276/0-23              3.7911               9.3680      0.02      0.05   68
+ 123                 Range-Brush --> RNGB/WA325/45-66             28.2085              69.7046      0.14      0.34   69
+ 124                 Range-Brush --> RNGB/WA325/66-96             24.6744              60.9717      0.12      0.30   70
+ 125               Range-Brush --> RNGB/WA325/96-9999              3.2128               7.9390      0.02      0.04   71
+ 126                 Range-Brush --> RNGB/WA325/23-45             25.9595              64.1473      0.13      0.31   72
+ 127                  Range-Brush --> RNGB/WA325/0-23             12.2087              30.1683      0.06      0.15   73
+ 128               Range-Grasses --> RNGE/WA229/23-45              7.3252              18.1010      0.04      0.09   74
+ 129             Range-Grasses --> RNGE/WA229/96-9999             14.9074              36.8370      0.07      0.18   75
+ 130               Range-Grasses --> RNGE/WA229/66-96             40.1601              99.2377      0.20      0.48   76
+ 131               Range-Grasses --> RNGE/WA229/45-66             30.3289              74.9443      0.15      0.37   77
+ 132                Range-Grasses --> RNGE/WA229/0-23              1.0281               2.5405      0.01      0.01   78
+ 133                Range-Grasses --> RNGE/WA243/0-23              2.9558               7.3039      0.01      0.04   79
+ 134             Range-Grasses --> RNGE/WA243/96-9999              2.0562               5.0810      0.01      0.02   80
+ 135               Range-Grasses --> RNGE/WA243/66-96             10.4095              25.7224      0.05      0.13   81
+ 136               Range-Grasses --> RNGE/WA243/45-66             15.4215              38.1073      0.08      0.19   82
+ 137               Range-Grasses --> RNGE/WA243/23-45              7.6465              18.8949      0.04      0.09   83
+ 138               Range-Grasses --> RNGE/WA276/66-96             35.3409              87.3292      0.17      0.43   84
+ 139             Range-Grasses --> RNGE/WA276/96-9999             20.1122              49.6982      0.10      0.24   85
+ 140               Range-Grasses --> RNGE/WA276/45-66             19.1484              47.3165      0.09      0.23   86
+ 141               Range-Grasses --> RNGE/WA276/23-45             10.4738              25.8812      0.05      0.13   87
+ 142                Range-Grasses --> RNGE/WA276/0-23              1.5421               3.8107      0.01      0.02   88
+ 143               Range-Grasses --> RNGE/WA325/45-66             13.3653              33.0263      0.07      0.16   89
+ 144               Range-Grasses --> RNGE/WA325/66-96              7.9678              19.6888      0.04      0.10   90
+ 145               Range-Grasses --> RNGE/WA325/23-45              7.0682              17.4658      0.03      0.09   91
+ 146             Range-Grasses --> RNGE/WA325/96-9999              2.2490               5.5573      0.01      0.03   92
+ 147                Range-Grasses --> RNGE/WA325/0-23              3.9839               9.8444      0.02      0.05   93
+ 148                          Hay --> HAY/WA229/45-66              0.6426               1.5878      0.00      0.01   94
+ 149                          Hay --> HAY/WA229/66-96              0.7068               1.7466      0.00      0.01   95
+ 150                          Hay --> HAY/WA243/45-66              0.2570               0.6351      0.00      0.00   96
+ 151                          Hay --> HAY/WA243/66-96              0.1285               0.3176      0.00      0.00   97
+ 152                          Hay --> HAY/WA276/23-45              0.0643               0.1588      0.00      0.00   98
+ 153                          Hay --> HAY/WA276/45-66              0.5140               1.2702      0.00      0.01   99
+ 154                        Hay --> HAY/WA276/96-9999              1.0924               2.6993      0.01      0.01  100
+ 155                          Hay --> HAY/WA276/66-96              2.1205               5.2398      0.01      0.03  101
+ 156            Wetlands-Forested --> WETF/WA243/0-23             12.5300              30.9622      0.06      0.15  102
+ 157           Wetlands-Forested --> WETF/WA243/45-66              1.3494               3.3344      0.01      0.02  103
+ 158           Wetlands-Forested --> WETF/WA243/23-45              3.7911               9.3680      0.02      0.05  104
+ 159           Wetlands-Forested --> WETF/WA325/66-96              0.0643               0.1588      0.00      0.00  105
+ 160           Wetlands-Forested --> WETF/WA325/23-45              2.4417               6.0337      0.01      0.03  106
+ 161            Wetlands-Forested --> WETF/WA325/0-23            116.6893             288.3451      0.57      1.41  107
+ 162           Wetlands-Forested --> WETF/WA325/45-66              0.1285               0.3176      0.00      0.00  108
+ 163        Wetlands-Non-Forested --> WETN/WA325/0-23              4.6264              11.4322      0.02      0.06  109
+__________________________________________________________________________________________________________________________
+__________________________________________________________________________________________________________________________
+                                                                Area [ha]          Area[acres] %Wat.Area %Sub.Area
+
+SUBBASIN #                                          3           2030.1755            5016.6651      9.89
+
+LANDUSE:
+                                       Water --> WATR              0.5140               1.2702      0.00      0.03
+                     Residential-Low Density --> URLD             19.9837              49.3807      0.10      0.98
+                  Residential-Medium Density --> URMD             14.6504              36.2019      0.07      0.72
+                    Residential-High Density --> URHD              6.6826              16.5132      0.03      0.33
+                                  Industrial --> UIDU              1.7349               4.2871      0.01      0.09
+                Southwestern US (Arid) Range --> SWRN             24.0318              59.3839      0.12      1.18
+                            Forest-Deciduous --> FRSD              0.4498               1.1115      0.00      0.02
+                            Forest-Evergreen --> FRSE           1382.6655            3416.6356      6.74     68.11
+                                Forest-Mixed --> FRST              2.6988               6.6688      0.01      0.13
+                                 Range-Brush --> RNGB            434.6934            1074.1491      2.12     21.41
+                               Range-Grasses --> RNGE            125.7494             310.7331      0.61      6.19
+                                          Hay --> HAY              6.8754              16.9895      0.03      0.34
+                           Wetlands-Forested --> WETF              8.5461              21.1178      0.04      0.42
+                       Wetlands-Non-Forested --> WETN              0.8996               2.2229      0.00      0.04
+
+SOILS:
+                                                WA229           1399.7576            3458.8711      6.82     68.95
+                                                WA325            630.4178            1557.7940      3.07     31.05
+
+SLOPE:
+                                                 0-23            376.9270             931.4055      1.84     18.57
+                                                23-45            635.1085            1569.3850      3.10     31.28
+                                                45-66            552.5393            1365.3522      2.69     27.22
+                                                66-96            394.5975             975.0701      1.92     19.44
+                                              96-9999             71.0031             175.4523      0.35      3.50
+HRUs
+ 164                        Water --> WATR/WA229/0-23              0.4498               1.1115      0.00      0.02    1
+ 165                       Water --> WATR/WA229/23-45              0.0643               0.1588      0.00      0.00    2
+ 166     Residential-Low Density --> URLD/WA229/45-66              6.6826              16.5132      0.03      0.33    3
+ 167     Residential-Low Density --> URLD/WA229/66-96              6.6184              16.3544      0.03      0.33    4
+ 168   Residential-Low Density --> URLD/WA229/96-9999              0.6426               1.5878      0.00      0.03    5
+ 169      Residential-Low Density --> URLD/WA229/0-23              0.0643               0.1588      0.00      0.00    6
+ 170     Residential-Low Density --> URLD/WA229/23-45              0.8996               2.2229      0.00      0.04    7
+ 171      Residential-Low Density --> URLD/WA325/0-23              0.1285               0.3176      0.00      0.01    8
+ 172     Residential-Low Density --> URLD/WA325/45-66              2.5060               6.1924      0.01      0.12    9
+ 173     Residential-Low Density --> URLD/WA325/23-45              0.7068               1.7466      0.00      0.03   10
+ 174     Residential-Low Density --> URLD/WA325/66-96              1.7349               4.2871      0.01      0.09   11
+ 175   Residential-Medium Density --> URMD/WA229/0-23              0.3213               0.7939      0.00      0.02   12
+ 176Residential-Medium Density --> URMD/WA229/96-9999              2.1847               5.3985      0.01      0.11   13
+ 177  Residential-Medium Density --> URMD/WA229/23-45              1.4136               3.4932      0.01      0.07   14
+ 178  Residential-Medium Density --> URMD/WA229/66-96              6.2971              15.5605      0.03      0.31   15
+ 179  Residential-Medium Density --> URMD/WA229/45-66              3.3413               8.2566      0.02      0.16   16
+ 180  Residential-Medium Density --> URMD/WA325/23-45              0.1928               0.4763      0.00      0.01   17
+ 181  Residential-Medium Density --> URMD/WA325/45-66              0.4498               1.1115      0.00      0.02   18
+ 182  Residential-Medium Density --> URMD/WA325/66-96              0.4498               1.1115      0.00      0.02   19
+ 183    Residential-High Density --> URHD/WA229/45-66              1.4779               3.6519      0.01      0.07   20
+ 184    Residential-High Density --> URHD/WA229/66-96              3.2128               7.9390      0.02      0.16   21
+ 185  Residential-High Density --> URHD/WA229/96-9999              0.2570               0.6351      0.00      0.01   22
+ 186    Residential-High Density --> URHD/WA229/23-45              0.9638               2.3817      0.00      0.05   23
+ 187     Residential-High Density --> URHD/WA229/0-23              0.7711               1.9054      0.00      0.04   24
+ 188                   Industrial --> UIDU/WA229/0-23              0.2570               0.6351      0.00      0.01   25
+ 189                  Industrial --> UIDU/WA229/45-66              0.3855               0.9527      0.00      0.02   26
+ 190                  Industrial --> UIDU/WA229/23-45              1.0281               2.5405      0.01      0.05   27
+ 191                  Industrial --> UIDU/WA229/66-96              0.0643               0.1588      0.00      0.00   28
+ 192Southwestern US (Arid) Range --> SWRN/WA229/23-45              5.6545              13.9727      0.03      0.28   29
+ 193 Southwestern US (Arid) Range --> SWRN/WA229/96-9999              2.5060               6.1924      0.01      0.12   30
+ 194 Southwestern US (Arid) Range --> SWRN/WA229/0-23              0.7068               1.7466      0.00      0.03   31
+ 195Southwestern US (Arid) Range --> SWRN/WA229/66-96              6.7469              16.6719      0.03      0.33   32
+ 196Southwestern US (Arid) Range --> SWRN/WA229/45-66              8.4176              20.8002      0.04      0.41   33
+ 197             Forest-Deciduous --> FRSD/WA229/0-23              0.2570               0.6351      0.00      0.01   34
+ 198            Forest-Deciduous --> FRSD/WA229/23-45              0.1928               0.4763      0.00      0.01   35
+ 199            Forest-Evergreen --> FRSE/WA229/23-45            245.0732             605.5883      1.19     12.07   36
+ 200            Forest-Evergreen --> FRSE/WA229/45-66            272.0609             672.2760      1.33     13.40   37
+ 201             Forest-Evergreen --> FRSE/WA229/0-23             96.1916             237.6942      0.47      4.74   38
+ 202            Forest-Evergreen --> FRSE/WA229/66-96            150.4238             371.7048      0.73      7.41   39
+ 203          Forest-Evergreen --> FRSE/WA229/96-9999             25.7667              63.6709      0.13      1.27   40
+ 204             Forest-Evergreen --> FRSE/WA325/0-23            223.6759             552.7144      1.09     11.02   41
+ 205          Forest-Evergreen --> FRSE/WA325/96-9999              1.3494               3.3344      0.01      0.07   42
+ 206            Forest-Evergreen --> FRSE/WA325/23-45            248.8644             614.9563      1.21     12.26   43
+ 207            Forest-Evergreen --> FRSE/WA325/45-66             95.0350             234.8361      0.46      4.68   44
+ 208            Forest-Evergreen --> FRSE/WA325/66-96             24.2246              59.8602      0.12      1.19   45
+ 209                Forest-Mixed --> FRST/WA229/45-66              0.7068               1.7466      0.00      0.03   46
+ 210                Forest-Mixed --> FRST/WA229/66-96              1.6064               3.9695      0.01      0.08   47
+ 211                Forest-Mixed --> FRST/WA229/23-45              0.0643               0.1588      0.00      0.00   48
+ 212              Forest-Mixed --> FRST/WA229/96-9999              0.3213               0.7939      0.00      0.02   49
+ 213               Range-Brush --> RNGB/WA229/96-9999             23.5820              58.2724      0.11      1.16   50
+ 214                 Range-Brush --> RNGB/WA229/45-66            114.7616             283.5817      0.56      5.65   51
+ 215                  Range-Brush --> RNGB/WA229/0-23             40.0316              98.9202      0.20      1.97   52
+ 216                 Range-Brush --> RNGB/WA229/23-45            100.4967             248.3325      0.49      4.95   53
+ 217                 Range-Brush --> RNGB/WA229/66-96            129.4120             319.7836      0.63      6.37   54
+ 218                  Range-Brush --> RNGB/WA325/0-23              0.7711               1.9054      0.00      0.04   55
+ 219                 Range-Brush --> RNGB/WA325/23-45              9.4457              23.3407      0.05      0.47   56
+ 220               Range-Brush --> RNGB/WA325/96-9999              0.0643               0.1588      0.00      0.00   57
+ 221                 Range-Brush --> RNGB/WA325/45-66             11.9517              29.5331      0.06      0.59   58
+ 222                 Range-Brush --> RNGB/WA325/66-96              4.1767              10.3207      0.02      0.21   59
+ 223                Range-Grasses --> RNGE/WA229/0-23              4.4337              10.9558      0.02      0.22   60
+ 224               Range-Grasses --> RNGE/WA229/66-96             55.3246             136.7099      0.27      2.73   61
+ 225               Range-Grasses --> RNGE/WA229/23-45             18.8271              46.5226      0.09      0.93   62
+ 226               Range-Grasses --> RNGE/WA229/45-66             33.5418              82.8833      0.16      1.65   63
+ 227             Range-Grasses --> RNGE/WA229/96-9999             12.9155              31.9149      0.06      0.64   64
+ 228               Range-Grasses --> RNGE/WA325/23-45              0.2570               0.6351      0.00      0.01   65
+ 229               Range-Grasses --> RNGE/WA325/66-96              0.1928               0.4763      0.00      0.01   66
+ 230               Range-Grasses --> RNGE/WA325/45-66              0.2570               0.6351      0.00      0.01   67
+ 231                           Hay --> HAY/WA229/0-23              0.1285               0.3176      0.00      0.01   68
+ 232                          Hay --> HAY/WA229/23-45              0.2570               0.6351      0.00      0.01   69
+ 233                          Hay --> HAY/WA229/45-66              0.9638               2.3817      0.00      0.05   70
+ 234                        Hay --> HAY/WA229/96-9999              1.4136               3.4932      0.01      0.07   71
+ 235                          Hay --> HAY/WA229/66-96              4.1124              10.1619      0.02      0.20   72
+ 236           Wetlands-Forested --> WETF/WA229/23-45              0.1285               0.3176      0.00      0.01   73
+ 237            Wetlands-Forested --> WETF/WA229/0-23              4.4337              10.9558      0.02      0.22   74
+ 238            Wetlands-Forested --> WETF/WA325/0-23              3.4056               8.4154      0.02      0.17   75
+ 239           Wetlands-Forested --> WETF/WA325/23-45              0.5783               1.4290      0.00      0.03   76
+ 240        Wetlands-Non-Forested --> WETN/WA229/0-23              0.8996               2.2229      0.00      0.04   77
+__________________________________________________________________________________________________________________________
+__________________________________________________________________________________________________________________________
+                                                                Area [ha]          Area[acres] %Wat.Area %Sub.Area
+
+SUBBASIN #                                          4           4454.8200           11008.0828     21.71
+
+LANDUSE:
+                     Residential-Low Density --> URLD             48.0637             118.7677      0.23      1.08
+                  Residential-Medium Density --> URMD             30.9072              76.3733      0.15      0.69
+                    Residential-High Density --> URHD              4.3694              10.7971      0.02      0.10
+                Southwestern US (Arid) Range --> SWRN             77.9428             192.6006      0.38      1.75
+                            Forest-Deciduous --> FRSD              4.4337              10.9558      0.02      0.10
+                            Forest-Evergreen --> FRSE           3468.8724            8571.7572     16.90     77.87
+                                Forest-Mixed --> FRST              3.4056               8.4154      0.02      0.08
+                                 Range-Brush --> RNGB            453.5847            1120.8305      2.21     10.18
+                               Range-Grasses --> RNGE            265.5710             656.2392      1.29      5.96
+                                          Hay --> HAY             21.1403              52.2387      0.10      0.47
+                           Wetlands-Forested --> WETF             67.0192             165.6079      0.33      1.50
+                       Wetlands-Non-Forested --> WETN              9.5099              23.4995      0.05      0.21
+
+SOILS:
+                                                WA229           1471.6604            3636.5463      7.17     33.04
+                                                WA325           1167.4714            2884.8802      5.69     26.21
+                                                WA243           1815.6882            4486.6563      8.85     40.76
+
+SLOPE:
+                                                45-66           1228.1935            3034.9276      5.99     27.57
+                                                23-45           1388.8341            3431.8785      6.77     31.18
+                                                 0-23            897.0169            2216.5737      4.37     20.14
+                                                66-96            863.6037            2134.0079      4.21     19.39
+                                              96-9999             77.1717             190.6952      0.38      1.73
+HRUs
+ 241     Residential-Low Density --> URLD/WA229/45-66              0.7068               1.7466      0.00      0.02    1
+ 242     Residential-Low Density --> URLD/WA229/23-45              5.3975              13.3375      0.03      0.12    2
+ 243      Residential-Low Density --> URLD/WA229/0-23              1.1566               2.8580      0.01      0.03    3
+ 244     Residential-Low Density --> URLD/WA325/45-66              5.1405              12.7024      0.03      0.12    4
+ 245     Residential-Low Density --> URLD/WA325/66-96              1.6064               3.9695      0.01      0.04    5
+ 246      Residential-Low Density --> URLD/WA325/0-23             23.3250              57.6373      0.11      0.52    6
+ 247     Residential-Low Density --> URLD/WA325/23-45             10.7308              26.5163      0.05      0.24    7
+ 248  Residential-Medium Density --> URMD/WA325/66-96              0.1285               0.3176      0.00      0.00    8
+ 249  Residential-Medium Density --> URMD/WA325/45-66              0.2570               0.6351      0.00      0.01    9
+ 250   Residential-Medium Density --> URMD/WA325/0-23             26.0880              64.4648      0.13      0.59   10
+ 251  Residential-Medium Density --> URMD/WA325/23-45              4.4337              10.9558      0.02      0.10   11
+ 252    Residential-High Density --> URHD/WA325/23-45              0.3213               0.7939      0.00      0.01   12
+ 253     Residential-High Density --> URHD/WA325/0-23              4.0481              10.0032      0.02      0.09   13
+ 254 Southwestern US (Arid) Range --> SWRN/WA229/0-23              0.8996               2.2229      0.00      0.02   14
+ 255 Southwestern US (Arid) Range --> SWRN/WA229/96-9999              0.3855               0.9527      0.00      0.01   15
+ 256Southwestern US (Arid) Range --> SWRN/WA229/66-96              2.6988               6.6688      0.01      0.06   16
+ 257Southwestern US (Arid) Range --> SWRN/WA229/45-66              4.8192              11.9085      0.02      0.11   17
+ 258Southwestern US (Arid) Range --> SWRN/WA229/23-45              6.5541              16.1956      0.03      0.15   18
+ 259Southwestern US (Arid) Range --> SWRN/WA243/45-66             21.1403              52.2387      0.10      0.47   19
+ 260Southwestern US (Arid) Range --> SWRN/WA243/23-45             14.0721              34.7729      0.07      0.32   20
+ 261 Southwestern US (Arid) Range --> SWRN/WA243/0-23              2.6345               6.5100      0.01      0.06   21
+ 262Southwestern US (Arid) Range --> SWRN/WA243/66-96             18.9556              46.8402      0.09      0.43   22
+ 263 Southwestern US (Arid) Range --> SWRN/WA243/96-9999              5.7831              14.2902      0.03      0.13   23
+ 264             Forest-Deciduous --> FRSD/WA229/0-23              0.7711               1.9054      0.00      0.02   24
+ 265            Forest-Deciduous --> FRSD/WA229/23-45              0.4498               1.1115      0.00      0.01   25
+ 266             Forest-Deciduous --> FRSD/WA243/0-23              0.0643               0.1588      0.00      0.00   26
+ 267            Forest-Deciduous --> FRSD/WA243/23-45              0.1928               0.4763      0.00      0.00   27
+ 268            Forest-Deciduous --> FRSD/WA325/23-45              0.0643               0.1588      0.00      0.00   28
+ 269             Forest-Deciduous --> FRSD/WA325/0-23              2.8915               7.1451      0.01      0.06   29
+ 270            Forest-Evergreen --> FRSE/WA229/45-66            304.1890             751.6662      1.48      6.83   30
+ 271             Forest-Evergreen --> FRSE/WA229/0-23             86.7459             214.3535      0.42      1.95   31
+ 272          Forest-Evergreen --> FRSE/WA229/96-9999             12.0802              29.8507      0.06      0.27   32
+ 273            Forest-Evergreen --> FRSE/WA229/66-96            173.0420             427.5955      0.84      3.88   33
+ 274            Forest-Evergreen --> FRSE/WA229/23-45            330.8553             817.5600      1.61      7.43   34
+ 275          Forest-Evergreen --> FRSE/WA243/96-9999             39.3891              97.3324      0.19      0.88   35
+ 276            Forest-Evergreen --> FRSE/WA243/66-96            373.9070             923.9429      1.82      8.39   36
+ 277            Forest-Evergreen --> FRSE/WA243/45-66            520.6039            1286.4384      2.54     11.69   37
+ 278             Forest-Evergreen --> FRSE/WA243/0-23            102.1674             252.4608      0.50      2.29   38
+ 279            Forest-Evergreen --> FRSE/WA243/23-45            524.5878            1296.2828      2.56     11.78   39
+ 280          Forest-Evergreen --> FRSE/WA325/96-9999              0.1285               0.3176      0.00      0.00   40
+ 281             Forest-Evergreen --> FRSE/WA325/0-23            535.2544            1322.6403      2.61     12.02   41
+ 282            Forest-Evergreen --> FRSE/WA325/66-96             19.5981              48.4280      0.10      0.44   42
+ 283            Forest-Evergreen --> FRSE/WA325/45-66            105.8943             261.6700      0.52      2.38   43
+ 284            Forest-Evergreen --> FRSE/WA325/23-45            340.4295             841.2183      1.66      7.64   44
+ 285                Forest-Mixed --> FRST/WA229/45-66              1.1566               2.8580      0.01      0.03   45
+ 286                Forest-Mixed --> FRST/WA229/23-45              1.4779               3.6519      0.01      0.03   46
+ 287                Forest-Mixed --> FRST/WA229/66-96              0.7711               1.9054      0.00      0.02   47
+ 288                 Range-Brush --> RNGB/WA229/66-96            104.6091             258.4944      0.51      2.35   48
+ 289                 Range-Brush --> RNGB/WA229/23-45             61.3004             151.4765      0.30      1.38   49
+ 290                 Range-Brush --> RNGB/WA229/45-66            115.5970             285.6458      0.56      2.59   50
+ 291               Range-Brush --> RNGB/WA229/96-9999              7.3252              18.1010      0.04      0.16   51
+ 292                  Range-Brush --> RNGB/WA229/0-23             17.9917              44.4585      0.09      0.40   52
+ 293                 Range-Brush --> RNGB/WA243/45-66             45.8789             113.3692      0.22      1.03   53
+ 294               Range-Brush --> RNGB/WA243/96-9999              4.3694              10.7971      0.02      0.10   54
+ 295                 Range-Brush --> RNGB/WA243/66-96             33.4132              82.5658      0.16      0.75   55
+ 296                 Range-Brush --> RNGB/WA243/23-45             39.7103              98.1263      0.19      0.89   56
+ 297                  Range-Brush --> RNGB/WA243/0-23             10.7950              26.6751      0.05      0.24   57
+ 298                 Range-Brush --> RNGB/WA325/66-96              1.2851               3.1756      0.01      0.03   58
+ 299                 Range-Brush --> RNGB/WA325/45-66              4.1767              10.3207      0.02      0.09   59
+ 300                  Range-Brush --> RNGB/WA325/0-23              1.6707               4.1283      0.01      0.04   60
+ 301                 Range-Brush --> RNGB/WA325/23-45              5.4618              13.4963      0.03      0.12   61
+ 302               Range-Grasses --> RNGE/WA229/45-66             71.1959             175.9286      0.35      1.60   62
+ 303                Range-Grasses --> RNGE/WA229/0-23              4.4337              10.9558      0.02      0.10   63
+ 304               Range-Grasses --> RNGE/WA229/23-45             24.0318              59.3839      0.12      0.54   64
+ 305               Range-Grasses --> RNGE/WA229/66-96            101.9746             251.9844      0.50      2.29   65
+ 306             Range-Grasses --> RNGE/WA229/96-9999              4.9477              12.2261      0.02      0.11   66
+ 307               Range-Grasses --> RNGE/WA243/23-45             12.5942              31.1209      0.06      0.28   67
+ 308               Range-Grasses --> RNGE/WA243/45-66             17.9275              44.2997      0.09      0.40   68
+ 309             Range-Grasses --> RNGE/WA243/96-9999              2.3775               5.8749      0.01      0.05   69
+ 310                Range-Grasses --> RNGE/WA243/0-23              3.4698               8.5741      0.02      0.08   70
+ 311               Range-Grasses --> RNGE/WA243/66-96             17.9275              44.2997      0.09      0.40   71
+ 312               Range-Grasses --> RNGE/WA325/23-45              1.2209               3.0168      0.01      0.03   72
+ 313               Range-Grasses --> RNGE/WA325/45-66              1.4779               3.6519      0.01      0.03   73
+ 314               Range-Grasses --> RNGE/WA325/66-96              1.4136               3.4932      0.01      0.03   74
+ 315                Range-Grasses --> RNGE/WA325/0-23              0.5783               1.4290      0.00      0.01   75
+ 316                           Hay --> HAY/WA229/0-23              0.1928               0.4763      0.00      0.00   76
+ 317                        Hay --> HAY/WA229/96-9999              0.3855               0.9527      0.00      0.01   77
+ 318                          Hay --> HAY/WA229/66-96             12.0802              29.8507      0.06      0.27   78
+ 319                          Hay --> HAY/WA229/45-66              7.5822              18.7361      0.04      0.17   79
+ 320                          Hay --> HAY/WA229/23-45              0.8996               2.2229      0.00      0.02   80
+ 321           Wetlands-Forested --> WETF/WA229/45-66              0.1928               0.4763      0.00      0.00   81
+ 322            Wetlands-Forested --> WETF/WA229/0-23              0.7068               1.7466      0.00      0.02   82
+ 323           Wetlands-Forested --> WETF/WA229/23-45              1.0281               2.5405      0.01      0.02   83
+ 324           Wetlands-Forested --> WETF/WA243/45-66              0.1928               0.4763      0.00      0.00   84
+ 325            Wetlands-Forested --> WETF/WA243/0-23              2.3775               5.8749      0.01      0.05   85
+ 326           Wetlands-Forested --> WETF/WA243/23-45              1.1566               2.8580      0.01      0.03   86
+ 327           Wetlands-Forested --> WETF/WA325/66-96              0.1928               0.4763      0.00      0.00   87
+ 328           Wetlands-Forested --> WETF/WA325/45-66              0.0643               0.1588      0.00      0.00   88
+ 329           Wetlands-Forested --> WETF/WA325/23-45              1.8634               4.6046      0.01      0.04   89
+ 330            Wetlands-Forested --> WETF/WA325/0-23             59.2442             146.3955      0.29      1.33   90
+ 331        Wetlands-Non-Forested --> WETN/WA229/0-23              1.0281               2.5405      0.01      0.02   91
+ 332        Wetlands-Non-Forested --> WETN/WA325/0-23              8.4818              20.9590      0.04      0.19   92
+__________________________________________________________________________________________________________________________
+__________________________________________________________________________________________________________________________
+                                                                Area [ha]          Area[acres] %Wat.Area %Sub.Area
+
+SUBBASIN #                                          5           2756.7849            6812.1533     13.43
+
+LANDUSE:
+                                       Water --> WATR             24.5459              60.6541      0.12      0.89
+                Southwestern US (Arid) Range --> SWRN             29.2366              72.2451      0.14      1.06
+                            Forest-Deciduous --> FRSD              4.8192              11.9085      0.02      0.17
+                            Forest-Evergreen --> FRSE           2257.9638            5579.5415     11.00     81.91
+                                 Range-Brush --> RNGB            277.5226             685.7723      1.35     10.07
+                               Range-Grasses --> RNGE             99.9827             247.0622      0.49      3.63
+                           Wetlands-Forested --> WETF             50.9552             125.9128      0.25      1.85
+                       Wetlands-Non-Forested --> WETN             11.7589              29.0568      0.06      0.43
+
+SOILS:
+                                                WA229           1475.6442            3646.3907      7.19     53.53
+                                                WA325            585.3100            1446.3302      2.85     21.23
+                                                WA243            695.8307            1719.4324      3.39     25.24
+
+SLOPE:
+                                                23-45            843.0417            2083.1982      4.11     30.58
+                                                 0-23            789.9661            1952.0456      3.85     28.66
+                                                66-96            426.6613            1054.3015      2.08     15.48
+                                                45-66            611.7835            1511.7477      2.98     22.19
+                                              96-9999             85.3323             210.8603      0.42      3.10
+HRUs
+ 333                       Water --> WATR/WA229/23-45              1.2209               3.0168      0.01      0.04    1
+ 334                        Water --> WATR/WA229/0-23             23.1322              57.1609      0.11      0.84    2
+ 335                       Water --> WATR/WA229/66-96              0.0643               0.1588      0.00      0.00    3
+ 336                       Water --> WATR/WA229/45-66              0.1285               0.3176      0.00      0.00    4
+ 337 Southwestern US (Arid) Range --> SWRN/WA229/96-9999              4.4979              11.1146      0.02      0.16    5
+ 338Southwestern US (Arid) Range --> SWRN/WA229/23-45              7.3252              18.1010      0.04      0.27    6
+ 339 Southwestern US (Arid) Range --> SWRN/WA229/0-23              2.8273               6.9863      0.01      0.10    7
+ 340Southwestern US (Arid) Range --> SWRN/WA229/66-96              5.7188              14.1315      0.03      0.21    8
+ 341Southwestern US (Arid) Range --> SWRN/WA229/45-66              6.7469              16.6719      0.03      0.24    9
+ 342Southwestern US (Arid) Range --> SWRN/WA325/23-45              0.2570               0.6351      0.00      0.01   10
+ 343Southwestern US (Arid) Range --> SWRN/WA325/66-96              0.8353               2.0641      0.00      0.03   11
+ 344 Southwestern US (Arid) Range --> SWRN/WA325/96-9999              0.1928               0.4763      0.00      0.01   12
+ 345Southwestern US (Arid) Range --> SWRN/WA325/45-66              0.8353               2.0641      0.00      0.03   13
+ 346            Forest-Deciduous --> FRSD/WA229/45-66              0.3855               0.9527      0.00      0.01   14
+ 347            Forest-Deciduous --> FRSD/WA229/23-45              0.7711               1.9054      0.00      0.03   15
+ 348             Forest-Deciduous --> FRSD/WA229/0-23              1.7992               4.4458      0.01      0.07   16
+ 349            Forest-Deciduous --> FRSD/WA229/66-96              0.3213               0.7939      0.00      0.01   17
+ 350            Forest-Deciduous --> FRSD/WA325/23-45              0.1928               0.4763      0.00      0.01   18
+ 351             Forest-Deciduous --> FRSD/WA325/0-23              1.3494               3.3344      0.01      0.05   19
+ 352             Forest-Evergreen --> FRSE/WA229/0-23            309.0725             763.7335      1.51     11.21   20
+ 353            Forest-Evergreen --> FRSE/WA229/66-96            112.1271             277.0717      0.55      4.07   21
+ 354            Forest-Evergreen --> FRSE/WA229/23-45            398.5814             984.9145      1.94     14.46   22
+ 355          Forest-Evergreen --> FRSE/WA229/96-9999             18.6343              46.0463      0.09      0.68   23
+ 356            Forest-Evergreen --> FRSE/WA229/45-66            211.2102             521.9110      1.03      7.66   24
+ 357            Forest-Evergreen --> FRSE/WA243/45-66            231.5152             572.0856      1.13      8.40   25
+ 358          Forest-Evergreen --> FRSE/WA243/96-9999             26.5378              65.5763      0.13      0.96   26
+ 359            Forest-Evergreen --> FRSE/WA243/66-96            172.8493             427.1191      0.84      6.27   27
+ 360            Forest-Evergreen --> FRSE/WA243/23-45            200.5437             495.5535      0.98      7.27   28
+ 361             Forest-Evergreen --> FRSE/WA243/0-23             57.7021             142.5848      0.28      2.09   29
+ 362            Forest-Evergreen --> FRSE/WA325/66-96             22.6824              56.0495      0.11      0.82   30
+ 363          Forest-Evergreen --> FRSE/WA325/96-9999              3.0200               7.4627      0.01      0.11   31
+ 364            Forest-Evergreen --> FRSE/WA325/45-66             56.0314             138.4565      0.27      2.03   32
+ 365             Forest-Evergreen --> FRSE/WA325/0-23            291.7875             721.0216      1.42     10.58   33
+ 366            Forest-Evergreen --> FRSE/WA325/23-45            145.6689             359.9551      0.71      5.28   34
+ 367                 Range-Brush --> RNGB/WA229/66-96             60.4009             149.2535      0.29      2.19   35
+ 368                 Range-Brush --> RNGB/WA229/45-66             74.6015             184.3440      0.36      2.71   36
+ 369               Range-Brush --> RNGB/WA229/96-9999             14.8432              36.6783      0.07      0.54   37
+ 370                 Range-Brush --> RNGB/WA229/23-45             74.2802             183.5501      0.36      2.69   38
+ 371                  Range-Brush --> RNGB/WA229/0-23             37.8469              93.5216      0.18      1.37   39
+ 372               Range-Brush --> RNGB/WA243/96-9999              0.5783               1.4290      0.00      0.02   40
+ 373                 Range-Brush --> RNGB/WA243/66-96              2.1847               5.3985      0.01      0.08   41
+ 374                  Range-Brush --> RNGB/WA243/0-23              0.5783               1.4290      0.00      0.02   42
+ 375                 Range-Brush --> RNGB/WA243/23-45              1.2209               3.0168      0.01      0.04   43
+ 376                 Range-Brush --> RNGB/WA243/45-66              1.8634               4.6046      0.01      0.07   44
+ 377                  Range-Brush --> RNGB/WA325/0-23              0.1928               0.4763      0.00      0.01   45
+ 378               Range-Brush --> RNGB/WA325/96-9999              0.7068               1.7466      0.00      0.03   46
+ 379                 Range-Brush --> RNGB/WA325/66-96              2.1847               5.3985      0.01      0.08   47
+ 380                 Range-Brush --> RNGB/WA325/45-66              4.3694              10.7971      0.02      0.16   48
+ 381                 Range-Brush --> RNGB/WA325/23-45              1.6707               4.1283      0.01      0.06   49
+ 382               Range-Grasses --> RNGE/WA229/45-66             23.0680              57.0021      0.11      0.84   50
+ 383             Range-Grasses --> RNGE/WA229/96-9999             16.2568              40.1714      0.08      0.59   51
+ 384                Range-Grasses --> RNGE/WA229/0-23              2.5702               6.3512      0.01      0.09   52
+ 385               Range-Grasses --> RNGE/WA229/66-96             46.8428             115.7509      0.23      1.70   53
+ 386               Range-Grasses --> RNGE/WA229/23-45              9.8955              24.4522      0.05      0.36   54
+ 387               Range-Grasses --> RNGE/WA243/45-66              0.0643               0.1588      0.00      0.00   55
+ 388               Range-Grasses --> RNGE/WA243/23-45              0.0643               0.1588      0.00      0.00   56
+ 389               Range-Grasses --> RNGE/WA243/66-96              0.0643               0.1588      0.00      0.00   57
+ 390                Range-Grasses --> RNGE/WA243/0-23              0.0643               0.1588      0.00      0.00   58
+ 391               Range-Grasses --> RNGE/WA325/23-45              0.3855               0.9527      0.00      0.01   59
+ 392             Range-Grasses --> RNGE/WA325/96-9999              0.0643               0.1588      0.00      0.00   60
+ 393               Range-Grasses --> RNGE/WA325/45-66              0.2570               0.6351      0.00      0.01   61
+ 394               Range-Grasses --> RNGE/WA325/66-96              0.3855               0.9527      0.00      0.01   62
+ 395           Wetlands-Forested --> WETF/WA229/45-66              0.7068               1.7466      0.00      0.03   63
+ 396           Wetlands-Forested --> WETF/WA229/23-45              0.8353               2.0641      0.00      0.03   64
+ 397            Wetlands-Forested --> WETF/WA229/0-23              5.3975              13.3375      0.03      0.20   65
+ 398            Wetlands-Forested --> WETF/WA325/0-23             44.0155             108.7645      0.21      1.60   66
+ 399        Wetlands-Non-Forested --> WETN/WA229/0-23              3.4056               8.4154      0.02      0.12   67
+ 400       Wetlands-Non-Forested --> WETN/WA229/23-45              0.1285               0.3176      0.00      0.00   68
+ 401        Wetlands-Non-Forested --> WETN/WA325/0-23              8.2248              20.3239      0.04      0.30   69

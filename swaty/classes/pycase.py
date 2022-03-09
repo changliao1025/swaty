@@ -2,6 +2,7 @@
 import os,stat
 import sys
 import glob
+import shutil
 import numpy as np
 from pathlib import Path
 import tarfile
@@ -43,6 +44,7 @@ class swatcase(object):
     iCase_index=0
     iSiteID=0
     iFlag_run =0
+    iFlag_standalone=1
     iFlag_simulation=1
     iFlag_calibration=0
     iFlag_watershed=0
@@ -73,9 +75,8 @@ class swatcase(object):
     sFilename_swat_current = ''
 
     sFilename_model_configuration=''
-    sWorkspace_data=''
-    sWorkspace_scratch=''    
-    sWorkspace_project=''    
+    sWorkspace_input=''
+    sWorkspace_output=''
     sWorkspace_simulation=''
     sWorkspace_simulation_case=''
     sWorkspace_calibration=''
@@ -83,7 +84,7 @@ class swatcase(object):
 
     sFilename_model_configuration=''
     sFilename_observation_discharge=''
-
+    sFilename_LandUseSoilsReport=''
     sFilename_HRULandUseSoilsReport=''
     sRegion=''
     sModel=''
@@ -93,10 +94,17 @@ class swatcase(object):
     sDate_start =''
     sDate_end=''
 
-    def __init__(self, aConfig_in,sDate_in=None):
+    def __init__(self, aConfig_in,iFlag_standalone_in= None,\
+        sDate_in=None, sWorkspace_output_in=None):
         if 'iFlag_run' in aConfig_in:
             self.iFlag_run =  int(aConfig_in['iFlag_run']) 
-        
+        if iFlag_standalone_in is not None:
+            self.iFlag_standalone = iFlag_standalone_in
+        else:
+            if 'iFlag_standalone' in aConfig_in:
+                self.iFlag_standalone = int(aConfig_in['iFlag_standalone'])
+            else:
+                self.iFlag_standalone=1
 
         if 'iFlag_calibration' in aConfig_in:
             self.iFlag_calibration =  int(aConfig_in['iFlag_calibration']) 
@@ -153,14 +161,22 @@ class swatcase(object):
         
         if 'sWorkspace_home' in aConfig_in:
             self.sWorkspace_home = aConfig_in[ 'sWorkspace_home']
-        if 'sWorkspace_data' in aConfig_in:
-            self.sWorkspace_data = aConfig_in[ 'sWorkspace_data']
+        if 'sWorkspace_input' in aConfig_in:
+            self.sWorkspace_input = aConfig_in[ 'sWorkspace_input']
        
-        if 'sWorkspace_scratch' in aConfig_in:
-            self.sWorkspace_scratch    = aConfig_in[ 'sWorkspace_scratch']
-
-        if 'sWorkspace_project' in aConfig_in:
-            self.sWorkspace_project= aConfig_in[ 'sWorkspace_project']
+        if sWorkspace_output_in is not None:
+            self.sWorkspace_output = sWorkspace_output_in
+        else:
+            if 'sWorkspace_output' in aConfig_in:
+                self.sWorkspace_output = aConfig_in[ 'sWorkspace_output']
+                #the model can be run as part of hexwatershed or standalone
+        if self.iFlag_standalone == 1:
+            #in standalone case, will add case information 
+            sPath = str(Path(self.sWorkspace_output)  /  sCase)
+            self.sWorkspace_output = sPath
+        else:
+            #use specified output path, also do not add output or input tag
+            sPath = self.sWorkspace_output
         if 'sWorkspace_bin' in aConfig_in:
             self.sWorkspace_bin= aConfig_in[ 'sWorkspace_bin']
         
@@ -208,10 +224,13 @@ class swatcase(object):
         sPath = self.sWorkspace_calibration_case
         Path(sPath).mkdir(parents=True, exist_ok=True)
 
+        if 'sFilename_LandUseSoilsReport' in aConfig_in:
+            self.sFilename_LandUseSoilsReport = aConfig_in[ 'sFilename_LandUseSoilsReport']
+        self.sFilename_LandUseSoilsReport =  os.path.join(self.sWorkspace_input,  self.sFilename_LandUseSoilsReport )
 
         if 'sFilename_HRULandUseSoilsReport' in aConfig_in:
             self.sFilename_HRULandUseSoilsReport = aConfig_in[ 'sFilename_HRULandUseSoilsReport']
-        self.sFilename_HRULandUseSoilsReport =  os.path.join(self.sWorkspace_data,  self.sFilename_HRULandUseSoilsReport )
+        self.sFilename_HRULandUseSoilsReport =  os.path.join(self.sWorkspace_input,  self.sFilename_HRULandUseSoilsReport )
           
         if 'sFilename_observation_discharge' in aConfig_in:
             self.sFilename_observation_discharge = aConfig_in[ 'sFilename_observation_discharge']
@@ -246,14 +265,14 @@ class swatcase(object):
             self.sWorkspace_simulation_copy= aConfig_in[ 'sWorkspace_simulation_copy']
         else:
             self.sWorkspace_simulation_copy='TxtInOut.tar'
-        self.sWorkspace_simulation_copy =  os.path.join(self.sWorkspace_data,  self.sWorkspace_simulation_copy )
+        self.sWorkspace_simulation_copy =  os.path.join(self.sWorkspace_input,  self.sWorkspace_simulation_copy )
         
         if 'sFilename_hru_combination' in aConfig_in:
             self.sFilename_hru_combination =   aConfig_in['sFilename_hru_combination'] 
         else:
             self.sFilename_hru_combination = 'hru_combination.txt'
         
-        self.sFilename_hru_combination = os.path.join(self.sWorkspace_data,  self.sFilename_hru_combination )
+        self.sFilename_hru_combination = os.path.join(self.sWorkspace_input,  self.sFilename_hru_combination )
             
 
         if 'sFilename_watershed_configuration' in aConfig_in:
@@ -261,7 +280,7 @@ class swatcase(object):
         else:
             self.sFilename_watershed_configuration =  'watershed_configuration.txt'
             
-        self.sFilename_watershed_configuration = os.path.join(self.sWorkspace_data, self.sFilename_watershed_configuration )
+        self.sFilename_watershed_configuration = os.path.join(self.sWorkspace_input, self.sFilename_watershed_configuration )
 
     
         if 'sFilename_hru_info' in aConfig_in:
@@ -269,7 +288,7 @@ class swatcase(object):
         else:
             self.sFilename_hru_info = aConfig_in['hru_info.txt'] 
             
-        self.sFilename_hru_info = os.path.join(self.sWorkspace_data,  self.sFilename_hru_info )
+        self.sFilename_hru_info = os.path.join(self.sWorkspace_input,  self.sFilename_hru_info )
 
         if 'nParameter_watershed' in aConfig_in:
             self.nParameter_watershed = int(aConfig_in['nParameter_watershed'] )
@@ -320,11 +339,15 @@ class swatcase(object):
             #we might need to extract 
             if os.path.isfile(self.sWorkspace_simulation_copy):  
                 sBasename = Path(self.sWorkspace_simulation_copy).stem
-                #pTar = tarfile.open(self.sWorkspace_simulation_copy)
-                #pTar.extractall(self.sWorkspace_simulation) # specify which folder to extract to
-                #pTar.close()
+                #delete previous folder
+                sTarget_path = str(Path(self.sWorkspace_simulation) /sBasename)
+                if os.path.exists(sTarget_path):
+                    shutil.rmtree(sTarget_path)
+                pTar = tarfile.open(self.sWorkspace_simulation_copy)
+                pTar.extractall(self.sWorkspace_simulation) # specify which folder to extract to
+                pTar.close()
                 
-                self.sWorkspace_simulation_copy = str(Path(self.sWorkspace_simulation) /sBasename)
+                self.sWorkspace_simulation_copy = sTarget_path
         
 
         sWorkspace_simulation_copy= self.sWorkspace_simulation_copy
@@ -367,7 +390,7 @@ class swatcase(object):
     
     def setup(self):
         
-        self.copy_TxtInOut_files()
+        #self.copy_TxtInOut_files()
         self.swaty_prepare_watershed_configuration()      
 
         #replace parameter using parameter files
@@ -423,9 +446,7 @@ class swatcase(object):
       
 
         sWorkspace_data = self.sWorkspace_data
-        sWorkspace_project = self.sWorkspace_project
-        sWorkspace_data_project = sWorkspace_data + slash + sWorkspace_project
-        sWorkspace_simulation = self.sWorkspace_simulation
+        sWorkspace_project = self.sWorkspace_project        
 
         sFilename_hru_report = self.sFilename_HRULandUseSoilsReport
         print(sFilename_hru_report)

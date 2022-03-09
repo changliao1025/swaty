@@ -30,14 +30,18 @@ from swaty.classes.pycase import swatcase
 from swaty.swaty_generate_template_configuration_json_file import swaty_generate_template_configuration_json_file
 from swaty.swaty_read_model_configuration_file import swaty_read_model_configuration_file
 parser = argparse.ArgumentParser()
-iFlag_option = 2
+iFlag_option = 1
 sPath = str( Path().resolve() )
 if iFlag_option ==1:
     
     sFilename_configuration_in = realpath( sPath +  '/tests/configurations/template.json' ) 
-    sPath_data = realpath( sPath +  '/data/arw' )
+    sWorkspace_data = realpath( sPath +  '/data/arw' )
+    sWorkspace_input = realpath( sWorkspace_data +  '/input' )
+
+    sWorkspace_output = realpath( sWorkspace_data +  '/output' )
+
     sPath_bin = realpath( sPath +  '/bin' )
-    oSwat = swaty_generate_template_configuration_json_file(sFilename_configuration_in, sPath_data, sPath_bin)
+    oSwat = swaty_generate_template_configuration_json_file(sFilename_configuration_in, sWorkspace_input,sWorkspace_output, sPath_bin)
     oSwat.iCase_index = 1
     print(oSwat.tojson())
 else: 
@@ -52,7 +56,7 @@ else:
         print(oSwat.tojson())
 
 
-#oSwat.setup()
+oSwat.setup()
 oSwat.run()
 oSwat.analyze()
 oSwat.evaluate()
