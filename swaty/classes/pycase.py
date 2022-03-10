@@ -61,28 +61,19 @@ class swatcase(object):
     nstress=0
     nsegment =0
     nhru=0
-
     aConfig_in=None
     aParameter_watershed = None
     aParameter_subbasin = None
     aParameter_hru = None
-
-
     nParameter=0
     nParameter_watershed=0
     nParameter_subbasin=0
     nParameter_hru=0
-
     sFilename_swat_current = ''
-
     sFilename_model_configuration=''
     sWorkspace_input=''
-    sWorkspace_output=''
-   
+    sWorkspace_output=''   
     sWorkspace_output_case=''
-
-  
-
     sFilename_model_configuration=''
     sFilename_observation_discharge=''
     sFilename_LandUseSoilsReport=''
@@ -1521,9 +1512,7 @@ class swatcase(object):
         return
 
     def tojson(self):
-        aSkip = ['aBasin', \
-                'aFlowline_simplified','aFlowline_conceptual','aCellID_outlet',
-                'aCell']      
+        aSkip = []      
 
         obj = self.__dict__.copy()
         for sKey in aSkip:

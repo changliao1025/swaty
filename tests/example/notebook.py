@@ -27,7 +27,7 @@ def is_module_available(module_name):
 iFlag = is_module_available('swaty')
 
 from swaty.classes.pycase import swatcase
-from swaty.swaty_generate_template_configuration_json_file import swaty_generate_template_configuration_json_file
+from swaty.swaty_generate_template_configuration_file import swaty_generate_template_configuration_file
 from swaty.swaty_read_model_configuration_file import swaty_read_model_configuration_file
 parser = argparse.ArgumentParser()
 iFlag_option = 1
@@ -41,7 +41,7 @@ if iFlag_option ==1:
     
     #realpath( sWorkspace_data +  '/output' )
     
-    oSwat = swaty_generate_template_configuration_json_file(sFilename_configuration_in, sWorkspace_input,sWorkspace_output, sPath_bin, iFlag_standalone_in=1, iCase_index_in=3, sDate_in='20220308')
+    oSwat = swaty_generate_template_configuration_file(sFilename_configuration_in, sWorkspace_input,sWorkspace_output, sPath_bin, iFlag_standalone_in=1, iCase_index_in=3, sDate_in='20220308')
    
     print(oSwat.tojson())
 else: 

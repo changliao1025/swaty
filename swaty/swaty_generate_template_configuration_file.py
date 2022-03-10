@@ -9,7 +9,7 @@ from swaty.classes.pycase import swatcase
 
 from swaty.classes.swatpara import swatpara
 
-def swaty_generate_template_configuration_json_file(sFilename_json, sWorkspace_input, sWorkspace_output ,sPath_bin, iFlag_standalone_in=None, iCase_index_in = None, sDate_in = None):
+def swaty_generate_template_configuration_file(sFilename_json, sWorkspace_input, sWorkspace_output,sPath_bin, iFlag_standalone_in=None, iCase_index_in = None, sDate_in = None):
     if iCase_index_in is not None:        
         iCase_index = iCase_index_in
     else:       
@@ -24,13 +24,21 @@ def swaty_generate_template_configuration_json_file(sFilename_json, sWorkspace_i
     else:
         sDate = '20220202'
         pass
+
+    if iFlag_standalone ==1:
+        iFlag_simulation =1
+        iFlag_calibration =0 
+    else:
+        iFlag_simulation =0
+        iFlag_calibration =1
+        
     #use a dict to initialize the class
     aConfig = {}
     aConfig['iFlag_run'] = 1
     aConfig['iFlag_standalone']=iFlag_standalone
     
-    aConfig['iFlag_simulation'] = 1
-    aConfig['iFlag_calibration'] = 0
+    aConfig['iFlag_simulation'] = iFlag_simulation
+    aConfig['iFlag_calibration'] = iFlag_calibration
     
     aConfig['iFlag_watershed'] = 1   
     aConfig['iFlag_subbasin'] = 0
