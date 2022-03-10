@@ -78,8 +78,18 @@ Below are some key content description in the template JSON file:
 
 * sWorkspace_simulation_copy: the path to the ArcSWAT generated SWAT input files. If a tar file is provided, it will be extracted to the output path.
 
+A swatcase object is often initialized by either 
 
+```
+oSwat = swaty_generate_template_configuration_file(sFilename_configuration_in, sWorkspace_input,sWorkspace_output, sPath_bin, iFlag_standalone_in=1, iCase_index_in=3, sDate_in='20220308')
+```
 
+or
+
+```
+oSwat = swaty_read_model_configuration_file(sFilename_configuration_in, iFlag_standalone_in=1,iCase_index_in=2,sDate_in='20220308', sWorkspace_input_in=sWorkspace_input, sWorkspace_output_in=sWorkspace_output)
+```
+      
 # Acknowledgement
 
 This research was supported by several funding sources:
