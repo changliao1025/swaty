@@ -11,14 +11,14 @@ pDate = datetime.datetime.today()
 sDate_default = "{:04d}".format(pDate.year) + "{:02d}".format(pDate.month) + "{:02d}".format(pDate.day)
 
 def swaty_read_model_configuration_file(sFilename_configuration_in , \
-    iCase_index_in = None,\
+    iFlag_standalone_in=None, iCase_index_in = None, sDate_in = None,\
         iYear_start_in = None,\
             iMonth_start_in = None,\
                 iDay_start_in = None, \
         iYear_end_in = None,\
             iMonth_end_in = None,\
                 iDay_end_in = None, \
-            ):
+          sWorkspace_input_in =None, sWorkspace_output_in =None   ):
 
     if not os.path.isfile(sFilename_configuration_in):
         print(sFilename_configuration_in + ' does not exist')
@@ -31,14 +31,33 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
     sModel = aConfig['sModel'] 
     sRegion = aConfig['sRegion']
 
-    sWorkspace_data=  aConfig['sWorkspace_data']
-    sWorkspace_scratch=  aConfig['sWorkspace_scratch']
-         
+    if sWorkspace_input_in is not None:
+        sWorkspace_input = sWorkspace_input_in
+    else:
+        sWorkspace_input = aConfig['sWorkspace_input']
+        pass
+    if sWorkspace_output_in is not None:
+        sWorkspace_output = sWorkspace_output_in
+    else:
+        sWorkspace_output = aConfig['sWorkspace_output']
+        pass
+ 
+
+    
+    if iFlag_standalone_in is not None:        
+        iFlag_standalone = iFlag_standalone_in
+    else:       
+        iFlag_standalone = int( aConfig['iFlag_standalone'])
+    if sDate_in is not None:
+        sDate = sDate_in
+    else:
+        sDate = aConfig['sDate']
+        pass
     if iCase_index_in is not None:        
         iCase_index = iCase_index_in
     else:       
         iCase_index = int( aConfig['iCase_index'])
-        #aConfig['iCase_index'] = int( aConfig['iCase_index'])
+        
     
     if iYear_start_in is not None:        
         iYear_start = iYear_start_in
@@ -77,7 +96,11 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
     #calculate the modflow simulation period
     #https://docs.python.org/3/library/datetime.html#datetime-objects
     
-    
+    aConfig['iFlag_standalone'] = iFlag_standalone
+    aConfig['iCase_index'] = iCase_index
+    aConfig['sDate'] = sDate
+    aConfig['sWorkspace_input'] = sWorkspace_input
+    aConfig['sWorkspace_output'] = sWorkspace_output
     dummy1 = datetime.datetime(iYear_start, iMonth_start, iDay_start)
     dummy2 = datetime.datetime(iYear_end, iMonth_end, iDay_end)
     julian1 = julian.to_jd(dummy1, fmt='jd')

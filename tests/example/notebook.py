@@ -32,21 +32,25 @@ from swaty.swaty_read_model_configuration_file import swaty_read_model_configura
 parser = argparse.ArgumentParser()
 iFlag_option = 1
 sPath = str( Path().resolve() )
+sWorkspace_data = realpath( sPath +  '/data/arw' )
+sWorkspace_input = realpath( sWorkspace_data +  '/input' )
+sWorkspace_output = '/global/cscratch1/sd/liao313/04model/swat/arw/simulation'
+sPath_bin = realpath( sPath +  '/bin' )
 if iFlag_option ==1:
     sFilename_configuration_in = realpath( sPath +  '/tests/configurations/template.json' ) 
-    sWorkspace_data = realpath( sPath +  '/data/arw' )
-    sWorkspace_input = realpath( sWorkspace_data +  '/input' )
-    sWorkspace_output = realpath( sWorkspace_data +  '/output' )
-    sPath_bin = realpath( sPath +  '/bin' )
-    oSwat = swaty_generate_template_configuration_json_file(sFilename_configuration_in, sWorkspace_input,sWorkspace_output, sPath_bin)
-    oSwat.iCase_index = 1
+    
+    #realpath( sWorkspace_data +  '/output' )
+    
+    oSwat = swaty_generate_template_configuration_json_file(sFilename_configuration_in, sWorkspace_input,sWorkspace_output, sPath_bin, iFlag_standalone_in=1, iCase_index_in=2, sDate_in='20220308')
+   
     print(oSwat.tojson())
 else: 
     if iFlag_option == 2:
+        
         #an example configuration file is provided with the repository, but you need to update this file based on your own case study
         #linux
         sFilename_configuration_in = sPath +  '/tests/configurations/arw.json'
-        oSwat = swaty_read_model_configuration_file(sFilename_configuration_in)
+        oSwat = swaty_read_model_configuration_file(sFilename_configuration_in, iFlag_standalone_in=1,iCase_index_in=1,sDate_in='20220308', sWorkspace_input_in=sWorkspace_input, sWorkspace_output_in=sWorkspace_output)
         print(oSwat.tojson())
 
 oSwat.setup()

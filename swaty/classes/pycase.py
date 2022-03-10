@@ -3,6 +3,7 @@ import os,stat
 import sys
 import glob
 import shutil
+from matplotlib.cbook import ls_mapper
 import numpy as np
 from pathlib import Path
 import tarfile
@@ -77,10 +78,10 @@ class swatcase(object):
     sFilename_model_configuration=''
     sWorkspace_input=''
     sWorkspace_output=''
-    sWorkspace_simulation=''
-    sWorkspace_simulation_case=''
-    sWorkspace_calibration=''
-    sWorkspace_calibration_case=''
+   
+    sWorkspace_output_case=''
+
+  
 
     sFilename_model_configuration=''
     sFilename_observation_discharge=''
@@ -174,23 +175,6 @@ class swatcase(object):
 
         if 'sWorkspace_bin' in aConfig_in:
             self.sWorkspace_bin= aConfig_in[ 'sWorkspace_bin']
-        
-        if 'sWorkspace_simulation' in aConfig_in:
-            self.sWorkspace_simulation= aConfig_in[ 'sWorkspace_simulation']
-        else:
-            pass
-
-        #self.sWorkspace_simulation = str(Path(self.sWorkspace_scratch ) / self.sModel / self.sRegion / 'simulation')
-        
-        sPath = self.sWorkspace_simulation
-        Path(sPath).mkdir(parents=True, exist_ok=True)
-
-        if 'sWorkspace_calibration' in aConfig_in:
-            self.sWorkspace_calibration= aConfig_in[ 'sWorkspace_calibration']
-
-        #self.sWorkspace_calibration = str(Path(self.sWorkspace_scratch ) / self.sModel / self.sRegion / 'calibration')
-        sPath = self.sWorkspace_calibration
-        Path(sPath).mkdir(parents=True, exist_ok=True)
 
         if 'iCase_index' in aConfig_in:
             iCase_index = int(aConfig_in['iCase_index'])
@@ -212,19 +196,12 @@ class swatcase(object):
         if self.iFlag_standalone == 1:
             #in standalone case, will add case information 
             sPath = str(Path(self.sWorkspace_output)  /  sCase)
-            self.sWorkspace_output = sPath
+            self.sWorkspace_output_case = sPath
+            Path(sPath).mkdir(parents=True, exist_ok=True)
         else:
             #use specified output path, also do not add output or input tag
-            sPath = self.sWorkspace_output
-            pass
-
-        self.sWorkspace_simulation_case = str(Path(self.sWorkspace_simulation ) / sCase )
-        sPath = self.sWorkspace_simulation_case
-        Path(sPath).mkdir(parents=True, exist_ok=True)
-
-        self.sWorkspace_calibration_case = str(Path(self.sWorkspace_calibration ) / sCase )
-        sPath = self.sWorkspace_calibration_case
-        Path(sPath).mkdir(parents=True, exist_ok=True)
+            self.sWorkspace_output_case = self.sWorkspace_output
+    
 
         if 'sFilename_LandUseSoilsReport' in aConfig_in:
             self.sFilename_LandUseSoilsReport = aConfig_in[ 'sFilename_LandUseSoilsReport']
@@ -262,12 +239,16 @@ class swatcase(object):
         else:
             self.sJob = 'swat'
 
-        
         if 'sWorkspace_simulation_copy' in aConfig_in:
             self.sWorkspace_simulation_copy= aConfig_in[ 'sWorkspace_simulation_copy']
+            if (os.path.exists(self.sWorkspace_simulation_copy)):
+                pass
+            else:
+                self.sWorkspace_simulation_copy = os.path.join(self.sWorkspace_input, self.sWorkspace_simulation_copy )
+                pass
         else:
             self.sWorkspace_simulation_copy='TxtInOut.tar'
-        self.sWorkspace_simulation_copy =  os.path.join(self.sWorkspace_input,  self.sWorkspace_simulation_copy )
+            self.sWorkspace_simulation_copy = os.path.join(self.sWorkspace_input,  self.sWorkspace_simulation_copy )
         
         if 'sFilename_hru_combination' in aConfig_in:
             self.sFilename_hru_combination =   aConfig_in['sFilename_hru_combination'] 
@@ -310,26 +291,21 @@ class swatcase(object):
             watershed_dummy = aConfig_in['aParameter_watershed'][i]
             pParameter_watershed = swatpara(watershed_dummy)
             self.aParameter_watershed.append(pParameter_watershed)
-
         
         return
 
-    
-        
 
     def copy_TxtInOut_files(self):
         """
         sFilename_configuration_in
         sModel
         """
-              
-        
-        sWorkspace_simulation_case = self.sWorkspace_simulation_case      
+        sWorkspace_output_case = self.sWorkspace_output_case      
 
         if self.iFlag_calibration == 1:
             sWorkspace_target_case = os.getcwd()
         else:
-            sWorkspace_target_case = sWorkspace_simulation_case   
+            sWorkspace_target_case = sWorkspace_output_case   
 
         Path(sWorkspace_target_case).mkdir(parents=True, exist_ok=True)
 
@@ -342,16 +318,19 @@ class swatcase(object):
             if os.path.isfile(self.sWorkspace_simulation_copy):  
                 sBasename = Path(self.sWorkspace_simulation_copy).stem
                 #delete previous folder
-                sTarget_path = str(Path(self.sWorkspace_simulation) /sBasename)
+                sTarget_path = str(Path(self.sWorkspace_output) /sBasename)
                 if os.path.exists(sTarget_path):
+                    shutil.rmtree(sTarget_path)
                     pass
-                    #shutil.rmtree(sTarget_path)
-                else:
-                    pTar = tarfile.open(self.sWorkspace_simulation_copy)
-                    pTar.extractall(self.sWorkspace_simulation) # specify which folder to extract to
-                    pTar.close()
+                
+                pTar = tarfile.open(self.sWorkspace_simulation_copy)
+                pTar.extractall(self.sWorkspace_output) # specify which folder to extract to
+                pTar.close()
                 
                 self.sWorkspace_simulation_copy = sTarget_path
+            else:
+                #this is a folder
+                pass
         
 
         sWorkspace_simulation_copy= self.sWorkspace_simulation_copy
@@ -362,7 +341,7 @@ class swatcase(object):
         aExtension = ('.pnd','.rte','.sub','.swq','.wgn','.wus',\
                 '.chm','.gw','.hru','.mgt','sdr','.sep',\
                  '.sol','ATM','bsn','wwq','deg','.cst',\
-                 'dat','fig','cio','fin','dat','.pcp','.tmp'  )
+                 'dat','fig','cio','fin','dat','.pcp','.tmp','.slr','.hmd'  )
 
         #we need to be careful that Tmp is different in python/linux with tmp
 
@@ -420,9 +399,9 @@ class swatcase(object):
 
     def run(self):
         if (self.iFlag_run ==1):            
-            sFilename_bash = os.path.join(self.sWorkspace_simulation_case,  'run_swat.sh' )
+            sFilename_bash = os.path.join(self.sWorkspace_output_case,  'run_swat.sh' )
             if (os.path.exists(sFilename_bash)):
-                os.chdir(self.sWorkspace_simulation_case)
+                os.chdir(self.sWorkspace_output_case)
                 sCommand = './run_swat.sh '
                 print(sCommand)
                 p = subprocess.Popen(sCommand, shell= True)
@@ -554,8 +533,8 @@ class swatcase(object):
         """
         #prepare the pest control file
         """      
-        sWorkspace_simulation_case = self.sWorkspace_simulation_case    
-        sWorkspace_calibration_case = self.sWorkspace_calibration_case 
+        sWorkspace_output_case = self.sWorkspace_output_case    
+
 
         iFlag_simulation = self.iFlag_simulation
         iFlag_watershed = self.iFlag_watershed
@@ -565,11 +544,9 @@ class swatcase(object):
 
         nParameter_watershed = self.nParameter_watershed
 
-        if iFlag_simulation == 1:
-            sFilename_watershed_template = os.path.join(str(Path(sWorkspace_simulation_case)) ,  'watershed.para' )     
-        else:
-            sFilename_watershed_template = os.path.join(str(Path(sWorkspace_calibration_case)) ,  'watershed.para' )    
-            pass
+        
+        sFilename_watershed_template = os.path.join(str(Path(sWorkspace_output_case)), 'watershed.para' )     
+        
         
         if iFlag_watershed ==1:    
             ofs = open(sFilename_watershed_template, 'w')
@@ -601,8 +578,8 @@ class swatcase(object):
         #prepare the pest control file
         """      
         
-        sWorkspace_simulation_case = self.sWorkspace_simulation_case    
-        sWorkspace_calibration_case = self.sWorkspace_calibration_case 
+        sWorkspace_output_case = self.sWorkspace_output_case    
+        
 
         iFlag_simulation = self.iFlag_simulation
         iFlag_watershed = self.iFlag_watershed
@@ -614,15 +591,11 @@ class swatcase(object):
         aParameter_subbasin = self.aParameter_subbasin
         nParameter_subbasin = self.nParameter_subbasin
 
-        if iFlag_simulation == 1:
-            sFilename_subbasin_template = os.path.join(str(Path(sWorkspace_simulation_case)) ,  'subbasin.para' )  
-            #sFilename_subbasin_template = sWorkspace_simulation_case + slash + 'subbasin.para'   
-    
-        else:
-            sFilename_subbasin_template = os.path.join(str(Path(sWorkspace_calibration_case)) ,  'subbasin.para' )  
-            #sFilename_subbasin_template = sWorkspace_simulation_case + slash + 'basin.para'   
+        
+        sFilename_subbasin_template = os.path.join(str(Path(sWorkspace_output_case)) ,  'subbasin.para' )  
 
-            pass
+    
+       
         
         
         
@@ -656,8 +629,8 @@ class swatcase(object):
         #prepare the pest control file
         """      
    
-        sWorkspace_simulation_case = self.sWorkspace_simulation_case    
-        sWorkspace_calibration_case = self.sWorkspace_calibration_case 
+        sWorkspace_output_case = self.sWorkspace_output_case    
+
 
         iFlag_simulation = self.iFlag_simulation
      
@@ -677,13 +650,10 @@ class swatcase(object):
         aData_all = text_reader_string(self.sFilename_hru_combination)
         nhru_type = len(aData_all)
 
-        if iFlag_simulation == 1:
-            sFilename_hru_template = os.path.join(str(Path(sWorkspace_simulation_case)) ,  'hru.para' )  
-            #sFilename_hru_template = sWorkspace_simulation_case + slash + 'hru.para'   
-        else:
-            sFilename_hru_template = os.path.join(str(Path(sWorkspace_calibration_case)) ,  'hru.para' )  
-            #sFilename_hru_template = sWorkspace_simulation_case + slash + 'hru.para'    
-            pass
+       
+        sFilename_hru_template = os.path.join(str(Path(sWorkspace_output_case)) ,  'hru.para' )  
+            #sFilename_hru_template = sWorkspace_output_case + slash + 'hru.para'   
+        
        
 
         if iFlag_hru ==1:    
@@ -726,11 +696,11 @@ class swatcase(object):
         iFlag_calibration = self.iFlag_calibration
 
 
-        sWorkspace_simulation_case = self.sWorkspace_simulation_case
+        sWorkspace_output_case = self.sWorkspace_output_case
         sWorkspace_simulation_copy =  self.sWorkspace_simulation_copy
 
-        sWorkspace_calibration_case = self.sWorkspace_calibration_case
-        sWorkspace_pest_model = sWorkspace_calibration_case
+        
+        sWorkspace_pest_model = sWorkspace_output_case
         print('sWorkspace_simulation_copy: ' + sWorkspace_simulation_copy)
 
 
@@ -778,8 +748,8 @@ class swatcase(object):
     
         #read parameter file
         if iFlag_simulation == 1:
-            sFilename_parameter = os.path.join(str(Path(sWorkspace_simulation_case)) ,  'watershed.para' )  
-            #sFilename_parameter = sWorkspace_simulation_case + slash + 'watershed.para'
+            sFilename_parameter = os.path.join(str(Path(sWorkspace_output_case)) ,  'watershed.para' )  
+            #sFilename_parameter = sWorkspace_output_case + slash + 'watershed.para'
         else:
             iFlag_debug = 0
             sPath_current = os.getcwd()
@@ -823,7 +793,7 @@ class swatcase(object):
                     
         if iFlag_simulation == 1:
             sWorkspace_source_case = sWorkspace_simulation_copy
-            sWorkspace_target_case = sWorkspace_simulation_case
+            sWorkspace_target_case = sWorkspace_output_case
             pass
         else:
             sPath_current = os.getcwd()
@@ -919,11 +889,11 @@ class swatcase(object):
         iFlag_calibration = self.iFlag_calibration
 
 
-        sWorkspace_simulation_case = self.sWorkspace_simulation_case
+        sWorkspace_output_case = self.sWorkspace_output_case
         sWorkspace_simulation_copy =  self.sWorkspace_simulation_copy
 
-        sWorkspace_calibration_case = self.sWorkspace_calibration_case
-        sWorkspace_pest_model = sWorkspace_calibration_case
+       
+        sWorkspace_pest_model = sWorkspace_output_case
 
         sWorkspace_data_project = self.sWorkspace_data_project
     
@@ -971,8 +941,8 @@ class swatcase(object):
         #iFlag_simulation=0
 
         if iFlag_simulation == 1:
-            #sFilename_parameter = sWorkspace_simulation_case + slash + 'subbasin.para'
-            sFilename_parameter = os.path.join(str(Path(sWorkspace_simulation_case)) ,  'subbasin.para' )   
+            #sFilename_parameter = sWorkspace_output_case + slash + 'subbasin.para'
+            sFilename_parameter = os.path.join(str(Path(sWorkspace_output_case)) ,  'subbasin.para' )   
         else:
             iFlag_debug = 0        
             sPath_current = os.getcwd()
@@ -1111,11 +1081,11 @@ class swatcase(object):
         iFlag_calibration = self.iFlag_calibration
 
 
-        sWorkspace_simulation_case = self.sWorkspace_simulation_case
+        sWorkspace_output_case = self.sWorkspace_output_case
         sWorkspace_simulation_copy =  self.sWorkspace_simulation_copy
 
-        sWorkspace_calibration_case = self.sWorkspace_calibration_case
-        sWorkspace_pest_model = sWorkspace_calibration_case
+    
+        sWorkspace_pest_model = sWorkspace_output_case
 
         sWorkspace_data_project = self.sWorkspace_data_project
     
@@ -1231,8 +1201,8 @@ class swatcase(object):
     
         #read parameter file
         if iFlag_simulation == 1:
-            #sFilename_parameter = sWorkspace_simulation_case + slash + 'hru.para'
-            sFilename_parameter = os.path.join(str(Path(sWorkspace_simulation_case)) ,  'hru.para' )  
+            #sFilename_parameter = sWorkspace_output_case + slash + 'hru.para'
+            sFilename_parameter = os.path.join(str(Path(sWorkspace_output_case)) ,  'hru.para' )  
         else:
             iFlag_debug = 0
             sPath_current = os.getcwd()
@@ -1271,7 +1241,7 @@ class swatcase(object):
                         continue
 
         sWorkspace_source_case = sWorkspace_simulation_copy
-        sWorkspace_target_case = sWorkspace_simulation_case
+        sWorkspace_target_case = sWorkspace_output_case
         if iFlag_simulation == 1:
             pass
         else:
@@ -1282,7 +1252,7 @@ class swatcase(object):
             else:
                 print('this is a child')
                 sWorkspace_source_case = sWorkspace_simulation_copy
-                sWorkspace_target_case = sWorkspace_simulation_case
+                sWorkspace_target_case = sWorkspace_output_case
 
         iHru_index = 0 
         for iSubbasin in range(0, nsubbasin):
@@ -1372,16 +1342,16 @@ class swatcase(object):
         """    
         sWorkspace_bin = self.sWorkspace_bin 
         sFilename_swat = self.sFilename_swat   
-        sWorkspace_simulation_case = self.sWorkspace_simulation_case
-        sWorkspace_calibration_case = self.sWorkspace_calibration_case    
-        sWorkspace_pest_model = sWorkspace_calibration_case
+        sWorkspace_output_case = self.sWorkspace_output_case
+   
+        sWorkspace_pest_model = sWorkspace_output_case
         #copy swat
         
         sFilename_swat_source = os.path.join(str(Path(sWorkspace_bin)) ,  sFilename_swat )
 
         
         if self.iFlag_simulation ==1:
-            sPath_current = sWorkspace_simulation_case
+            sPath_current = sWorkspace_output_case
         else:
             sPath_current = os.getcwd()
         
@@ -1413,9 +1383,9 @@ class swatcase(object):
 
     def swaty_prepare_simulation_bash_file(self):
 
-        sWorkspace_simulation_case = self.sWorkspace_simulation_case
+        sWorkspace_output_case = self.sWorkspace_output_case
 
-        sFilename_bash = os.path.join(sWorkspace_simulation_case,  'run_swat.sh' )
+        sFilename_bash = os.path.join(sWorkspace_output_case,  'run_swat.sh' )
         
         ifs = open(sFilename_bash, 'w')       
         #end of example
@@ -1425,7 +1395,7 @@ class swatcase(object):
         ifs.write(sLine)    
         sLine = 'module load gcc/6.1.0' + '\n'
         ifs.write(sLine)
-        sLine = 'cd ' + sWorkspace_simulation_case + '\n'
+        sLine = 'cd ' + sWorkspace_output_case + '\n'
         ifs.write(sLine)
         sLine = './swat' + '\n'
         ifs.write(sLine)
@@ -1437,9 +1407,9 @@ class swatcase(object):
     
     def swaty_prepare_simulation_job_file(self):
 
-        sWorkspace_simulation_case = self.sWorkspace_simulation_case
+        sWorkspace_output_case = self.sWorkspace_output_case
         sJob = self.sJob
-        sFilename_job = os.path.join(sWorkspace_simulation_case,  'submit_swat.job' )
+        sFilename_job = os.path.join(sWorkspace_output_case,  'submit_swat.job' )
       
         ifs = open(sFilename_job, 'w')   
 
@@ -1477,7 +1447,7 @@ class swatcase(object):
         ifs.write(sLine)    
         sLine = 'module load gcc/6.1.0' + '\n'
         ifs.write(sLine)
-        sLine = 'cd ' + sWorkspace_simulation_case+ '\n'
+        sLine = 'cd ' + sWorkspace_output_case+ '\n'
         ifs.write(sLine)
         sLine = './swat' + '\n'
         ifs.write(sLine)

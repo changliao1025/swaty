@@ -3,6 +3,7 @@ unused/
 .vscode/
 .core*
 *.tar
+output/
 *~
 
 # data files, etc

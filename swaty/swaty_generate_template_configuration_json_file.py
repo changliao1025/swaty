@@ -9,10 +9,25 @@ from swaty.classes.pycase import swatcase
 
 from swaty.classes.swatpara import swatpara
 
-def swaty_generate_template_configuration_json_file(sFilename_json, sWorkspace_input, sWorkspace_output ,sPath_bin):
+def swaty_generate_template_configuration_json_file(sFilename_json, sWorkspace_input, sWorkspace_output ,sPath_bin, iFlag_standalone_in=None, iCase_index_in = None, sDate_in = None):
+    if iCase_index_in is not None:        
+        iCase_index = iCase_index_in
+    else:       
+        iCase_index = 1
+    
+    if iFlag_standalone_in is not None:        
+        iFlag_standalone = iFlag_standalone_in
+    else:       
+        iFlag_standalone = 1
+    if sDate_in is not None:
+        sDate = sDate_in
+    else:
+        sDate = '20220202'
+        pass
     #use a dict to initialize the class
     aConfig = {}
     aConfig['iFlag_run'] = 1
+    aConfig['iFlag_standalone']=iFlag_standalone
     
     aConfig['iFlag_simulation'] = 1
     aConfig['iFlag_calibration'] = 0
@@ -35,13 +50,12 @@ def swaty_generate_template_configuration_json_file(sFilename_json, sWorkspace_i
     aConfig['sWorkspace_input'] = sWorkspace_input  
 
     aConfig['sWorkspace_output'] = sWorkspace_output  
-    aConfig['sWorkspace_simulation'] = '/global/cscratch1/sd/liao313/04model/swat/arw/simulation'
-    aConfig['sWorkspace_calibration'] = '/global/cscratch1/sd/liao313/04model/swat/arw/calibration'
+    
     aConfig['sRegion'] = 'arw'
     aConfig['sModel'] = 'swat'
-    aConfig['sDate'] = '20220308'
+    aConfig['sDate'] = sDate
     aConfig['sJob'] = 'swat'
-    aConfig['iCase_index'] = 1
+    aConfig['iCase_index'] = iCase_index
     aConfig['iYear_start'] = 1997
     aConfig['iYear_end'] = 2009
     aConfig['iMonth_start'] = 1
@@ -51,10 +65,10 @@ def swaty_generate_template_configuration_json_file(sFilename_json, sWorkspace_i
    
     aConfig['nsegment'] = 1
     aConfig['nsubbasin']= 1
-    aConfig['sFilename_swat'] = 'swat670_static.exe'
+    aConfig['sFilename_swat'] = 'swat670'
   
     aConfig['sFilename_observation_discharge'] = 'obs.flow_am.csv'
-    aConfig['sWorkspace_simulation_copy'] = 'TxtInOut.tar'
+    aConfig['sWorkspace_simulation_copy'] = '/global/cscratch1/sd/liao313/04model/swat/arw/TxtInOut.tar'
     aConfig['sFilename_LandUseSoilsReport'] = 'LandUseSoilsReport.txt'
     aConfig['sFilename_HRULandUseSoilsReport'] = 'HRULandUseSoilsReport.txt'
     
