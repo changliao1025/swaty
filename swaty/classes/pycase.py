@@ -360,7 +360,6 @@ class swatcase(object):
 
 
         print('Finished copying all input files')
-
     
     def setup(self):
         
@@ -409,6 +408,7 @@ class swatcase(object):
         self.swaty_extract_stream_discharge()
         
         return
+    
     def evaluate(self):
         return
 
@@ -1372,7 +1372,6 @@ class swatcase(object):
 
         print('The swat executable file is copied successfully!')
     
-
     def swaty_prepare_simulation_bash_file(self):
 
         sWorkspace_output_case = self.sWorkspace_output_case
