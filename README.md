@@ -104,6 +104,27 @@ After that, modelers can carry a SWAT simulation in the following steps:
 5. Generate both the bash and slurm job files, which can be used to run the SWAT simulation.
 ```
 oSwat.setup()
+
+    def setup(self):
+        """
+        Set up a SWAT case
+        """
+        self.copy_TxtInOut_files()
+        self.swaty_prepare_watershed_configuration()      
+        if (self.iFlag_replace_parameter == 1):
+            self.swaty_prepare_watershed_parameter_file()
+            self.swaty_write_watershed_input_file()    
+            self.swaty_prepare_subbasin_parameter_file()
+            self.swaty_write_subbasin_input_file()      
+            self.swaty_prepare_hru_parameter_file()
+            self.swaty_write_hru_input_file()        
+        else:
+            pass
+
+        self.swaty_copy_executable_file()
+        sFilename_bash = self.swaty_prepare_simulation_bash_file()
+        sFilename_job = self.swaty_prepare_simulation_job_file() 
+        return
 ```
 
 ## The run function

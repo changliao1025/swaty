@@ -362,11 +362,11 @@ class swatcase(object):
         print('Finished copying all input files')
     
     def setup(self):
-        
+        """
+        Set up a SWAT case
+        """
         self.copy_TxtInOut_files()
         self.swaty_prepare_watershed_configuration()      
-
-        #replace parameter using parameter files
         if (self.iFlag_replace_parameter == 1):
             self.swaty_prepare_watershed_parameter_file()
             self.swaty_write_watershed_input_file()    
@@ -377,14 +377,9 @@ class swatcase(object):
         else:
             pass
 
-        #step 5
         self.swaty_copy_executable_file()
-        #step 6
         sFilename_bash = self.swaty_prepare_simulation_bash_file()
-        #step 7
         sFilename_job = self.swaty_prepare_simulation_job_file() 
-
-
         return
 
     def run(self):
