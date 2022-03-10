@@ -33,8 +33,10 @@ def swaty_generate_template_configuration_json_file(sFilename_json, sWorkspace_i
  
  
     aConfig['sWorkspace_input'] = sWorkspace_input  
-    aConfig['sWorkspace_simulation'] = '/global/homes/l/liao313/04model/swat/arw/simulation'
-    aConfig['sWorkspace_calibration'] = '/global/homes/l/liao313/04model/swat/arw/calibration'
+
+    aConfig['sWorkspace_output'] = sWorkspace_output  
+    aConfig['sWorkspace_simulation'] = '/global/cscratch1/sd/liao313/04model/swat/arw/simulation'
+    aConfig['sWorkspace_calibration'] = '/global/cscratch1/sd/liao313/04model/swat/arw/calibration'
     aConfig['sRegion'] = 'arw'
     aConfig['sModel'] = 'swat'
     aConfig['sDate'] = '20220308'

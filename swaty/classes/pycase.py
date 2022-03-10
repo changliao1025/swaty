@@ -170,13 +170,8 @@ class swatcase(object):
             if 'sWorkspace_output' in aConfig_in:
                 self.sWorkspace_output = aConfig_in[ 'sWorkspace_output']
                 #the model can be run as part of hexwatershed or standalone
-        if self.iFlag_standalone == 1:
-            #in standalone case, will add case information 
-            sPath = str(Path(self.sWorkspace_output)  /  sCase)
-            self.sWorkspace_output = sPath
-        else:
-            #use specified output path, also do not add output or input tag
-            sPath = self.sWorkspace_output
+        
+
         if 'sWorkspace_bin' in aConfig_in:
             self.sWorkspace_bin= aConfig_in[ 'sWorkspace_bin']
         
@@ -214,7 +209,14 @@ class swatcase(object):
         self.iCase_index =   iCase_index
         sCase = self.sModel + self.sDate + sCase_index
         self.sCase = sCase
-        
+        if self.iFlag_standalone == 1:
+            #in standalone case, will add case information 
+            sPath = str(Path(self.sWorkspace_output)  /  sCase)
+            self.sWorkspace_output = sPath
+        else:
+            #use specified output path, also do not add output or input tag
+            sPath = self.sWorkspace_output
+            pass
 
         self.sWorkspace_simulation_case = str(Path(self.sWorkspace_simulation ) / sCase )
         sPath = self.sWorkspace_simulation_case
@@ -342,10 +344,12 @@ class swatcase(object):
                 #delete previous folder
                 sTarget_path = str(Path(self.sWorkspace_simulation) /sBasename)
                 if os.path.exists(sTarget_path):
-                    shutil.rmtree(sTarget_path)
-                pTar = tarfile.open(self.sWorkspace_simulation_copy)
-                pTar.extractall(self.sWorkspace_simulation) # specify which folder to extract to
-                pTar.close()
+                    pass
+                    #shutil.rmtree(sTarget_path)
+                else:
+                    pTar = tarfile.open(self.sWorkspace_simulation_copy)
+                    pTar.extractall(self.sWorkspace_simulation) # specify which folder to extract to
+                    pTar.close()
                 
                 self.sWorkspace_simulation_copy = sTarget_path
         
@@ -390,7 +394,7 @@ class swatcase(object):
     
     def setup(self):
         
-        #self.copy_TxtInOut_files()
+        self.copy_TxtInOut_files()
         self.swaty_prepare_watershed_configuration()      
 
         #replace parameter using parameter files
@@ -443,10 +447,7 @@ class swatcase(object):
             and os.path.isfile(self.sFilename_hru_combination) \
                 and os.path.isfile(self.sFilename_watershed_configuration)):
             return
-      
-
-        sWorkspace_data = self.sWorkspace_data
-        sWorkspace_project = self.sWorkspace_project        
+    
 
         sFilename_hru_report = self.sFilename_HRULandUseSoilsReport
         print(sFilename_hru_report)
@@ -1393,8 +1394,7 @@ class swatcase(object):
         self.sFilename_swat_current = sFilename_swat_new
 
 
-
-    
+        os.chmod(sFilename_swat_new, stat.S_IRWXU )
 
         #copy ppest
         #sFilename_beopest_source = sWorkspace_calibration + slash + sFilename_pest
