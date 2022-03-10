@@ -586,10 +586,6 @@ class swatcase(object):
         
         sFilename_subbasin_template = os.path.join(str(Path(sWorkspace_output_case)) ,  'subbasin.para' )  
 
-    
-       
-        
-        
         
         if iFlag_subbasin ==1:    
             ofs = open(sFilename_subbasin_template, 'w')
