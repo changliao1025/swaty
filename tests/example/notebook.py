@@ -8,23 +8,6 @@ for handler in logging.root.handlers[:]:
 
 logging.basicConfig(format='%(asctime)s %(message)s')
 logging.warning('is the time swaty simulation started.')
-def is_module_available(module_name):
-    if sys.version_info < (3, 0):
-        # python 2
-        import importlib
-        torch_loader = importlib.find_loader(module_name)
-    elif sys.version_info <= (3, 3):
-        # python 3.0 to 3.3
-        import pkgutil
-        torch_loader = pkgutil.find_loader(module_name)
-    elif sys.version_info >= (3, 4):
-        # python 3.4 and above
-        import importlib
-        torch_loader = importlib.util.find_spec(module_name)
-
-    return torch_loader is not None
-
-iFlag = is_module_available('swaty')
 
 from swaty.classes.pycase import swatcase
 from swaty.swaty_generate_template_configuration_file import swaty_generate_template_configuration_file
@@ -38,17 +21,10 @@ sWorkspace_output = '/global/cscratch1/sd/liao313/04model/swat/arw/simulation'
 sPath_bin = realpath( sPath +  '/bin' )
 if iFlag_option ==1:
     sFilename_configuration_in = realpath( sPath +  '/tests/configurations/template.json' ) 
-    
-    #realpath( sWorkspace_data +  '/output' )
-    
     oSwat = swaty_generate_template_configuration_file(sFilename_configuration_in, sWorkspace_input,sWorkspace_output, sPath_bin, iFlag_standalone_in=1, iCase_index_in=3, sDate_in='20220308')
-   
     print(oSwat.tojson())
 else: 
     if iFlag_option == 2:
-        
-        #an example configuration file is provided with the repository, but you need to update this file based on your own case study
-        #linux
         sFilename_configuration_in = sPath +  '/tests/configurations/arw.json'
         oSwat = swaty_read_model_configuration_file(sFilename_configuration_in, iFlag_standalone_in=1,iCase_index_in=2,sDate_in='20220308', sWorkspace_input_in=sWorkspace_input, sWorkspace_output_in=sWorkspace_output)
         print(oSwat.tojson())
