@@ -146,6 +146,10 @@ The evaluate function can be used to compare simulated variables with observatio
 ```
 oSwat.evaluate()
 ```
+
+Through the SWATy package, the whole SWAT simulation process can be automated. For example, modelers can launch multiple SWAT simulations with different parameters to conduct a simple sensitivity test. 
+
+Besides, SWATy can be linked to the PyPEST package to conduct model calibration using the PEST software.
       
 # Acknowledgement
 
