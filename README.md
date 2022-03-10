@@ -159,7 +159,7 @@ This research was supported by several funding sources:
 
 * A Laboratory Directed Research and Development (LDRD) Program.
 
-This contribution originates from a effort of hydrology-based design of geomorphic evapotranspiration covers for reclamation of mine land at Pacific Northwest National Laboratory (PNNL).
+This contribution originates from an effort of hydrology-based design of geomorphic evapotranspiration covers for reclamation of mine land at Pacific Northwest National Laboratory (PNNL).
 
 
 # Contact
