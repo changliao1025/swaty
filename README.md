@@ -89,6 +89,43 @@ or
 ```
 oSwat = swaty_read_model_configuration_file(sFilename_configuration_in, iFlag_standalone_in=1,iCase_index_in=2,sDate_in='20220308', sWorkspace_input_in=sWorkspace_input, sWorkspace_output_in=sWorkspace_output)
 ```
+
+After that, modelers can carry a SWAT simulation in the following steps:
+
+## The setup function
+1. untar/copy the existing SWAT files into the simulation folder, output files are excluded.
+
+2. Generate the look-up table of HRU using the ArcSWAT reports.
+
+3. Replace the SWAT parameters for HRU, sub-basin, and watershed level, if their corresponding flags are turned on.
+
+4. copy the binary SWAT file to the simulation folder, update file permission.
+
+5. Generate both the bash and slurm job files, which can be used to run the SWAT simulation.
+```
+oSwat.setup()
+```
+
+## The run function
+The run function can run the SWAT simulation as a subprocess or submit the slurm job file.
+```
+oSwat.run()
+```
+
+## The analyze function
+After the simulation is finished, this function can
+1. extract river discharge and convert it other formats
+
+```
+oSwat.analyze()
+```
+
+## The evaluate function
+The evaluate function can be used to compare simulated variables with observations.
+```
+oSwat.evaluate()
+```
+
       
 # Acknowledgement
 
