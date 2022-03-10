@@ -68,7 +68,7 @@ def swaty_generate_template_configuration_json_file(sFilename_json, sWorkspace_i
     aConfig['sFilename_swat'] = 'swat670'
   
     aConfig['sFilename_observation_discharge'] = 'obs.flow_am.csv'
-    aConfig['sWorkspace_simulation_copy'] = '/global/cscratch1/sd/liao313/04model/swat/arw/TxtInOut.tar'
+    aConfig['sWorkspace_simulation_copy'] = '/global/cscratch1/sd/liao313/04model/swat/arw/simulation/TxtInOut/'
     aConfig['sFilename_LandUseSoilsReport'] = 'LandUseSoilsReport.txt'
     aConfig['sFilename_HRULandUseSoilsReport'] = 'HRULandUseSoilsReport.txt'
     

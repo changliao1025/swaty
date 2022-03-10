@@ -56,5 +56,5 @@
     "sWorkspace_calibration_case": "/global/cscratch1/sd/liao313/04model/swat/arw/calibration/swat20210902001",
     "sWorkspace_input": "/global/u1/l/liao313/workspace/python/swaty/data/arw/input",
     "sWorkspace_output": "/global/u1/l/liao313/workspace/python/swaty/data/arw/output/",
-    "sWorkspace_simulation_copy": "/global/cscratch1/sd/liao313/04model/swat/arw/TxtInOut.tar"
+    "sWorkspace_simulation_copy": "/global/cscratch1/sd/liao313/04model/swat/arw/simulation/TxtInOut"
 }

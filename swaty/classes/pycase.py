@@ -15,7 +15,7 @@ from shutil import copy2
 import json
 from json import JSONEncoder
 
-from pyearth.system.define_global_variables import *
+from pyearth.toolbox.data.convert_time_series_daily_to_monthly import convert_time_series_daily_to_monthly
 
 from swaty.auxiliary.text_reader_string import text_reader_string
 from swaty.auxiliary.line_count import line_count
@@ -415,6 +415,7 @@ class swatcase(object):
         return    
 
     def analyze(self):
+        self.swaty_extract_stream_discharge()
         
         return
     def evaluate(self):
@@ -1458,7 +1459,60 @@ class swatcase(object):
 
         print('Job file is prepared.')
         return sFilename_job
-    
+
+    def swaty_extract_stream_discharge(self):
+        """
+        extract discharge from swat model simulation
+        """     
+        sModel = self.sModel
+        sRegion = self.sRegion
+        sCase = self.sCase
+        iYear_start = self.iYear_start    
+        iYear_end  = self.iYear_end   
+        nstress = self.nstress
+        nsegment = self.nsegment
+        
+        sWorkspace_data_project = self.sWorkspace_data_project  
+        sWorkspace_simulation_case = self.sWorkspace_simulation_case   
+        sPath_current = self.sWorkspace_output_case
+        
+        print('The current path is: ' + sPath_current)    
+        sFilename = os.path.join( sPath_current ,  'output.rch')
+        aData = text_reader_string(sFilename, iSkipline_in=9)
+        aData_all = np.array( aData )
+        nrow_dummy = len(aData_all)
+        ncolumn_dummy = len(aData_all[0,:])
+
+        aData_discharge = aData_all[:, 5].astype(float) 
+
+        aIndex = np.arange(nsegment-1 , nstress * nsegment + 1, nsegment)
+
+        aDischarge_simulation_daily = aData_discharge[aIndex]
+
+        iYear_start_in = self.iYear_start
+        iMonth_start_in = self.iMonth_start
+        iDay_start_in = self.iDay_start
+
+        iYear_end_in = self.iYear_end
+        iMonth_end_in = self.iMonth_end
+        iDay_end_in = self.iDay_end
+
+        aDischarge_simulation_monthly = convert_time_series_daily_to_monthly(aDischarge_simulation_daily,\
+            iYear_start_in, iMonth_start_in, iDay_start_in, \
+          iYear_end_in, iMonth_end_in, iDay_end_in , sType_in = 'sum'  )
+
+        #save it to a text file
+        sFilename_out = os.path.join(sPath_current , 'stream_discharge_monthly.txt')
+
+        np.savetxt(sFilename_out, aDischarge_simulation_monthly, delimiter=",")
+
+        sTime  = datetime.datetime.now().strftime("%m%d%Y%H%M%S")
+
+        sFilename_new = os.path.join(sPath_current , 'stream_discharge' + sTime + '.txt')
+        copy2(sFilename_out, sFilename_new)
+
+        print('Finished extracting stream discharge: ' + sFilename_out)
+
     def export_config_to_json(self, sFilename_output):
         with open(sFilename_output, 'w', encoding='utf-8') as f:
             json.dump(self.__dict__, f,sort_keys=True, \
