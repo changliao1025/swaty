@@ -158,9 +158,8 @@ This research was supported by several funding sources:
 * The U.S. Department of Energy (DOE), Office of Science (SC) Biological and Environmental Research (BER) program, as part of BER's Environmental System Science (ESS) program. 
 
 * A Laboratory Directed Research and Development (LDRD) Program.
+
 This contribution originates from a effort of hydrology-based design of geomorphic evapotranspiration covers for reclamation of mine land at Pacific Northwest National Laboratory (PNNL).
-
-
 
 
 # Contact
