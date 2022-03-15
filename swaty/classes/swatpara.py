@@ -15,8 +15,9 @@ class ParaClassEncoder(JSONEncoder):
 
 class swatpara(object):
     sName=''
-    iParameter_type=1
+    iParameter_type=1 #1 watershed, 2 subbsain 3 hru
     dValue_init=0.0
+    dValue_current=0.5
     dValue_lower=-1
     dValue_upper=1
     def __init__(self, aConfig_in):
@@ -28,6 +29,9 @@ class swatpara(object):
 
         if 'dValue_init' in aConfig_in:
             self.dValue_init = float(aConfig_in['dValue_init'])
+        
+        if 'dValue_current' in aConfig_in:
+            self.dValue_current = float(aConfig_in['dValue_current'])
         
         if 'dValue_lower' in aConfig_in:
             self.dValue_lower = float(aConfig_in['dValue_lower'])

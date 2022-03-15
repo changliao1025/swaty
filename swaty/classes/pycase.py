@@ -283,6 +283,18 @@ class swatcase(object):
             pParameter_watershed = swatpara(watershed_dummy)
             self.aParameter_watershed.append(pParameter_watershed)
         
+        self.aParameter_subbasin=list()
+        for i in range(self.nParameter_subbasin):
+            subbasin_dummy = aConfig_in['aParameter_subbasin'][i]
+            pParameter_subbasin = swatpara(subbasin_dummy)
+            self.aParameter_subbasin.append(pParameter_subbasin)
+
+        self.aParameter_hru=list()
+        for i in range(self.nParameter_hru):
+            hru_dummy = aConfig_in['aParameter_hru'][i]
+            pParameter_hru = swatpara(hru_dummy)
+            self.aParameter_hru.append(pParameter_hru)
+        
         return
 
 

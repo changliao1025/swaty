@@ -1,4 +1,6 @@
-import os 
+from collections import _OrderedDictKeysView
+import os
+from pprint import pp 
 import sys #used to add system path
 
 import datetime
@@ -18,7 +20,8 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
         iYear_end_in = None,\
             iMonth_end_in = None,\
                 iDay_end_in = None, \
-          sWorkspace_input_in =None, sWorkspace_output_in =None   ):
+          sWorkspace_input_in =None, sWorkspace_output_in =None ,\
+              aParameter_in=None  ):
 
     if not os.path.isfile(sFilename_configuration_in):
         print(sFilename_configuration_in + ' does not exist')
@@ -89,6 +92,13 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
     else:       
         iDay_end  = int( aConfig['iDay_end'])
 
+    if aParameter_in is not None:
+        iFlag_paramter = 1
+        aParameter = aParameter_in
+    else:       
+        iFlag_paramter = 0
+        
+
     #by default, this system is used to prepare inputs for modflow simulation.
     #however, it can also be used to prepare gsflow simulation inputs.
 
@@ -116,9 +126,45 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
     if 'nhru' in aConfig:
         pass
     
+
     #data
-    
     oSwat = swatcase(aConfig)
+    if iFlag_paramter ==1:
+        for i in range(len(aParameter)):
+            pParameter = aParameter[i]
+            sName = pParameter.sName
+            iType = pParameter.iParameter_type
+            dValue = pParameter.dValue_current
+            iFlag_found =0
+            if iType == 1:
+                
+                for j in range(oSwat.nParameter_watershed):
+                    pPara = oSwat.aParameter_watershed[j]
+                    sName1 = pPara.sName
+                    if sName.lower() == sName1.lower():
+                        #replace
+                        oSwat.aParameter_watershed[j].dValue_current = dValue
+                        iFlag_found = 1
+                        break
+                
+                if iFlag_found == 0:
+                    #this one is not in the list yet
+                    pass
+
+                    
+            else:
+                if iType == 2: #subbasin level
+                    pass
+                else: #hru level
+                    pass #
+
+            
+        pass
+    
+    
+    
+
+
    
     
     return oSwat
