@@ -4,6 +4,8 @@ from os.path import realpath
 import argparse
 import logging
 import numpy as np 
+import ray
+ray.init()
 
 for handler in logging.root.handlers[:]:
     logging.root.removeHandler(handler)
@@ -33,7 +35,10 @@ sPath_bin = realpath( sPath +  '/bin' )
 
 sFilename_configuration_in = sPath +  '/tests/configurations/arw.json'
 
-for i in range(nEnsemble):
+#for i in range(20):
+
+@ray.remote
+def generate_model_input(i):
     aParameter = list()
     aPara_in={}
 
@@ -54,7 +59,6 @@ for i in range(nEnsemble):
     pParameter_watershed = swatpara(aPara_in)    
     aParameter.append(pParameter_watershed)
 
-
     oSwat = swaty_read_model_configuration_file(sFilename_configuration_in, \
         iFlag_standalone_in=1,\
             iCase_index_in= i+1 ,\
@@ -62,8 +66,10 @@ for i in range(nEnsemble):
             sWorkspace_input_in=sWorkspace_input, \
                 sWorkspace_output_in=sWorkspace_output,\
             aParameter_in = aParameter)
+
     oSwat.setup()
 
-
+futures = [generate_model_input.remote(i) for i in range(10)]
+print(ray.get(futures))
 
 print('Finished')

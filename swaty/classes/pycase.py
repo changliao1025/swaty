@@ -608,7 +608,7 @@ class swatcase(object):
                 sSubbasin = "{:03d}".format( iSubbasin + 1)
                 sLine = 'subbasin' + sSubbasin 
                 for i in range(nParameter_subbasin):
-                    sValue =  "{:5.2f}".format( aParameter_value_subbasin[i] )            
+                    sValue =  "{:5.2f}".format( aParameter_subbasin[i] )            
                     sLine = sLine + ', ' + sValue 
                 sLine = sLine + '\n'
                 ofs.write(sLine)
