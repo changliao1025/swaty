@@ -1,6 +1,7 @@
 import sys
 from pathlib import Path
 from os.path import realpath
+import numpy as np
 import argparse
 import logging
 for handler in logging.root.handlers[:]:
@@ -85,6 +86,48 @@ aPara_in['dValue_upper']=5
 pParameter_watershed = swatpara(aPara_in)
 aParameter.append(pParameter_watershed)
 
+nParameter_subbasin=1
+nsubbasin = 10
+for i in range(nParameter_subbasin):
+    for j in np.range(1, nsubbasin):
+        aPara_in['iParameter_type'] = 2
+        aPara_in['iIndex'] = j
+        aPara_in['sName']= 'CH_K2'
+        aPara_in['dValue_init']=0.0
+        aPara_in['dValue_current']=0.6
+        aPara_in['dValue_lower']=-1
+        aPara_in['dValue_upper']=5
+        pParameter_watershed = swatpara(aPara_in)
+        aParameter.append(pParameter_watershed)
+
+nParameter_hru=1
+nhru = 10
+for i in range(nParameter_hru):
+    for j in np.range(1, nhru):
+        aPara_in['iParameter_type'] = 3
+        aPara_in['iIndex'] = j
+        aPara_in['sName']= 'CN2'
+        aPara_in['dValue_init']=0.0
+        aPara_in['dValue_current']=0.6
+        aPara_in['dValue_lower']=-1
+        aPara_in['dValue_upper']=5
+        pParameter_watershed = swatpara(aPara_in)
+        aParameter.append(pParameter_watershed)
+
+nsoil_layer = 3
+for i in range(nParameter_hru):
+    for j in np.range(1, nhru):
+        for k in np.arange(1, nsoil_layer+1):
+            aPara_in['iParameter_type'] = 3
+            aPara_in['iIndex'] = j
+            aPara_in['iSoil_layer'] = k
+            aPara_in['sName']= 'CN2'
+            aPara_in['dValue_init']=0.0
+            aPara_in['dValue_current']=0.6
+            aPara_in['dValue_lower']=-1
+            aPara_in['dValue_upper']=5
+            pParameter_watershed = swatpara(aPara_in)
+            aParameter.append(pParameter_watershed)
 
 
 

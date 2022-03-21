@@ -16,6 +16,8 @@ class ParaClassEncoder(JSONEncoder):
 class swatpara(object):
     sName=''
     iParameter_type=1 #1 watershed, 2 subbsain 3 hru
+    iIndex=1
+    iSoil_layer=1
     dValue_init=0.0
     dValue_current=0.5
     dValue_lower=-1
@@ -24,6 +26,13 @@ class swatpara(object):
 
         if 'iParameter_type' in aConfig_in:
             self.iParameter_type = int(aConfig_in['iParameter_type'])
+        
+        if 'iIndex' in aConfig_in:
+            self.iIndex = int(aConfig_in['iIndex'])
+
+        if 'iSoil_layer' in aConfig_in:
+            self.iParameter_type = int(aConfig_in['iSoil_layer'])
+
         if 'sName' in aConfig_in:
             self.sName = aConfig_in['sName']
 
