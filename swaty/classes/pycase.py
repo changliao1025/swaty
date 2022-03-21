@@ -377,7 +377,7 @@ class swatcase(object):
         """
         Set up a SWAT case
         """
-        #self.copy_TxtInOut_files()
+        self.copy_TxtInOut_files()
         self.swaty_prepare_watershed_configuration()      
         if (self.iFlag_replace_parameter == 1):
             self.swaty_prepare_watershed_parameter_file()
@@ -1375,7 +1375,7 @@ class swatcase(object):
         ifs.write(sLine)    
         sLine = 'module purge' + '\n'
         ifs.write(sLine)    
-        sLine = 'module load gcc/6.1.0' + '\n'
+        sLine = 'module load gcc/7.3.0' + '\n'
         ifs.write(sLine)
         sLine = 'cd ' + sWorkspace_output_case + '\n'
         ifs.write(sLine)
@@ -1453,8 +1453,7 @@ class swatcase(object):
         nstress = self.nstress
         nsegment = self.nsegment
         
-        sWorkspace_data_project = self.sWorkspace_data_project  
-        sWorkspace_simulation_case = self.sWorkspace_simulation_case   
+      
         sPath_current = self.sWorkspace_output_case
         
         print('The current path is: ' + sPath_current)    

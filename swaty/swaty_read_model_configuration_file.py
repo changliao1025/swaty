@@ -20,7 +20,8 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
         iYear_end_in = None,\
             iMonth_end_in = None,\
                 iDay_end_in = None, \
-          sWorkspace_input_in =None, sWorkspace_output_in =None ,\
+          sWorkspace_input_in =None, \
+              sWorkspace_output_in =None ,\
               aParameter_in=None  ):
 
     if not os.path.isfile(sFilename_configuration_in):

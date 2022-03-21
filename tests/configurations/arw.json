@@ -46,7 +46,7 @@
     "sFilename_hru_combination": "/global/u1/l/liao313/workspace/python/swaty/data/arw/hru_combination.txt",
     "sFilename_hru_info": "/global/u1/l/liao313/workspace/python/swaty/data/arw/hru_info.txt",
     "sFilename_observation_discharge": "obs.flow_am.csv",
-    "sFilename_swat": "swat670",
+    "sFilename_swat": "swat670_static.exe",
     "sFilename_watershed_configuration": "/global/u1/l/liao313/workspace/python/swaty/data/arw/watershed_configuration.txt",
     "sJob": "swat",
     "sModel": "swat",
