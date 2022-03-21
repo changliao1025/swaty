@@ -157,6 +157,7 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
                 if iType == 2: #subbasin level
                     pass
                 else: #hru level
+                    
                     pass #
 
             
