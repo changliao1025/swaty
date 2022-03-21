@@ -15,6 +15,34 @@
             "dValue_upper": 5.0,
             "iParameter_type": 1,
             "sName": "SMTMP"
+        },
+        {
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iParameter_type": 1,
+            "sName": "ESCO"
+        },
+        {
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iParameter_type": 1,
+            "sName": "SMFMX"
+        },
+        {
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iParameter_type": 1,
+            "sName": "TIMP"
+        },
+        {
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iParameter_type": 1,
+            "sName": "EPCO"
         }
     ],
     "iCase_index": 1,
@@ -35,7 +63,7 @@
     "nParameter_basin": 0,
     "nParameter_hru": 0,
     "nParameter_subbasin": 0,
-    "nParameter_watershed": 2,
+    "nParameter_watershed": 6,
     "nsegment": 5,
     "nstress_month": 156,
     "nsubbasin": 5,

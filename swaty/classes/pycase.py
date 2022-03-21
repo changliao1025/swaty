@@ -377,7 +377,7 @@ class swatcase(object):
         """
         Set up a SWAT case
         """
-        self.copy_TxtInOut_files()
+        #self.copy_TxtInOut_files()
         self.swaty_prepare_watershed_configuration()      
         if (self.iFlag_replace_parameter == 1):
             self.swaty_prepare_watershed_parameter_file()
@@ -692,7 +692,7 @@ class swatcase(object):
         sWorkspace_pest_model = sWorkspace_output_case
         
         aExtension = ['.bsn','.wwq']
-        aBSN=['SFTMP','SMTMP']
+        aBSN=['SFTMP','SMTMP','ESCO','SMFMX','TIMP','EPCO']
         aWWQ=['AI0']
 
 
@@ -842,8 +842,41 @@ class swatcase(object):
                                 print(sLine_new)
                                 break  #important
                             else:
-                                sLine = sLine + '\n'
-                                ofs.write(sLine)
+
+                                if 'esco' in sLine.lower() and 'ESCO' in aParameter_filetype: 
+                                    dummy = 'ESCO'                             
+                                    dummy_index1 = np.where(aParameter_filetype == dummy)
+                                    dummy_index2 = aParameter_indices[dummy_index1][0]
+                                    sLine_new = "{:16.3f}".format(  aParameter_watershed[dummy_index2].dValue_current   )     + '    | pest parameter ESCO' + '\n'
+                                    ofs.write(sLine_new)
+                                    print(sLine_new)
+                                else:
+                                    if 'smfmx' in sLine.lower() and 'SMFMX' in aParameter_filetype: 
+                                        dummy = 'SMFMX'                             
+                                        dummy_index1 = np.where(aParameter_filetype == dummy)
+                                        dummy_index2 = aParameter_indices[dummy_index1][0]
+                                        sLine_new = "{:16.3f}".format(  aParameter_watershed[dummy_index2].dValue_current   )     + '    | pest parameter SMFMX' + '\n'
+                                        ofs.write(sLine_new)
+                                        print(sLine_new)
+                                    else:
+                                        if 'timp' in sLine.lower() and 'TIMP' in aParameter_filetype: 
+                                            dummy = 'TIMP'                             
+                                            dummy_index1 = np.where(aParameter_filetype == dummy)
+                                            dummy_index2 = aParameter_indices[dummy_index1][0]
+                                            sLine_new = "{:16.3f}".format(  aParameter_watershed[dummy_index2].dValue_current   )     + '    | pest parameter TIMP' + '\n'
+                                            ofs.write(sLine_new)
+                                            print(sLine_new)
+                                        else:
+                                            if 'epco' in sLine.lower() and 'EPCO' in aParameter_filetype: 
+                                                dummy = 'EPCO'                             
+                                                dummy_index1 = np.where(aParameter_filetype == dummy)
+                                                dummy_index2 = aParameter_indices[dummy_index1][0]
+                                                sLine_new = "{:16.3f}".format(  aParameter_watershed[dummy_index2].dValue_current   )     + '    | pest parameter EPCO' + '\n'
+                                                ofs.write(sLine_new)
+                                                print(sLine_new)
+                                            else:
+                                                sLine = sLine + '\n'
+                                                ofs.write(sLine)
                                 break  #important
 
 
