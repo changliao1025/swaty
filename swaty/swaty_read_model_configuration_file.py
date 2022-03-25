@@ -148,13 +148,23 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
                         iFlag_found = 1
                         break
                 
-                if iFlag_found == 0:
-                    #this one is not in the list yet
-                    pass
+                #if iFlag_found == 0:
+                #    #this one is not in the list yet
+                #    pass
 
                     
             else:
                 if iType == 2: #subbasin level
+                    nPara = oSwat.nParameter_subbasin * oSwat.nsubbasin
+                    for j in np.arange(nPara ):
+                        pPara = oSwat.aParameter_subbasin[j]
+                        sName1 = pPara.sName
+                        iIndex = pPara.iIndex
+                        if sName.lower() == sName1.lower():
+                            #replace
+                            oSwat.aParameter_subbasin[j].dValue_current = dValue
+                            iFlag_found = 1
+                            break
                     pass
                 else: #hru level
                     

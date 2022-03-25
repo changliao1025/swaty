@@ -54,8 +54,8 @@ oSwat = swaty_read_model_configuration_file(sFilename_configuration_in, iFlag_st
 #print configure again
 print(oSwat.tojson())
 
-#oSwat.setup()
-#oSwat.run()
+oSwat.setup()
+oSwat.run()
 oSwat.analyze()
 oSwat.evaluate()
 

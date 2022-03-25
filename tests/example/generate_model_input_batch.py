@@ -62,14 +62,14 @@ def generate_model_input(i):
     oSwat = swaty_read_model_configuration_file(sFilename_configuration_in, \
         iFlag_standalone_in=1,\
             iCase_index_in= i+1 ,\
-                sDate_in='20220314', \
+                sDate_in='20220321', \
             sWorkspace_input_in=sWorkspace_input, \
                 sWorkspace_output_in=sWorkspace_output,\
             aParameter_in = aParameter)
 
     oSwat.setup()
 
-futures = [generate_model_input.remote(i) for i in range(10)]
+futures = [generate_model_input.remote(i) for i in range(20)]
 print(ray.get(futures))
 
 print('Finished')

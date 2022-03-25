@@ -37,7 +37,7 @@ def swat_write_subbasin_input_file(oSwat_in):
     aExtension = ['.rte', '.sub']
     #now we can add corresponding possible variables
 
-    aRTE =['CH_K2','CH_N2' ]
+    aRTE =['CH_K2','CH_N2']
     aSUB=[]
     
     aExtension = np.asarray(aExtension)

@@ -3,7 +3,7 @@ import os,stat
 import sys
 import glob
 import shutil
-from matplotlib.cbook import ls_mapper
+
 import numpy as np
 from pathlib import Path
 import tarfile
@@ -268,10 +268,10 @@ class swatcase(object):
             self.nParameter_watershed = int(aConfig_in['nParameter_watershed'] )
         else:
             self.nParameter_watershed = 0
-        if 'nParameter_basin' in aConfig_in:
-            self.nParameter_basin = int(aConfig_in['nParameter_basin'] )
+        if 'nParameter_subbasin' in aConfig_in:
+            self.nParameter_subbasin = int(aConfig_in['nParameter_subbasin'] )
         else:
-            self.nParameter_basin = 0
+            self.nParameter_subbasin = 0
         if 'nParameter_hru' in aConfig_in:
             self.nParameter_hru = int(aConfig_in['nParameter_hru'] )
         else:
@@ -369,15 +369,13 @@ class swatcase(object):
                     #sFilename_new = sWorkspace_target_case + slash + sBasename_with_extension
                     copyfile(sFilename, sFilename_new)
 
-
-
         print('Finished copying all input files')
     
     def setup(self):
         """
         Set up a SWAT case
         """
-        #self.copy_TxtInOut_files()
+        self.copy_TxtInOut_files()
         self.swaty_prepare_watershed_configuration()      
         if (self.iFlag_replace_parameter == 1):
             self.swaty_prepare_watershed_parameter_file()
@@ -576,30 +574,23 @@ class swatcase(object):
         """
         #prepare the pest control file
         """      
-        
         sWorkspace_output_case = self.sWorkspace_output_case    
         
-
-        iFlag_simulation = self.iFlag_simulation
-        iFlag_watershed = self.iFlag_watershed
         iFlag_subbasin = self.iFlag_subbasin
-        iFlag_hru = self.iFlag_hru
+        
         nsubbasin = self.nsubbasin
 
-    
         aParameter_subbasin = self.aParameter_subbasin
         nParameter_subbasin = self.nParameter_subbasin
-
         
         sFilename_subbasin_template = os.path.join(str(Path(sWorkspace_output_case)) ,  'subbasin.para' )  
-
         
         if iFlag_subbasin ==1:    
             ofs = open(sFilename_subbasin_template, 'w')
 
             sLine = 'subbasin'
             for i in range(nParameter_subbasin):
-                sVariable = aParameter_subbasin[i]
+                sVariable = aParameter_subbasin[i].sName 
                 sLine = sLine + ',' + sVariable
             sLine = sLine + '\n'        
             ofs.write(sLine)
@@ -608,7 +599,11 @@ class swatcase(object):
                 sSubbasin = "{:03d}".format( iSubbasin + 1)
                 sLine = 'subbasin' + sSubbasin 
                 for i in range(nParameter_subbasin):
-                    sValue =  "{:5.2f}".format( aParameter_subbasin[i] )            
+
+                    sValue =  "{:5.2f}".format( aParameter_subbasin[i] ) 
+                    #sIndex + "{:03d}".format( iSubbasin + 1)
+
+
                     sLine = sLine + ', ' + sValue 
                 sLine = sLine + '\n'
                 ofs.write(sLine)

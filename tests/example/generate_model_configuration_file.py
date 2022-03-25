@@ -45,7 +45,7 @@ sWorkspace_output = '/global/cscratch1/sd/liao313/04model/swat/arw/simulation'
 sPath_bin = str(Path(sPath)  /  'bin')
 
 #where do you want to save the configuration file
-sFilename_configuration_in = sPath +  '/tests/configurations/template.json'
+sFilename_configuration_in = sPath +  '/tests/configurations/template_new.json'
 
 #the module to generate a confiug file
 oSwat = swaty_generate_template_configuration_file(sFilename_configuration_in, \
