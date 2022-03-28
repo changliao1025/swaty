@@ -29,9 +29,13 @@ class swatpara(object):
         
         if 'iIndex' in aConfig_in:
             self.iIndex = int(aConfig_in['iIndex'])
+        else:
+            self.iIndex = 1
 
         if 'iSoil_layer' in aConfig_in:
-            self.iParameter_type = int(aConfig_in['iSoil_layer'])
+            self.iSoil_layer = int(aConfig_in['iSoil_layer'])
+        else:
+            self.iSoil_layer =1
 
         if 'sName' in aConfig_in:
             self.sName = aConfig_in['sName']
@@ -41,6 +45,8 @@ class swatpara(object):
         
         if 'dValue_current' in aConfig_in:
             self.dValue_current = float(aConfig_in['dValue_current'])
+        else:
+            self.dValue_current = self.dValue_init
         
         if 'dValue_lower' in aConfig_in:
             self.dValue_lower = float(aConfig_in['dValue_lower'])

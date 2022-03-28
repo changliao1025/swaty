@@ -135,10 +135,10 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
             pParameter = aParameter[i]
             sName = pParameter.sName
             iType = pParameter.iParameter_type
+            iIndex = pParameter.iIndex
             dValue = pParameter.dValue_current
             iFlag_found =0
-            if iType == 1:
-                
+            if iType == 1:                
                 for j in range(oSwat.nParameter_watershed):
                     pPara = oSwat.aParameter_watershed[j]
                     sName1 = pPara.sName
@@ -151,18 +151,18 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
                 #if iFlag_found == 0:
                 #    #this one is not in the list yet
                 #    pass
-
                     
             else:
                 if iType == 2: #subbasin level
-                    nPara = oSwat.nParameter_subbasin * oSwat.nsubbasin
-                    for j in np.arange(nPara ):
-                        pPara = oSwat.aParameter_subbasin[j]
+                    #get name index
+                    iIndex_name = oSwat.aParameter_subbasin_name.index(sName)                    
+                    for j in np.arange(oSwat.nsubbasin ):
+                        pPara = oSwat.aParameter_subbasin[iIndex_name][j]
                         sName1 = pPara.sName
-                        iIndex = pPara.iIndex
-                        if sName.lower() == sName1.lower():
+                        iIndex1 = pPara.iIndex
+                        if  iIndex == iIndex1:
                             #replace
-                            oSwat.aParameter_subbasin[j].dValue_current = dValue
+                            oSwat.aParameter_subbasin[iIndex_name][j].dValue_current = dValue
                             iFlag_found = 1
                             break
                     pass

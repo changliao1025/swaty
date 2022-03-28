@@ -1,0 +1,79 @@
+{
+    "aParameter_hru": [
+        {
+            "dValue_current": 1.0,
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iIndex": 1,
+            "iParameter_type": 3,
+            "iSoil_layer": 1,
+            "sName": "CN2"
+        }
+    ],
+    "aParameter_subbasin": [
+        {
+            "dValue_current": 1.0,
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iIndex": 1,
+            "iParameter_type": 2,
+            "iSoil_layer": 1,
+            "sName": "CH_K2"
+        }
+    ],
+    "aParameter_watershed": [
+        {
+            "dValue_current": 1.0,
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iIndex": 1,
+            "iParameter_type": 1,
+            "iSoil_layer": 1,
+            "sName": "SFTMP"
+        }
+    ],
+    "iCase_index": 1,
+    "iDay_end": 31,
+    "iDay_start": 1,
+    "iFlag_calibration": 0,
+    "iFlag_hru": 1,
+    "iFlag_mode": 1,
+    "iFlag_replace_parameter": 1,
+    "iFlag_run": 1,
+    "iFlag_simulation": 1,
+    "iFlag_standalone": 1,
+    "iFlag_subbasin": 0,
+    "iFlag_watershed": 0,
+    "iMonth_end": 12,
+    "iMonth_start": 1,
+    "iYear_end": 2009,
+    "iYear_start": 1997,
+    "nParameter_hru": 1,
+    "nParameter_subbasin": 1,
+    "nParameter_watershed": 1,
+    "nhru": 2231,
+    "nsegment": 87,
+    "nstress_month": 156,
+    "nsubbasin": 87,
+    "sCase": "swat20220320001",
+    "sDate": "20220320",
+    "sFilename_HRULandUseSoilsReport": "/global/u1/l/liao313/workspace/python/swaty/data/arw/input/HRULandUseSoilsReport.txt",
+    "sFilename_LandUseSoilsReport": "/global/u1/l/liao313/workspace/python/swaty/data/arw/input/LandUseSoilsReport.txt",
+    "sFilename_hru_combination": "/global/u1/l/liao313/workspace/python/swaty/data/arw/input/hru_combination.txt",
+    "sFilename_hru_info": "/global/u1/l/liao313/workspace/python/swaty/data/arw/input/hru_info.txt",
+    "sFilename_observation_discharge": "obs.flow_am.csv",
+    "sFilename_swat": "swat670",
+    "sFilename_watershed_configuration": "/global/u1/l/liao313/workspace/python/swaty/data/arw/input/watershed_configuration.txt",
+    "sJob": "swat",
+    "sModel": "swat",
+    "sPython": "/global/homes/l/liao313/.conda/envs/swatenv/bin/python",
+    "sRegion": "arw",
+    "sWorkspace_bin": "/global/u1/l/liao313/workspace/python/swaty/bin",
+    "sWorkspace_input": "/global/u1/l/liao313/workspace/python/swaty/data/arw/input",
+    "sWorkspace_output": "/global/cscratch1/sd/liao313/04model/swat/arw/simulation",
+    "sWorkspace_output_case": "/global/cscratch1/sd/liao313/04model/swat/arw/simulation/swat20220320001",
+    "sWorkspace_simulation_copy": "/global/cscratch1/sd/liao313/04model/swat/arw/simulation/TxtInOut/"
+}

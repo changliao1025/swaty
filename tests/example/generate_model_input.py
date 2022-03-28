@@ -89,7 +89,7 @@ nsubbasin = 87
 nParameter_subbasin=1
 
 for i in np.arange(nParameter_subbasin):
-    for j in np.arange(1, nsubbasin):
+    for j in np.arange(1, nsubbasin+1):
         aPara_in['iParameter_type'] = 2
         aPara_in['iIndex'] = j
         aPara_in['sName']= 'CH_K2'
@@ -142,7 +142,7 @@ sWorkspace_output = '/global/cscratch1/sd/liao313/04model/swat/arw/simulation'
 #where is the swat binary is stored
 sPath_bin = str(Path(sPath)  /  'bin')
 
-sFilename_configuration_in = sPath +  '/tests/configurations/arw.json'
+sFilename_configuration_in = sPath +  '/tests/configurations/template.json'
 oSwat = swaty_read_model_configuration_file(sFilename_configuration_in, \
     iFlag_standalone_in=iFlag_standalone,\
         iCase_index_in=iCase_index,\

@@ -62,9 +62,15 @@ class swatcase(object):
     nsegment =0
     nhru=0
     aConfig_in=None
+
     aParameter_watershed = None
+
     aParameter_subbasin = None
+    aParameter_subbasin_name = None
+
     aParameter_hru = None
+    aParameter_hru_name = None
+
     nParameter=0
     nParameter_watershed=0
     nParameter_subbasin=0
@@ -284,16 +290,34 @@ class swatcase(object):
             self.aParameter_watershed.append(pParameter_watershed)
         
         self.aParameter_subbasin=list()
+        self.aParameter_subbasin_name=list()
         for i in range(self.nParameter_subbasin):
-            subbasin_dummy = aConfig_in['aParameter_subbasin'][i]
-            pParameter_subbasin = swatpara(subbasin_dummy)
-            self.aParameter_subbasin.append(pParameter_subbasin)
+            aParameter_subbasin_varaible=list()
+            for j in range(self.nsubbasin):
+                subbasin_dummy = aConfig_in['aParameter_subbasin'][i]
+                pParameter_subbasin = swatpara(subbasin_dummy)
+                pParameter_subbasin.iIndex = j +1 
+                sName = pParameter_subbasin.sName
+                if j == 0:
+                    self.aParameter_subbasin_name.append(sName)
+
+                aParameter_subbasin_varaible.append(pParameter_subbasin)
+
+            self.aParameter_subbasin.append(aParameter_subbasin_varaible)
 
         self.aParameter_hru=list()
+        self.aParameter_hru_name=list()
         for i in range(self.nParameter_hru):
-            hru_dummy = aConfig_in['aParameter_hru'][i]
-            pParameter_hru = swatpara(hru_dummy)
-            self.aParameter_hru.append(pParameter_hru)
+            aParameter_hru_varaible=list()
+            for j in range(self.nhru):
+                hru_dummy = aConfig_in['aParameter_hru'][i]
+                pParameter_hru = swatpara(hru_dummy)
+                pParameter_hru.iIndex = j + 1
+                sName = pParameter_hru.sName
+                if sName not in self.aParameter_hru_name:
+                    self.aParameter_hru_name.append(sName)
+                aParameter_hru_varaible.append(pParameter_hru)
+            self.aParameter_hru.append(aParameter_hru_varaible)
         
         return
 
@@ -375,7 +399,7 @@ class swatcase(object):
         """
         Set up a SWAT case
         """
-        self.copy_TxtInOut_files()
+        #self.copy_TxtInOut_files()
         self.swaty_prepare_watershed_configuration()      
         if (self.iFlag_replace_parameter == 1):
             self.swaty_prepare_watershed_parameter_file()
@@ -581,6 +605,7 @@ class swatcase(object):
         nsubbasin = self.nsubbasin
 
         aParameter_subbasin = self.aParameter_subbasin
+        aParameter_subbasin_name = self.aParameter_subbasin_name
         nParameter_subbasin = self.nParameter_subbasin
         
         sFilename_subbasin_template = os.path.join(str(Path(sWorkspace_output_case)) ,  'subbasin.para' )  
@@ -590,7 +615,7 @@ class swatcase(object):
 
             sLine = 'subbasin'
             for i in range(nParameter_subbasin):
-                sVariable = aParameter_subbasin[i].sName 
+                sVariable = aParameter_subbasin_name[i]
                 sLine = sLine + ',' + sVariable
             sLine = sLine + '\n'        
             ofs.write(sLine)
@@ -599,10 +624,8 @@ class swatcase(object):
                 sSubbasin = "{:03d}".format( iSubbasin + 1)
                 sLine = 'subbasin' + sSubbasin 
                 for i in range(nParameter_subbasin):
-
-                    sValue =  "{:5.2f}".format( aParameter_subbasin[i] ) 
+                    sValue =  "{:5.2f}".format( aParameter_subbasin[i][iSubbasin].dValue_init ) 
                     #sIndex + "{:03d}".format( iSubbasin + 1)
-
 
                     sLine = sLine + ', ' + sValue 
                 sLine = sLine + '\n'
@@ -627,6 +650,7 @@ class swatcase(object):
         iFlag_hru = self.iFlag_hru
 
         aParameter_hru = self.aParameter_hru
+        aParameter_hru_name=self.aParameter_hru_name
 
         nParameter_hru = self.nParameter_hru
 
@@ -651,16 +675,16 @@ class swatcase(object):
 
             sLine = 'hru'
             for i in range(nParameter_hru):
-                sVariable = aParameter_hru[i]
+                sVariable = aParameter_hru_name[i]
                 sLine = sLine + ',' + sVariable
             sLine = sLine + '\n'        
             ofs.write(sLine)
 
             for iHru_type in range(0, nhru_type):
-                sHru_type = "{:03d}".format( iHru_type + 1)
+                sHru_type = "{:04d}".format( iHru_type + 1)
                 sLine = 'hru'+ sHru_type 
                 for i in range(nParameter_hru):
-                    sValue =  "{:5.2f}".format( aParameter_hru[i].dValue_init )            
+                    sValue =  "{:5.2f}".format( aParameter_hru[i][iHru_type].dValue_init )            
                     sLine = sLine + ', ' + sValue 
                 sLine = sLine + '\n'
                 ofs.write(sLine)
@@ -706,7 +730,7 @@ class swatcase(object):
                     aParameter_table[0] = np.array(sParameter_watershed)
                 else:
                     aParameter_table[0] = np.append(aParameter_table[0],sParameter_watershed)
-                    #aParameter_table[0].append(sParameter_watershed) 
+                    
                 pass
             else:
                 if sParameter_watershed in aWWQ:
@@ -721,35 +745,7 @@ class swatcase(object):
         aParameter_count = np.full( (nFile_type) , 0 , dtype = int )
         aParameter_flag = np.full( (nFile_type) , 0 , dtype = int )
         aParameter_index = np.full( (nFile_type) , -1 , dtype = np.dtype(object) )
-    
-        #then we need to define what parameters may be calibrated
-        #this list should include all possible parameters in the parameter file
-    
-        #read parameter file
-        #if iFlag_simulation == 1:
-        #    sFilename_parameter = os.path.join(str(Path(sWorkspace_output_case)) ,  'watershed.para' )  
-        #    #sFilename_parameter = sWorkspace_output_case + slash + 'watershed.para'
-        #else:
-        #    iFlag_debug = 0
-        #    sPath_current = os.getcwd()
-        #    sFilename_parameter = os.path.join(str(Path(sPath_current)) ,  'watershed.para' )  
-            #sFilename_parameter = sPath_current + slash + 'watershed.para'
-
-        #print(sFilename_parameter)
-        ##check whetheher the file exist or not
-        #if os.path.isfile(sFilename_parameter):
-        #    pass
-        #else:
-        #    print('The file does not exist: ' + sFilename_parameter)
-        #    return
-
-        #aData_all = text_reader_string(sFilename_parameter, cDelimiter_in =',')
-        #aDummy = aData_all[0,:]
-        #nParameter = len(aDummy) - 1
-        #aParameter_list = aDummy[1: nParameter+1]
-        #aParameter_value = (aData_all[1,1: nParameter+1]).astype(float)
-        #aParameter_value = np.array(aParameter_value)
-        #print(aParameter_value)
+      
 
         for p in range(0, nParameter_watershed):
             para = aParameter_watershed[p].sName
@@ -888,8 +884,9 @@ class swatcase(object):
         write the input files from the new parameter generated by PEST to each hru file
         """
         aParameter_subbasin = self.aParameter_subbasin
-        nvariable = self.nParameter_subbasin
-        if(nvariable<1):
+        aParameter_subbasin_name= self.aParameter_subbasin_name
+        nParameter_subbasin = self.nParameter_subbasin
+        if(nParameter_subbasin<1):
             #there is nothing to be replaced at all
             print("There is no subbasin parameter to be updated!")
             return
@@ -897,7 +894,7 @@ class swatcase(object):
             pass    
         
         iFlag_simulation = self.iFlag_simulation
-        iFlag_calibration = self.iFlag_calibration
+
 
 
         sWorkspace_output_case = self.sWorkspace_output_case
@@ -906,7 +903,7 @@ class swatcase(object):
        
         sWorkspace_pest_model = sWorkspace_output_case
 
-        sWorkspace_data_project = self.sWorkspace_data_project
+        #sWorkspace_data_project = self.sWorkspace_data_project
     
         nsubbasin = self.nsubbasin
     
@@ -915,7 +912,7 @@ class swatcase(object):
         #now we can add corresponding possible variables
 
         aRTE =['CH_K2','CH_N2' ]
-        aSUB=[]
+        aSUB=['PLAPS','TLAPS']
 
         aExtension = np.asarray(aExtension)
         nFile_type= aExtension.size
@@ -924,8 +921,8 @@ class swatcase(object):
         aParameter_table = np.empty( (nFile_type)  , dtype = object )
 
         #need a better way to control this 
-        for iVariable in range(nvariable):
-            sParameter_subbasin = aParameter_subbasin[iVariable]
+        for iVariable in range(nParameter_subbasin):
+            sParameter_subbasin = aParameter_subbasin_name[iVariable]
 
             if sParameter_subbasin in aRTE:
 
@@ -944,40 +941,10 @@ class swatcase(object):
         aParameter_flag = np.full( (nFile_type) , 0 , dtype = int )
         aParameter_index = np.full( (nFile_type) , -1 , dtype = np.dtype(object) )
     
-        #then we need to define what parameters may be calibrated
-        #this list should include all possible parameters in the parameter file
-    
-        #read parameter file
-        #os.chdir('/global/cscratch1/sd/liao313/04model/swat/arw/calibration/swat20210723011/child3')
-        #iFlag_simulation=0
+        
 
-        if iFlag_simulation == 1:
-            #sFilename_parameter = sWorkspace_output_case + slash + 'subbasin.para'
-            sFilename_parameter = os.path.join(str(Path(sWorkspace_output_case)) ,  'subbasin.para' )   
-        else:
-            iFlag_debug = 0        
-            sPath_current = os.getcwd()
-            #sFilename_parameter = sPath_current + slash + 'subbasin.para'
-            sFilename_parameter = os.path.join(str(Path(sPath_current)) ,  'subbasin.para' )   
-
-        print(sFilename_parameter)
-        #check whetheher the file exist or not
-        if os.path.isfile(sFilename_parameter):
-            pass
-        else:
-            print('The file does not exist: '+sFilename_parameter)
-            return
-
-        aData_all = text_reader_string(sFilename_parameter, cDelimiter_in =',')
-        aDummy = aData_all[0,:]
-        nParameter = len(aDummy) - 1
-        aParameter_list = aDummy[1: nParameter+1]
-
-        aParameter_value = (aData_all[1:(nsubbasin+1),1: nParameter+1]).astype(float)
-        aParameter_value = np.asarray(aParameter_value)
-
-        for p in range(0, nParameter):
-            para = aParameter_list[p]
+        for p in range(0, nParameter_subbasin):
+            para = aParameter_subbasin_name[p]
             for i in range(0, nFile_type):
                 aParameter_tmp = aParameter_table[i]
                 if aParameter_tmp is not None:
@@ -995,6 +962,8 @@ class swatcase(object):
 
                     
         if iFlag_simulation == 1:
+            sWorkspace_source_case = sWorkspace_simulation_copy
+            sWorkspace_target_case = sWorkspace_output_case
             pass
         else:
             sPath_current = os.getcwd()
@@ -1006,7 +975,7 @@ class swatcase(object):
                 sWorkspace_source_case = sWorkspace_simulation_copy
                 sWorkspace_target_case = sPath_current
 
-        #iHru_index = 0 
+        
         for iSubbasin in range(0, nsubbasin):
             #subbasin string
             sSubbasin = "{:05d}".format( iSubbasin + 1)
@@ -1019,10 +988,8 @@ class swatcase(object):
                 iFlag = aParameter_flag[iFile_type]
                 sFilename = sSubbasin + '0000' + sExtension
 
-
                 if( iFlag == 1):
 
-                    #sFilename_subbasin = sWorkspace_source_case  + slash + sFilename 
                     sFilename_subbasin = os.path.join(str(Path(sWorkspace_source_case)) ,  sFilename )   
                     #open the file to read
                     ifs=open(sFilename_subbasin, 'rb')   
@@ -1037,8 +1004,9 @@ class swatcase(object):
 
                     ofs=open(sFilename_subbasin_out, 'w') 
                     #because of the python interface, pest will no longer interact with model files directly
-                    #starting from here we will                             
-                    aValue = aParameter_value[iSubbasin, :]
+                    #starting from here we will                 
+                    dummy_data  = np.array(aParameter_subbasin)
+                    aValue = dummy_data[:, iSubbasin]
                     while sLine:
                     
                         for i in range(0, aParameter_count[iFile_type]):
@@ -1047,14 +1015,14 @@ class swatcase(object):
                             if 'ch_k2' in sLine.lower()  and 'CH_K2' in aParameter_filetype:    
                                 dummy_index1 = np.where(aParameter_filetype == 'CH_K2')                            
                                 dummy_index2 = aParameter_indices[dummy_index1][0]
-                                sLine_new = "{:14.5f}".format(  aValue[dummy_index2]  )     + '    | pest parameter ch_k2 \n'
+                                sLine_new = "{:14.5f}".format(  aValue[dummy_index2].dValue_current  )     + '    | pest parameter ch_k2 \n'
                                 ofs.write(sLine_new)                            
                                 break                            
                             else:
                                 if 'ch_n2' in sLine.lower() and 'CH_N2' in aParameter_filetype:                                
                                     dummy_index1 = np.where(aParameter_filetype == 'CH_N2')                               
                                     dummy_index2 = aParameter_indices[dummy_index1][0]
-                                    sLine_new = "{:14.5f}".format(  aValue[dummy_index2]  )     + '    | pest parameter ch_n2 \n'
+                                    sLine_new = "{:14.5f}".format(  aValue[dummy_index2].dValue_current  )     + '    | pest parameter ch_n2 \n'
                                     ofs.write(sLine_new)    
                                     break
                                 else:
@@ -1079,8 +1047,11 @@ class swatcase(object):
         """
         write the input files from the new parameter generated by PEST to each hru file
         """
+        nvariable = self.nParameter_hru
         aParameter_hru = self.aParameter_hru
+        aParameter_hru_name = self.aParameter_hru_name
         nParameter_hru = self.nParameter_hru
+        nsubbasin = self.nsubbasin
         if(nParameter_hru<1):
             #there is nothing to be replaced at all
             print("There is no hru parameter to be updated!")
@@ -1089,16 +1060,13 @@ class swatcase(object):
             pass    
         
         iFlag_simulation = self.iFlag_simulation
-        iFlag_calibration = self.iFlag_calibration
+    
 
 
         sWorkspace_output_case = self.sWorkspace_output_case
         sWorkspace_simulation_copy =  self.sWorkspace_simulation_copy
-
     
         sWorkspace_pest_model = sWorkspace_output_case
-
-        sWorkspace_data_project = self.sWorkspace_data_project
     
         sFilename_watershed_configuration = self.sFilename_watershed_configuration
         sFilename_hru_info = self.sFilename_hru_info
@@ -1140,12 +1108,12 @@ class swatcase(object):
 
 
         aCHM =[]
-        aGW = []
-        aHRU =[]
+        aGW = ['RCHRG_DP', 'GWQMN', 'GW_REVAP','REVAPMN']
+        aHRU =['OV_N']
         aMGT = ['CN2']
         aSDR = []
         aSEP =[]
-        aSOL=['AWC']
+        aSOL=['SOL_AWC','SOL_K','SOL_ALB','SOL_BD']
 
         aExtension = np.asarray(aExtension)
         nFile_type= len(aExtension)
@@ -1155,73 +1123,48 @@ class swatcase(object):
 
         #need a better way to control this 
         for iVariable in range(nvariable):
-            sVariable = aParameter_hru[iVariable]
+            sParameter_hru = aParameter_hru_name[iVariable]
 
-            if sVariable in aCHM:
+            if sParameter_hru in aCHM:
                 pass
             else:
-                if sVariable in aGW:
+                if sParameter_hru in aGW:
                     pass
                 else:
-                    if sVariable in aHRU:
+                    if sParameter_hru in aHRU:
                         pass
                     else:
-                        if sVariable in aMGT:
+                        if sParameter_hru in aMGT:
                             if( aParameter_table[3] is None  ):
-                                aParameter_table[3] = sVariable
+                                aParameter_table[3] = sParameter_hru
                             else:
-                                aParameter_table[3].append(sVariable)                             
+                                aParameter_table[3].append(sParameter_hru)                             
                         else:
-                            if sVariable in aSDR:
+                            if sParameter_hru in aSDR:
                                 pass
                             else: 
-                                if sVariable in aSEP:
+                                if sParameter_hru in aSEP:
                                     pass
                                 else:
-                                    if sVariable in aSOL:
+                                    if sParameter_hru in aSOL:
                                         if( aParameter_table[6] is None  ):
-                                            aParameter_table[6] = sVariable
+                                            aParameter_table[6] = sParameter_hru
                                         else:
-                                            aParameter_table[6].append(sVariable) 
+                                            aParameter_table[6].append(sParameter_hru) 
                                     else:
                                         pass
                                     
-                                    
-
-                                    
+                          
 
         aParameter_user = np.full( (nFile_type) , None , dtype = np.dtype(object) )
         aParameter_count = np.full( (nFile_type) , 0 , dtype = int )
         aParameter_flag = np.full( (nFile_type) , 0 , dtype = int )
         aParameter_index = np.full( (nFile_type) , -1 , dtype = np.dtype(object) )
     
-        #then we need to define what parameters may be calibrated
-        #this list should include all possible parameters in the parameter file
-    
-        #read parameter file
-        #if iFlag_simulation == 1:
-        #    #sFilename_parameter = sWorkspace_output_case + slash + #'hru.para'
-        #    sFilename_parameter = os.path.join(str(Path#(sWorkspace_output_case)) ,  'hru.para' )  
-        #else:
-        #    iFlag_debug = 0
-        #    sPath_current = os.getcwd()
-        #    #sFilename_parameter = sPath_current + slash + 'hru.para'
-        #    sFilename_parameter = os.path.join(str(Path(sPath_current)#) ,  'hru.para' )  
-        ##check whetheher the file exist or not
-        #if os.path.isfile(sFilename_parameter):
-        #    pass
-        #else:
-        #    print('The file does not exist: '+sFilename_parameter)
-        #    return
-        #aData_all = text_reader_string(sFilename_parameter, #cDelimiter_in =',')
-        #aDummy = aData_all[0,:]
-        #nParameter = len(aDummy) - 1
-        #aParameter_list = aDummy[1: nParameter+1]
-        #aParameter_value = (aData_all[1:(nhru+1),1: nParameter+1]).#astype(float)
-        #aParameter_value = np.asarray(aParameter_value)
+        
 
         for p in range(0, nParameter_hru):
-            para = aParameter_hru[p]
+            para = aParameter_hru_name[p]
             for i in range(0, nFile_type):
                 aParameter_tmp = aParameter_table[i]
                 if aParameter_tmp is not None:
@@ -1270,21 +1213,23 @@ class swatcase(object):
                     iFlag = aParameter_flag[iFile_type]
                     if( iFlag == 1):
                         sFilename = sSubbasin + sHru + sExtension
-                        sFilename_hru = sWorkspace_source_case +  slash + sFilename 
+                        sFilename_hru = os.path.join(sWorkspace_source_case , sFilename )
                         #open the file to read
                         ifs=open(sFilename_hru, 'rb')   
                         sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')
 
                         #open the new file to write out
-                        sFilename_hru_out = sWorkspace_target_case + slash + sFilename
+                        sFilename_hru_out = os.path.join(sWorkspace_target_case , sFilename)
                         #do we need to remove linnk first, i guess it's better to do so
                         if os.path.exists(sFilename_hru_out):                
                             os.remove(sFilename_hru_out)
 
                         ofs=open(sFilename_hru_out, 'w') 
+                        print(sFilename_hru_out)
                         #because of the python interface, pest will no longer interact with model files directly
-                        #starting from here we will                             
-                        aValue = aParameter_value[iIndex[0], :]
+                        #starting from here we will       
+                        dummy_data  = np.array(aParameter_hru)                      
+                        aValue = dummy_data[:, iIndex[0]]
                         while sLine:
                             aParameter = aParameter_user[iFile_type]
 
@@ -1297,7 +1242,7 @@ class swatcase(object):
                                     dummy2 = np.array(aParameter_user[iFile_type])
                                     dummy_index1 = np.where(dummy2 == 'CN2')
                                     dummy_index2 = dummy1[dummy_index1][0]
-                                    sLine_new = "{:16.2f}".format(  aValue[0][dummy_index2]  )     + '    | pest parameter CN2 \n'
+                                    sLine_new = "{:16.2f}".format(  aValue[0][dummy_index2].dValue_current  )     + '    | pest parameter CN2 \n'
                                     ofs.write(sLine_new)
                                     break
                                 else:
@@ -1312,7 +1257,7 @@ class swatcase(object):
                                         dummy_index1 = np.where(dummy2 == 'AWC')
                                         dummy_index2 = dummy1[dummy_index1][0]
                                         for j in range(nSoil_layer):
-                                            sLine_new = sLine_new +  "{:12.2f}".format(  aValue[0][dummy_index2]  ) 
+                                            sLine_new = sLine_new +  "{:12.2f}".format(  aValue[0][dummy_index2].dValue_current  ) 
                                         sLine_new = sLine_new + '\n'
                                         ofs.write(sLine_new)
                                         break

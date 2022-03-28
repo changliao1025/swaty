@@ -40,9 +40,9 @@ def swaty_generate_template_configuration_file(sFilename_json, sWorkspace_input,
     aConfig['iFlag_simulation'] = iFlag_simulation
     aConfig['iFlag_calibration'] = iFlag_calibration
     
-    aConfig['iFlag_watershed'] = 1   
-    aConfig['iFlag_subbasin'] = 0
-    aConfig['iFlag_hru'] = 0
+    aConfig['iFlag_watershed'] = 1  
+    aConfig['iFlag_subbasin'] = 1
+    aConfig['iFlag_hru'] = 1
 
     aConfig['iFlag_mode'] = 1 
     aConfig['iFlag_replace_parameter'] = 1 
@@ -71,8 +71,9 @@ def swaty_generate_template_configuration_file(sFilename_json, sWorkspace_input,
     aConfig['iDay_start'] = 1
     aConfig['iDay_end'] = 31
    
-    aConfig['nsegment'] = 1
-    aConfig['nsubbasin']= 1
+    aConfig['nsegment'] = 87
+    aConfig['nsubbasin']= 87
+    aConfig['nhru']= 2231
     aConfig['sFilename_swat'] = 'swat670'
   
     aConfig['sFilename_observation_discharge'] = 'obs.flow_am.csv'
@@ -88,11 +89,11 @@ def swaty_generate_template_configuration_file(sFilename_json, sWorkspace_input,
     oModel = swatcase(aConfig)
 
     aParameter_watershed=list()
-    nParameter_watershed=2
-    aName=['SFTMP','SMTMP']
-    aValue_init=[0.5,1.0]
-    aValue_lower=[-5,-5]
-    aValue_upper=[5,5]
+    nParameter_watershed=1
+    aName=['SFTMP']
+    aValue_lower=[-5]
+    aValue_upper=[5]
+    aValue_init=[1]
     for iPara in range(nParameter_watershed):
         aPara_in = {}
         aPara_in['iParameter_type']=1
@@ -106,8 +107,12 @@ def swaty_generate_template_configuration_file(sFilename_json, sWorkspace_input,
     oModel.aParameter_watershed=aParameter_watershed
     oModel.nParameter_watershed = len(aParameter_watershed)
 
+    aName=['CH_K2']
+    aValue_lower=[-5]
+    aValue_upper=[5]
+    aValue_init=[1]
     aParameter_subbasin=list()
-    nParameter_subbasin=0
+    nParameter_subbasin=1
     for iPara in range(nParameter_subbasin):
         aPara_in = {}
         aPara_in['iParameter_type']=2
@@ -121,8 +126,12 @@ def swaty_generate_template_configuration_file(sFilename_json, sWorkspace_input,
     oModel.aParameter_subbasin=aParameter_subbasin
     oModel.nParameter_subbasin = len(aParameter_subbasin)
 
+    aName=['CN2']
+    aValue_lower=[-5]
+    aValue_upper=[5]
+    aValue_init=[1]
     aParameter_hru=list()
-    nParameter_hru=0
+    nParameter_hru=1
     for iPara in range(nParameter_hru):
         aPara_in = {}
         aPara_in['iParameter_type']=3
