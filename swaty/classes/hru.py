@@ -15,6 +15,23 @@ import json
 from json import JSONEncoder
 from swaty.classes.swatpara import swatpara
 
+class HruClassEncoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        if isinstance(obj, np.float32):
+            return float(obj)
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        
+         
+        if isinstance(obj, swatpara):
+            return json.loads(obj.tojson()) 
+       
+        if isinstance(obj, list):
+            pass  
+        return JSONEncoder.default(self, obj)
+  
 
 class pyhru(object):
     __metaclass__ = ABCMeta
@@ -30,6 +47,7 @@ class pyhru(object):
     def  __init__(self,aConfig_in):
         self.nParameter_hru = len(aConfig_in)
         self.aParameter_hru=list()
+        self.aParameter_hru_name=list()
         for i in range(self.nParameter_hru):
             hru_dummy = aConfig_in[i]
             pParameter_hru = swatpara(hru_dummy)
@@ -39,3 +57,16 @@ class pyhru(object):
             if sName not in self.aParameter_hru_name:
                 self.aParameter_hru_name.append(sName)
         return
+    
+    def tojson(self):
+        aSkip = []      
+
+        obj = self.__dict__.copy()
+        for sKey in aSkip:
+            obj.pop(sKey, None)
+        sJson = json.dumps(obj,\
+            sort_keys=True, \
+                indent = 4, \
+                    ensure_ascii=True, \
+                        cls=HruClassEncoder)
+        return sJson 

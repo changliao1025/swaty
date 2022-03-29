@@ -14,6 +14,24 @@ from shutil import copy2
 import json
 from json import JSONEncoder
 from swaty.classes.swatpara import swatpara
+
+class WatershedClassEncoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        if isinstance(obj, np.float32):
+            return float(obj)
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        
+         
+        if isinstance(obj, swatpara):
+            return json.loads(obj.tojson()) 
+       
+        if isinstance(obj, list):
+            pass  
+        return JSONEncoder.default(self, obj)
+        
 class pywatershed(object):
     __metaclass__ = ABCMeta
     lIndex=-1
@@ -32,3 +50,15 @@ class pywatershed(object):
             pParameter_watershed = swatpara(watershed_dummy)
             self.aParameter_watershed.append(pParameter_watershed)
         return
+    def tojson(self):
+        aSkip = []      
+
+        obj = self.__dict__.copy()
+        for sKey in aSkip:
+            obj.pop(sKey, None)
+        sJson = json.dumps(obj,\
+            sort_keys=True, \
+                indent = 4, \
+                    ensure_ascii=True, \
+                        cls=WatershedClassEncoder)
+        return sJson    

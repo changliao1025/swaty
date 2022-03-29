@@ -35,6 +35,14 @@ class CaseClassEncoder(JSONEncoder):
             return float(obj)
         if isinstance(obj, np.ndarray):
             return obj.tolist()
+        if isinstance(obj, pywatershed):
+            return json.loads(obj.tojson())
+
+        if isinstance(obj, pysubbasin):
+            return json.loads(obj.tojson())
+
+        if isinstance(obj, pyhru):
+            return json.loads(obj.tojson())
          
         if isinstance(obj, swatpara):
             return json.loads(obj.tojson()) 
@@ -276,6 +284,7 @@ class swatcase(object):
             self.sFilename_hru_info = aConfig_in['hru_info.txt'] 
             
         self.sFilename_hru_info = os.path.join(self.sWorkspace_input,  self.sFilename_hru_info )
+        self.sFilename_soil_layer = os.path.join(self.sWorkspace_input, 'soil_layer.txt')
 
         if 'nParameter_watershed' in aConfig_in:
             self.nParameter_watershed = int(aConfig_in['nParameter_watershed'] )
@@ -574,9 +583,74 @@ class swatcase(object):
         print('finished')    
 
     def swaty_retrieve_soil_info(self):
-
+        sWorkspace_source_case = self.sWorkspace_simulation_copy
+        sWorkspace_target_case = self.sWorkspace_output_case
+        sFilename_watershed_configuration = self.sFilename_watershed_configuration
+        sFilename_hru_info = self.sFilename_hru_info
+        
+        aSoil_name=list()
+        aSoil_layer=list()
+        #check whether file exist
+        if os.path.isfile(sFilename_watershed_configuration):
+            pass
+        else:
+            print('The file does not exist: ' + sFilename_watershed_configuration)
+            return
+        aSubbasin_hru  = text_reader_string( sFilename_watershed_configuration, cDelimiter_in = ',' )
+        aHru = aSubbasin_hru[:,1].astype(int)
+        nhru = sum(aHru)
         #find how many soil layer in each hru
+        sExtension='.sol'
+        for iSubbasin in range(self.nsubbasin):
+            
+            sSubbasin = "{:05d}".format( iSubbasin + 1)
+            nhru = aHru[ iSubbasin]
+            #loop through all hru in this subbasin
+            for iHru in range(0, nhru):
+                #hru string
+                sHru = "{:04d}".format( iHru + 1)
+                sFilename = sSubbasin + sHru + sExtension
+                sFilename_hru = os.path.join(sWorkspace_source_case , sFilename )
+                ifs=open(sFilename_hru, 'rb')   
+                sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')
+                while sLine:
+                            
+                    if 'soil name' in sLine.lower() : 
+                        print(sLine)
+                        dummy = sLine.split(':')  
+                        dummy1=dummy[1].rstrip()
+                        if dummy1 not in aSoil_name:
+                            aSoil_name.append(dummy1)
+                            sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')
+                            while sLine:
+                                if 'bulk density moist' in sLine.lower():
+                                    dummy = sLine.split(':')  
+                                    dummy1=dummy[1].rstrip()
+                                    dummy2=dummy1.split()
+                                    nSoil_layer=len(dummy2)
+                                    print (nSoil_layer)
+                                    aSoil_layer.append(nSoil_layer)
+                                    sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')
+                                    break
 
+                                else:
+                                    sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')
+                            break
+                        else:
+                            #sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')
+                            break
+                    else:
+                        sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')
+
+
+            pass
+        #save 
+        ofs = open(self.sFilename_soil_layer, 'w')
+        nsoil = len(aSoil_name)
+        for i in range(nsoil):
+            sLine = aSoil_name[i] + ', ' + "{:02d}".format( aSoil_layer[i]) + '\n'
+            ofs.write(sLine)
+        ofs.close()
         return
     
     def swaty_prepare_watershed_parameter_file(self):
@@ -585,18 +659,13 @@ class swatcase(object):
         """      
         sWorkspace_output_case = self.sWorkspace_output_case    
 
-
         iFlag_simulation = self.iFlag_simulation
         iFlag_watershed = self.iFlag_watershed
 
-
         aParameter_watershed = self.aParameter_watershed
-
         nParameter_watershed = self.nParameter_watershed
 
-        
         sFilename_watershed_template = os.path.join(str(Path(sWorkspace_output_case)), 'watershed.para' )     
-        
         
         if iFlag_watershed ==1:    
             ofs = open(sFilename_watershed_template, 'w')
@@ -697,8 +766,6 @@ class swatcase(object):
         sFilename_hru_template = os.path.join(str(Path(sWorkspace_output_case)) ,  'hru.para' )  
             #sFilename_hru_template = sWorkspace_output_case + slash + 'hru.para'   
         
-       
-
         if iFlag_hru ==1:    
             ofs = open(sFilename_hru_template, 'w')
 

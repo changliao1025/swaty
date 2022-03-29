@@ -14,6 +14,24 @@ from shutil import copy2
 import json
 from json import JSONEncoder
 from swaty.classes.swatpara import swatpara
+class SubbasinClassEncoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        if isinstance(obj, np.float32):
+            return float(obj)
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        
+         
+        if isinstance(obj, swatpara):
+            return json.loads(obj.tojson()) 
+       
+        if isinstance(obj, list):
+            pass  
+        return JSONEncoder.default(self, obj)
+  
+
 class pysubbasin(object):
     __metaclass__ = ABCMeta
     lIndex=-1
@@ -36,3 +54,16 @@ class pysubbasin(object):
                 self.aParameter_subbasin_name.append(sName)
 
         return
+
+    def tojson(self):
+        aSkip = []      
+
+        obj = self.__dict__.copy()
+        for sKey in aSkip:
+            obj.pop(sKey, None)
+        sJson = json.dumps(obj,\
+            sort_keys=True, \
+                indent = 4, \
+                    ensure_ascii=True, \
+                        cls=SubbasinClassEncoder)
+        return sJson 

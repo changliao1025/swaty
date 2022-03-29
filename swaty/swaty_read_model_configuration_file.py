@@ -155,14 +155,15 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
             else:
                 if iType == 2: #subbasin level
                     #get name index
-                    iIndex_name = oSwat.aParameter_subbasin_name.index(sName)                    
+                                       
                     for j in np.arange(oSwat.nsubbasin ):
-                        pPara = oSwat.aParameter_subbasin[iIndex_name][j]
+                        iIndex_name = oSwat.aSubbasin[j].aParameter_subbasin_name.index(sName) 
+                        pPara = oSwat.aSubbasin[j].aParameter_subbasin[iIndex_name]
                         sName1 = pPara.sName
                         iIndex1 = pPara.iIndex
                         if  iIndex == iIndex1:
                             #replace
-                            oSwat.aParameter_subbasin[iIndex_name][j].dValue_current = dValue
+                            oSwat.aSubbasin[j].aParameter_subbasin[iIndex_name].dValue_current = dValue
                             iFlag_found = 1
                             break
                     pass
