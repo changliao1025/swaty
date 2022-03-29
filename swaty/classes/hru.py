@@ -20,8 +20,22 @@ class pyhru(object):
     __metaclass__ = ABCMeta
 
     lIndex=-1
+    iFlag_hru=0
     nSoil_layer = 1
+    nParameter_hru=0
+    aParameter_hru=None
+    aParameter_hru_name = None
     
 
-    def  __init__(self):
+    def  __init__(self,aConfig_in):
+        self.nParameter_hru = len(aConfig_in)
+        self.aParameter_hru=list()
+        for i in range(self.nParameter_hru):
+            hru_dummy = aConfig_in[i]
+            pParameter_hru = swatpara(hru_dummy)
+            self.aParameter_hru.append(pParameter_hru)
+
+            sName = pParameter_hru.sName
+            if sName not in self.aParameter_hru_name:
+                self.aParameter_hru_name.append(sName)
         return

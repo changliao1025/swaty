@@ -19,6 +19,9 @@ from pyearth.toolbox.data.convert_time_series_daily_to_monthly import convert_ti
 
 from swaty.auxiliary.text_reader_string import text_reader_string
 from swaty.auxiliary.line_count import line_count
+from swaty.classes.watershed import pywatershed
+from swaty.classes.subbasin import pysubbasin
+from swaty.classes.hru import pyhru
 from swaty.classes.swatpara import swatpara
 
 pDate = datetime.datetime.today()
@@ -63,18 +66,22 @@ class swatcase(object):
     nhru=0
     aConfig_in=None
 
-    aParameter_watershed = None
+    #aParameter_watershed = None
+    #aParameter_subbasin = None
+    #aParameter_subbasin_name = None
 
-    aParameter_subbasin = None
-    aParameter_subbasin_name = None
+    pWatershed = None
+    aSubbasin=None
+    aHru=None
 
-    aParameter_hru = None
-    aParameter_hru_name = None
+    #aParameter_hru = None
+    #aParameter_hru_name = None
 
     nParameter=0
     nParameter_watershed=0
     nParameter_subbasin=0
     nParameter_hru=0
+
     sFilename_swat_current = ''
     sFilename_model_configuration=''
     sWorkspace_input=''
@@ -283,41 +290,58 @@ class swatcase(object):
         else:
             self.nParameter_hru = 0
 
-        self.aParameter_watershed=list()
-        for i in range(self.nParameter_watershed):
-            watershed_dummy = aConfig_in['aParameter_watershed'][i]
-            pParameter_watershed = swatpara(watershed_dummy)
-            self.aParameter_watershed.append(pParameter_watershed)
+        #self.aParameter_watershed=list()
+        #for i in range(self.nParameter_watershed):
+        #    watershed_dummy = aConfig_in['aParameter_watershed'][i]
+        #    pParameter_watershed = swatpara(watershed_dummy)
+        #    self.aParameter_watershed.append(pParameter_watershed)
+        dummy =aConfig_in['aParameter_watershed']
+
+        self.pWatershed = pywatershed(dummy)    
         
-        self.aParameter_subbasin=list()
-        self.aParameter_subbasin_name=list()
-        for i in range(self.nParameter_subbasin):
-            aParameter_subbasin_varaible=list()
-            for j in range(self.nsubbasin):
-                subbasin_dummy = aConfig_in['aParameter_subbasin'][i]
-                pParameter_subbasin = swatpara(subbasin_dummy)
-                pParameter_subbasin.iIndex = j +1 
-                sName = pParameter_subbasin.sName
-                if j == 0:
-                    self.aParameter_subbasin_name.append(sName)
+        self.aSubbasin=list()
+        for i in range(self.nsubbasin):
+            dummy =aConfig_in['aParameter_subbasin']
+            pdummy = pysubbasin(dummy)    
+            pdummy.lIndex = i+1
+            self.aSubbasin.append(pdummy)
+        
+        #self.aParameter_subbasin=list()
+        #self.aParameter_subbasin_name=list()
+        #for i in range(self.nParameter_subbasin):
+        #    aParameter_subbasin_varaible=list()
+        #    for j in range(self.nsubbasin):
+        #        subbasin_dummy = aConfig_in['aParameter_subbasin'][i]
+        #        pParameter_subbasin = swatpara(subbasin_dummy)
+        #        pParameter_subbasin.iIndex = j +1 
+        #        sName = pParameter_subbasin.sName
+        #        if j == 0:
+        #            self.aParameter_subbasin_name.append(sName)
+#
+        #        aParameter_subbasin_varaible.append(pParameter_subbasin)
+#
+        #    self.aParameter_subbasin.append(aParameter_subbasin_varaible)
 
-                aParameter_subbasin_varaible.append(pParameter_subbasin)
+        self.aHru=list()
+        for i in range(self.nhru):
+            dummy =aConfig_in['aParameter_hru']
+            pdummy = pyhru(dummy)    
+            pdummy.lIndex = i+1
+            self.aHru.append(pdummy)
 
-            self.aParameter_subbasin.append(aParameter_subbasin_varaible)
-
-        self.aParameter_hru=list()
-        self.aParameter_hru_name=list()
-        for i in range(self.nParameter_hru):
-            aParameter_hru_varaible=list()
-            for j in range(self.nhru):
-                hru_dummy = aConfig_in['aParameter_hru'][i]
-                pParameter_hru = swatpara(hru_dummy)
-                pParameter_hru.iIndex = j + 1
-                sName = pParameter_hru.sName
-                if sName not in self.aParameter_hru_name:
-                    self.aParameter_hru_name.append(sName)
-                aParameter_hru_varaible.append(pParameter_hru)
-            self.aParameter_hru.append(aParameter_hru_varaible)
+        #self.aParameter_hru=list()
+        #self.aParameter_hru_name=list()
+        #for i in range(self.nParameter_hru):
+        #    aParameter_hru_varaible=list()
+        #    for j in range(self.nhru):
+        #        hru_dummy = aConfig_in['aParameter_hru'][i]
+        #        pParameter_hru = swatpara(hru_dummy)
+        #        pParameter_hru.iIndex = j + 1
+        #        sName = pParameter_hru.sName
+        #        if sName not in self.aParameter_hru_name:
+        #            self.aParameter_hru_name.append(sName)
+        #        aParameter_hru_varaible.append(pParameter_hru)
+        #    self.aParameter_hru.append(aParameter_hru_varaible)
         
         return
 
@@ -401,6 +425,7 @@ class swatcase(object):
         """
         #self.copy_TxtInOut_files()
         self.swaty_prepare_watershed_configuration()      
+        self.swaty_retrieve_soil_info()
         if (self.iFlag_replace_parameter == 1):
             self.swaty_prepare_watershed_parameter_file()
             self.swaty_write_watershed_input_file()    
@@ -532,7 +557,6 @@ class swatcase(object):
                 sLine=ifs.readline()
 
 
-
         ifs.close() #close hru report file
         ofs.close() #save watershed configuration file
         #save it to a file
@@ -546,9 +570,14 @@ class swatcase(object):
         ofs = open(self.sFilename_hru_info, 'w')
         for item in lookup_table2:
             ofs.write("%s\n" % item)
-        ofs.close()       
+        ofs.close()   
+        print('finished')    
 
-        print('finished')
+    def swaty_retrieve_soil_info(self):
+
+        #find how many soil layer in each hru
+
+        return
     
     def swaty_prepare_watershed_parameter_file(self):
         """
