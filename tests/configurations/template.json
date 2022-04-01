@@ -11,6 +11,18 @@
             "sName": "CN2"
         }
     ],
+    "aParameter_soil": [
+        {
+            "dValue_current": 1.0,
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iIndex": 1,
+            "iParameter_type": 3,
+            "iSoil_layer": 1,
+            "sName": "SOL_ALB"
+        }
+    ],
     "aParameter_subbasin": [
         {
             "dValue_current": 1.0,
@@ -45,13 +57,14 @@
     "iFlag_run": 1,
     "iFlag_simulation": 1,
     "iFlag_standalone": 1,
-    "iFlag_subbasin": 0,
-    "iFlag_watershed": 0,
+    "iFlag_subbasin": 1,
+    "iFlag_watershed": 1,
     "iMonth_end": 12,
     "iMonth_start": 1,
     "iYear_end": 2009,
     "iYear_start": 1997,
     "nParameter_hru": 1,
+    "nParameter_soil": 1,
     "nParameter_subbasin": 1,
     "nParameter_watershed": 1,
     "nhru": 2231,
@@ -65,6 +78,7 @@
     "sFilename_hru_combination": "/global/u1/l/liao313/workspace/python/swaty/data/arw/input/hru_combination.txt",
     "sFilename_hru_info": "/global/u1/l/liao313/workspace/python/swaty/data/arw/input/hru_info.txt",
     "sFilename_observation_discharge": "obs.flow_am.csv",
+    "sFilename_soil_layer": "/global/u1/l/liao313/workspace/python/swaty/data/arw/input/soil_layer.txt",
     "sFilename_swat": "swat670",
     "sFilename_watershed_configuration": "/global/u1/l/liao313/workspace/python/swaty/data/arw/input/watershed_configuration.txt",
     "sJob": "swat",

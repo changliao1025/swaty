@@ -30,104 +30,51 @@ else:
 
 #set up a parameter
 aParameter = list()
-
 aPara_in={}
-#aPara_in['iParameter_type'] = 1
-#aPara_in['sName']= 'SFTMP'
-#aPara_in['dValue_init']=0.0
-#aPara_in['dValue_current']=0.1
-#aPara_in['dValue_lower']=-1
-#aPara_in['dValue_upper']=5
-#pParameter_watershed = swatpara(aPara_in)
-#aParameter.append(pParameter_watershed)
-#
-#aPara_in['iParameter_type'] = 1
-#aPara_in['sName']= 'SMTMP'
-#aPara_in['dValue_init']=0.0
-#aPara_in['dValue_current']=0.2
-#aPara_in['dValue_lower']=-1
-#aPara_in['dValue_upper']=5
-#pParameter_watershed = swatpara(aPara_in)
-#aParameter.append(pParameter_watershed)
-#
-#aPara_in['iParameter_type'] = 1
-#aPara_in['sName']= 'ESCO'
-#aPara_in['dValue_init']=0.0
-#aPara_in['dValue_current']=0.3
-#aPara_in['dValue_lower']=-1
-#aPara_in['dValue_upper']=5
-#pParameter_watershed = swatpara(aPara_in)
-#aParameter.append(pParameter_watershed)
-#
-#aPara_in['iParameter_type'] = 1
-#aPara_in['sName']= 'SMFMX'
-#aPara_in['dValue_init']=0.0
-#aPara_in['dValue_current']=0.4
-#aPara_in['dValue_lower']=-1
-#aPara_in['dValue_upper']=5
-#pParameter_watershed = swatpara(aPara_in)
-#aParameter.append(pParameter_watershed)
-#
-#aPara_in['iParameter_type'] = 1
-#aPara_in['sName']= 'TIMP'
-#aPara_in['dValue_init']=0.0
-#aPara_in['dValue_current']=0.5
-#aPara_in['dValue_lower']=-1
-#aPara_in['dValue_upper']=5
-#pParameter_watershed = swatpara(aPara_in)
-#aParameter.append(pParameter_watershed)
-#
-#aPara_in['iParameter_type'] = 1
-#aPara_in['sName']= 'EPCO'
-#aPara_in['dValue_init']=0.0
-#aPara_in['dValue_current']=0.6
-#aPara_in['dValue_lower']=-1
-#aPara_in['dValue_upper']=5
-#pParameter_watershed = swatpara(aPara_in)
-#aParameter.append(pParameter_watershed)
+
 nsubbasin = 87
 nParameter_subbasin=1
 
-for i in np.arange(nParameter_subbasin):
-    for j in np.arange(1, nsubbasin+1):
-        aPara_in['iParameter_type'] = 2
-        aPara_in['iIndex'] = j
-        aPara_in['sName']= 'CH_K2'
-        aPara_in['dValue_init']=0.0
-        aPara_in['dValue_current']=0.01* j +0.01
-        aPara_in['dValue_lower']=-1
-        aPara_in['dValue_upper']=5
-        pParameter_watershed = swatpara(aPara_in)
-        aParameter.append(pParameter_watershed)
-
-#nParameter_hru=1
-#nhru = 10
-#for i in range(nParameter_hru):
-#    for j in np.range(1, nhru):
-#        aPara_in['iParameter_type'] = 3
+#for i in np.arange(nParameter_subbasin):
+#    for j in np.arange(1, nsubbasin+1):
+#        aPara_in['iParameter_type'] = 2
 #        aPara_in['iIndex'] = j
-#        aPara_in['sName']= 'CN2'
+#        aPara_in['sName']= 'CH_K2'
 #        aPara_in['dValue_init']=0.0
-#        aPara_in['dValue_current']=0.6
+#        aPara_in['dValue_current']=0.01* j +0.01
 #        aPara_in['dValue_lower']=-1
 #        aPara_in['dValue_upper']=5
-#        pParameter_watershed = swatpara(aPara_in)
-#        aParameter.append(pParameter_watershed)
-#
-#nsoil_layer = 3
-#for i in range(nParameter_hru):
-#    for j in np.range(1, nhru):
-#        for k in np.arange(1, nsoil_layer+1):
-#            aPara_in['iParameter_type'] = 3
-#            aPara_in['iIndex'] = j
-#            aPara_in['iSoil_layer'] = k
-#            aPara_in['sName']= 'CN2'
-#            aPara_in['dValue_init']=0.0
-#            aPara_in['dValue_current']=0.6
-#            aPara_in['dValue_lower']=-1
-#            aPara_in['dValue_upper']=5
-#            pParameter_watershed = swatpara(aPara_in)
-#            aParameter.append(pParameter_watershed)
+#        pParameter_subbasin = swatpara(aPara_in)
+#        aParameter.append(pParameter_subbasin)
+
+nParameter_hru=1
+nhru = 2231
+for i in range(nParameter_hru):
+    for j in np.range(1, nhru):
+        aPara_in['iParameter_type'] = 3
+        aPara_in['iIndex'] = j
+        aPara_in['sName']= 'CN2'
+        aPara_in['dValue_init']=0.0
+        aPara_in['dValue_current']=0.6
+        aPara_in['dValue_lower']=-1
+        aPara_in['dValue_upper']=5
+        pParameter_hru = swatpara(aPara_in)
+        aParameter.append(pParameter_hru)
+
+nsoil_layer = 1
+for i in range(nParameter_hru):
+    for j in np.range(1, nhru):
+        for k in np.arange(1, nsoil_layer+1):
+            aPara_in['iParameter_type'] = 3
+            aPara_in['iIndex'] = j
+            aPara_in['iSoil_layer'] = k
+            aPara_in['sName']= 'SOL_ALB'
+            aPara_in['dValue_init']=0.0
+            aPara_in['dValue_current']=0.6
+            aPara_in['dValue_lower']=-1
+            aPara_in['dValue_upper']=5
+            pParameter_soil = swatpara(aPara_in)
+            aParameter.append(pParameter_soil)
 
 
 

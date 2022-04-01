@@ -145,5 +145,25 @@ def swaty_generate_template_configuration_file(sFilename_json, sWorkspace_input,
     oModel.aParameter_hru=aParameter_hru
     oModel.nParameter_hru = len(aParameter_hru)
 
+
+    aName=['SOL_ALB']
+    aValue_lower=[-5]
+    aValue_upper=[5]
+    aValue_init=[1]
+    aParameter_soil=list()
+    nParameter_soil=1
+    for iPara in range(nParameter_soil):
+        aPara_in = {}
+        aPara_in['iParameter_type']=3
+        aPara_in['sName']=aName[iPara]
+        aPara_in['dValue_init']=aValue_init[iPara]
+        aPara_in['dValue_lower']=aValue_lower[iPara]
+        aPara_in['dValue_upper']=aValue_upper[iPara]
+        pPara_soil = swatpara(aPara_in)
+        aParameter_soil.append(pPara_soil)
+
+    oModel.aParameter_soil=aParameter_soil
+    oModel.nParameter_soil = len(aParameter_soil)
+
     oModel.export_config_to_json(sFilename_json)
     return oModel

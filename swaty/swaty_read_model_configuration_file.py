@@ -168,7 +168,17 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
                             break
                     pass
                 else: #hru level
-                    
+                    for j in np.arange(oSwat.nhru ):
+                        iIndex_name = oSwat.aHru[j].aParameter_hru_name.index(sName) 
+                        pPara = oSwat.aSubbasin[j].aParameter_hru[iIndex_name]
+                        sName1 = pPara.sName
+                        iIndex1 = pPara.iIndex
+                        if  iIndex == iIndex1:
+                            #replace
+                            oSwat.aSubbasin[j].aParameter_subbasin[iIndex_name].dValue_current = dValue
+                            iFlag_found = 1
+                            break
+                    pass
                     pass #
 
             
