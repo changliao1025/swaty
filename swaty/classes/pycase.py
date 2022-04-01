@@ -289,6 +289,8 @@ class swatcase(object):
             
         self.sFilename_hru_info = os.path.join(self.sWorkspace_input,  self.sFilename_hru_info )
         self.sFilename_soil_layer = os.path.join(self.sWorkspace_input, 'soil_layer.txt')
+        self.sFilename_soil_info = os.path.join(self.sWorkspace_input, 'soil_info.txt')
+        
 
         if 'nParameter_watershed' in aConfig_in:
             self.nParameter_watershed = int(aConfig_in['nParameter_watershed'] )
@@ -406,8 +408,8 @@ class swatcase(object):
         Set up a SWAT case
         """
         #self.copy_TxtInOut_files()
-        self.swaty_prepare_watershed_configuration()      
-        self.swaty_retrieve_soil_info()
+        #self.swaty_prepare_watershed_configuration()      
+        #self.swaty_retrieve_soil_info()
         #self.swaty_setup_soil_parameter()
         if (self.iFlag_replace_parameter == 1):
             self.swaty_prepare_watershed_parameter_file()
@@ -424,66 +426,6 @@ class swatcase(object):
         sFilename_job = self.swaty_prepare_simulation_job_file() 
         return
 
-    def swaty_setup_soil_parameter(self):
-        nsubbasin = self.nsubbasin
-        sWorkspace_simulation_copy = self.sWorkspace_simulation_copy
-        sWorkspace_source_case = sWorkspace_simulation_copy
-        sFilename_watershed_configuration = self.sFilename_watershed_configuration
-        sFilename_hru_info = self.sFilename_hru_info
-        #check whether file exist
-        if os.path.isfile(sFilename_watershed_configuration):
-            pass
-        else:
-            print('The file does not exist: ' + sFilename_watershed_configuration)
-            return
-        aSubbasin_hru  = text_reader_string( sFilename_watershed_configuration, cDelimiter_in = ',' )
-        aHru = aSubbasin_hru[:,1].astype(int)
-        aSubbasin_hru  = text_reader_string( sFilename_watershed_configuration, cDelimiter_in = ',' )
-        aHru = aSubbasin_hru[:,1].astype(int)
-        nhru = sum(aHru)
-        if os.path.isfile(sFilename_hru_info):
-            pass
-        else:
-            print('The file does not exist: ')
-            return
-        aHru_info = text_reader_string(sFilename_hru_info)
-        aHru_info = np.asarray(aHru_info)
-        nhru = len(aHru_info)
-        aHru_info= aHru_info.reshape(nhru)
-        sFilename_hru_combination = self.sFilename_hru_combination
-        if os.path.isfile(sFilename_hru_combination):
-            pass
-        else:
-            print('The file does not exist: ')
-            return
-        aHru_combination = text_reader_string(sFilename_hru_combination)
-        aHru_combination = np.asarray(aHru_combination)
-
-        nhru_type = len(aHru_combination)
-        aHru_combination= aHru_combination.reshape(nhru_type)
-        for iSubbasin in range(0, nsubbasin):
-           #subbasin string
-           sSubbasin = "{:05d}".format( iSubbasin + 1)
-           nhru = aHru[ iSubbasin]
-           #loop through all hru in this subbasin
-           for iHru in range(0, nhru):
-               #hru string
-               sHru = "{:04d}".format( iHru + 1)
-               #find the hry type 
-               #sHru_code = aHru_info[iHru_index]
-               #iIndex = np.where(aHru_combination == sHru_code)
-               #iHru_index = iHru_index + 1
-               #sFilename = sSubbasin + sHru + '.sol'
-               #sFilename_hru = os.path.join(sWorkspace_source_case , sFilename )
-               #ifs=open(sFilename_hru, 'rb')   
-               #sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')
-               pass
-                            
-               
-
-
-        
-        return
     def run(self):
         if (self.iFlag_run ==1):            
             sFilename_bash = os.path.join(self.sWorkspace_output_case,  'run_swat.sh' )
@@ -507,6 +449,12 @@ class swatcase(object):
         return
     
     def evaluate(self):
+        return
+
+    def swaty_generate_model_structure_files(self):
+        self.swaty_prepare_watershed_configuration()
+        self.swaty_retrieve_soil_info()
+
         return
 
     def swaty_prepare_watershed_configuration(self):
@@ -624,6 +572,7 @@ class swatcase(object):
         
         aSoil_name=list()
         aSoil_layer=list()
+        aSoil_info = list()
         #check whether file exist
         if os.path.isfile(sFilename_watershed_configuration):
             pass
@@ -650,37 +599,33 @@ class swatcase(object):
                 while sLine:
                             
                     if 'soil name' in sLine.lower() : 
-                        print(sLine)
+                        #print(sLine)
                         dummy = sLine.split(':')  
-                        dummy1=dummy[1].rstrip()
-                        if dummy1 not in aSoil_name:
-                            aSoil_name.append(dummy1)
-                            sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')
-                            while sLine:
-                                if 'bulk density moist' in sLine.lower():
-                                    dummy = sLine.split(':')  
-                                    dummy1=dummy[1].rstrip()
-                                    dummy2=dummy1.split()
-                                    nSoil_layer=len(dummy2)
-                                    print (nSoil_layer)
-                                    aSoil_layer.append(nSoil_layer)
+                        dummy_soil=dummy[1].rstrip()
 
-                                    self.aHru[iHru].aSoil=list()
-                                    aSoil_layer = list()
-                                    for i in nSoil_layer:
-                                        psoil = pysoil()
-                                        aSoil_layer.append(psoil)                                        
-                                    self.aHru[iHru].aSoil.append(aSoil_layer)
+                        sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')
+                        while sLine:
+                            if 'bulk density moist' in sLine.lower():
+                                dummy = sLine.split(':')  
+                                dummy1=dummy[1].rstrip()
+                                dummy2=dummy1.split()
+                                nSoil_layer=len(dummy2)
+                                
+                                #sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')
+                                break
+                            else:
+                                sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')
+                        
 
-                                    sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')
-                                    break
-
-                                else:
-                                    sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')
-                            break
+                        if dummy_soil not in aSoil_name:
+                            aSoil_name.append(dummy_soil)
+                            aSoil_layer.append(nSoil_layer)
                         else:
                             #sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')
-                            break
+                            pass
+
+                        aSoil_info.append(nSoil_layer )
+                                
                     else:
                         sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')
 
@@ -691,6 +636,13 @@ class swatcase(object):
         nsoil = len(aSoil_name)
         for i in range(nsoil):
             sLine = aSoil_name[i] + ', ' + "{:02d}".format( aSoil_layer[i]) + '\n'
+            ofs.write(sLine)
+        ofs.close()
+
+        ofs = open(self.sFilename_soil_info, 'w')
+        nsoil = len(aSoil_info)
+        for i in range(nsoil):
+            sLine = "{:02d}".format( aSoil_info[i]) + '\n'
             ofs.write(sLine)
         ofs.close()
         return
