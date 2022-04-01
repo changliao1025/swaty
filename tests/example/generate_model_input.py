@@ -90,9 +90,7 @@ for i in range(nParameter_hru):
             aPara_in['dValue_upper']=5
             pParameter_soil = swatpara(aPara_in)
         
-        #
-        
-        aParameter.append(pParameter_soil)
+            aParameter.append(pParameter_soil)
 
 
 
