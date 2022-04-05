@@ -53,7 +53,11 @@ oSwat = swaty_generate_template_configuration_file(sFilename_configuration_in, \
         sWorkspace_output, sPath_bin, \
             iFlag_standalone_in=iFlag_standalone, iCase_index_in=iCase_index, sDate_in=sDate)
 
+
+
+
 #print the object to check
+
 print(oSwat.tojson())
 #after you generate this config, remember to edit it so you can actually use it for simulation
 

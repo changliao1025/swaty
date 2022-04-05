@@ -14,7 +14,9 @@ pDate = datetime.datetime.today()
 sDate_default = "{:04d}".format(pDate.year) + "{:02d}".format(pDate.month) + "{:02d}".format(pDate.day)
 
 def swaty_read_model_configuration_file(sFilename_configuration_in , \
-    iFlag_standalone_in=None, iCase_index_in = None, sDate_in = None,\
+    iFlag_read_discretization_in = None,\
+    iFlag_standalone_in=None, \
+        iCase_index_in = None, sDate_in = None,\
         iYear_start_in = None,\
             iMonth_start_in = None,\
                 iDay_start_in = None, \
@@ -46,8 +48,12 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
     else:
         sWorkspace_output = aConfig['sWorkspace_output']
         pass
- 
 
+    if iFlag_read_discretization_in is not None:
+        iFlag_read_discretization=1
+    else:
+        iFlag_read_discretization=0
+        pass
     
     if iFlag_standalone_in is not None:        
         iFlag_standalone = iFlag_standalone_in
@@ -109,6 +115,8 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
     #https://docs.python.org/3/library/datetime.html#datetime-objects
     
     aConfig['iFlag_standalone'] = iFlag_standalone
+
+    aConfig['iFlag_read_discretization'] = iFlag_read_discretization
     aConfig['iCase_index'] = iCase_index
     aConfig['sDate'] = sDate
     aConfig['sWorkspace_input'] = sWorkspace_input
@@ -128,13 +136,13 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
     if 'nhru' in aConfig:
         pass
     
-
     #data
     oSwat = swatcase(aConfig)
 
-    #we need to initialize the discretization
-    sFilename_soil_info = oSwat.sFilename_soil_info
-    aSoil_info = np.array(text_reader_string(sFilename_soil_info)).astype(int)
+    
+
+
+    
 
     if iFlag_paramter ==1:
         for i in range(len(aParameter)):
@@ -145,7 +153,7 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
             iIndex_hru = pParameter.iIndex_hru
             iIndex_soil_layer = pParameter.iIndex_soil_layer
             dValue = pParameter.dValue_current
-            iFlag_found =0
+            iFlag_found = 0
             if iType == 1:                
                 for j in range(oSwat.nParameter_watershed):
                     pPara = oSwat.aParameter_watershed[j]

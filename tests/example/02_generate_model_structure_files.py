@@ -49,7 +49,6 @@ oSwat = swaty_read_model_configuration_file(sFilename_configuration_in, \
 
 #can change some members
 
-
 oSwat.swaty_generate_model_structure_files()
 
 

@@ -41,15 +41,18 @@ class pywatershed(object):
     aParameter_watershed=None
     aParameter_watershed_name = None
 
-    def  __init__(self,aConfig_in):
-
-        self.nParameter_watershed = len(aConfig_in)
-        self.aParameter_watershed=list()
-        for i in range(self.nParameter_watershed):
-            watershed_dummy = aConfig_in[i]
-            pParameter_watershed = swatpara(watershed_dummy)
-            self.aParameter_watershed.append(pParameter_watershed)
+    def  __init__(self, aConfig_in=None):
+        if aConfig_in is not None:
+            self.nParameter_watershed = len(aConfig_in)
+            self.aParameter_watershed=list()
+            for i in range(self.nParameter_watershed):
+                watershed_dummy = aConfig_in[i]
+                pParameter_watershed = swatpara(watershed_dummy)
+                self.aParameter_watershed.append(pParameter_watershed)
+        else:
+            pass
         return
+
     def tojson(self):
         aSkip = []      
 

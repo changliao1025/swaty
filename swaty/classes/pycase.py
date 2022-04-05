@@ -111,8 +111,11 @@ class swatcase(object):
     sDate_start =''
     sDate_end=''
 
-    def __init__(self, aConfig_in,iFlag_standalone_in= None,\
+    def __init__(self, aConfig_in,\
+        iFlag_read_discretization_in=None,\
+        iFlag_standalone_in= None,\
         sDate_in=None, sWorkspace_output_in=None):
+
         if 'iFlag_run' in aConfig_in:
             self.iFlag_run =  int(aConfig_in['iFlag_run']) 
         if iFlag_standalone_in is not None:
@@ -123,6 +126,15 @@ class swatcase(object):
             else:
                 self.iFlag_standalone=1
 
+        if iFlag_read_discretization_in is not None:
+            self.iFlag_read_discretization = 1
+        else:
+            if 'iFlag_read_discretization' in aConfig_in:
+                self.iFlag_read_discretization =int(aConfig_in['iFlag_read_discretization'])
+            else:
+                self.iFlag_read_discretization=0
+
+        
         if 'iFlag_calibration' in aConfig_in:
             self.iFlag_calibration =  int(aConfig_in['iFlag_calibration']) 
         if 'iFlag_simulation' in aConfig_in:
@@ -156,16 +168,7 @@ class swatcase(object):
         else:
             pass
 
-        if 'nsegment' in aConfig_in:
-            self.nsegment = int( aConfig_in[ 'nsegment'] )
-        if 'nsubbasin' in aConfig_in:
-            self.nsubbasin = int (aConfig_in[ 'nsubbasin'])
-        if 'nhru' in aConfig_in:
-            nhru = int( aConfig_in['nhru']) 
-            if nhru > 1:
-                self.nhru = nhru
-            else:
-                self.nhru=9
+        
 
         if 'sRegion' in aConfig_in:
             self.sRegion               = aConfig_in[ 'sRegion']
@@ -217,39 +220,7 @@ class swatcase(object):
         else:
             #use specified output path, also do not add output or input tag
             self.sWorkspace_output_case = self.sWorkspace_output
-    
-
-        if 'sFilename_LandUseSoilsReport' in aConfig_in:
-            self.sFilename_LandUseSoilsReport = aConfig_in[ 'sFilename_LandUseSoilsReport']
-        self.sFilename_LandUseSoilsReport =  os.path.join(self.sWorkspace_input,  self.sFilename_LandUseSoilsReport )
-
-        if 'sFilename_HRULandUseSoilsReport' in aConfig_in:
-            self.sFilename_HRULandUseSoilsReport = aConfig_in[ 'sFilename_HRULandUseSoilsReport']
-        self.sFilename_HRULandUseSoilsReport =  os.path.join(self.sWorkspace_input,  self.sFilename_HRULandUseSoilsReport )
-          
-        if 'sFilename_observation_discharge' in aConfig_in:
-            self.sFilename_observation_discharge = aConfig_in[ 'sFilename_observation_discharge']
-        if 'sFilename_swat' in aConfig_in:
-            self.sFilename_swat = aConfig_in[ 'sFilename_swat']
         
-        iMonth_count = 0
-        for iYear in range( self.iYear_start, self.iYear_end +1):
-            if iYear == self.iYear_start:
-                iMonth_start = self.iMonth_start
-            else:
-                iMonth_start = 1
-
-            if iYear == self.iYear_end :
-                iMonth_end = self.iMonth_end
-            else:
-                iMonth_end = 12
-
-            for iMonth in range(iMonth_start, iMonth_end+1):
-                iMonth_count = iMonth_count  + 1
-                pass     
-
-        self.nstress_month = iMonth_count        
-
         if 'sJob' in aConfig_in:
             self.sJob =  aConfig_in['sJob'] 
         else:
@@ -265,6 +236,22 @@ class swatcase(object):
         else:
             self.sWorkspace_simulation_copy='TxtInOut.tar'
             self.sWorkspace_simulation_copy = os.path.join(self.sWorkspace_input,  self.sWorkspace_simulation_copy )
+
+        
+
+        if 'sFilename_LandUseSoilsReport' in aConfig_in:
+            self.sFilename_LandUseSoilsReport = aConfig_in[ 'sFilename_LandUseSoilsReport']
+        else:
+            self.sFilename_LandUseSoilsReport = 'LandUseSoilsReport.txt'
+        self.sFilename_LandUseSoilsReport =  os.path.join(self.sWorkspace_input,  self.sFilename_LandUseSoilsReport )
+
+        if 'sFilename_HRULandUseSoilsReport' in aConfig_in:
+            self.sFilename_HRULandUseSoilsReport = aConfig_in[ 'sFilename_HRULandUseSoilsReport']
+        else:
+            self.sFilename_HRULandUseSoilsReport = 'HRULandUseSoilsReport.txt'
+        self.sFilename_HRULandUseSoilsReport =  os.path.join(self.sWorkspace_input,  self.sFilename_HRULandUseSoilsReport )
+          
+        
         
         if 'sFilename_hru_combination' in aConfig_in:
             self.sFilename_hru_combination =   aConfig_in['sFilename_hru_combination'] 
@@ -293,7 +280,61 @@ class swatcase(object):
         self.sFilename_soil_layer = os.path.join(self.sWorkspace_input, 'soil_layer.txt')
         self.sFilename_soil_info = os.path.join(self.sWorkspace_input, 'soil_info.txt')
         
+        if self.iFlag_read_discretization == 1:
+            #read basin
+            aSubbasin_info = np.array(text_reader_string(self.sFilename_watershed_configuration)).astype(int)
+            self.nSubbasin = aSubbasin_info.shape[0]
+            
 
+            #read hru
+            aHru_info = np.array(text_reader_string(self.sFilename_hru_combination)).astype(int)
+            self.nHru = aHru_info.shape[0]
+
+            #read soil
+            aSoil_info = np.array(text_reader_string(self.sFilename_soil_info)).astype(int)
+
+
+        else:
+
+
+            if 'nsegment' in aConfig_in:
+                self.nsegment = int( aConfig_in[ 'nsegment'] )
+            if 'nsubbasin' in aConfig_in:
+                self.nsubbasin = int (aConfig_in[ 'nsubbasin'])
+            if 'nhru' in aConfig_in:
+                nhru = int( aConfig_in['nhru']) 
+                if nhru > 1:
+                    self.nhru = nhru
+                else:
+                    self.nhru = 9
+        
+        if 'sFilename_observation_discharge' in aConfig_in:
+            self.sFilename_observation_discharge = aConfig_in[ 'sFilename_observation_discharge']
+        if 'sFilename_swat' in aConfig_in:
+            self.sFilename_swat = aConfig_in[ 'sFilename_swat']
+
+        
+        
+        iMonth_count = 0
+        for iYear in range( self.iYear_start, self.iYear_end +1):
+            if iYear == self.iYear_start:
+                iMonth_start = self.iMonth_start
+            else:
+                iMonth_start = 1
+
+            if iYear == self.iYear_end :
+                iMonth_end = self.iMonth_end
+            else:
+                iMonth_end = 12
+
+            for iMonth in range(iMonth_start, iMonth_end+1):
+                iMonth_count = iMonth_count  + 1
+                pass     
+
+        self.nstress_month = iMonth_count        
+
+        
+        
         if 'nParameter_watershed' in aConfig_in:
             self.nParameter_watershed = int(aConfig_in['nParameter_watershed'] )
         else:
@@ -302,14 +343,17 @@ class swatcase(object):
             self.nParameter_subbasin = int(aConfig_in['nParameter_subbasin'] )
         else:
             self.nParameter_subbasin = 0
+
         if 'nParameter_hru' in aConfig_in:
             self.nParameter_hru = int(aConfig_in['nParameter_hru'] )
         else:
             self.nParameter_hru = 0
 
         if 'aParameter_watershed' in aConfig_in:            
-            dummy =aConfig_in['aParameter_watershed']
-            self.pWatershed = pywatershed(dummy)    
+            dummy = aConfig_in['aParameter_watershed']
+            self.pWatershed = pywatershed(dummy)   
+        else:
+            self.pWatershed = pywatershed() 
         
         if 'aParameter_subbasin' in aConfig_in:
             self.aSubbasin=list()
@@ -318,6 +362,13 @@ class swatcase(object):
                 pdummy = pysubbasin(dummy)    
                 pdummy.lIndex = i+1
                 self.aSubbasin.append(pdummy)
+        else:
+            self.aSubbasin=list()
+            for i in range(self.nsubbasin):               
+                pdummy = pysubbasin()    
+                pdummy.lIndex = i+1
+                self.aSubbasin.append(pdummy)
+            pass
         
         
         if 'aParameter_hru' in aConfig_in:
@@ -325,6 +376,12 @@ class swatcase(object):
             for i in range(self.nhru):
                 dummy =aConfig_in['aParameter_hru']
                 pdummy = pyhru(dummy)    
+                pdummy.lIndex = i+1
+                self.aHru.append(pdummy)
+        else:
+            self.aHru=list()
+            for i in range(self.nhru):                
+                pdummy = pyhru()    
                 pdummy.lIndex = i+1
                 self.aHru.append(pdummy)
        

@@ -41,17 +41,20 @@ class pysubbasin(object):
     aParameter_subbasin=None
     aParameter_subbasin_name = None
 
-    def  __init__(self,aConfig_in):
-        self.nParameter_subbasin = len(aConfig_in)
-        self.aParameter_subbasin=list()
-        self.aParameter_subbasin_name =list()
-        for i in range(self.nParameter_subbasin):
-            subbasin_dummy = aConfig_in[i]
-            pParameter_subbasin = swatpara(subbasin_dummy)
-            self.aParameter_subbasin.append(pParameter_subbasin)
-            sName = pParameter_subbasin.sName
-            if sName not in self.aParameter_subbasin_name:
-                self.aParameter_subbasin_name.append(sName)
+    def  __init__(self,aConfig_in = None):
+        if aConfig_in is not None:
+            self.nParameter_subbasin = len(aConfig_in)
+            self.aParameter_subbasin=list()
+            self.aParameter_subbasin_name =list()
+            for i in range(self.nParameter_subbasin):
+                subbasin_dummy = aConfig_in[i]
+                pParameter_subbasin = swatpara(subbasin_dummy)
+                self.aParameter_subbasin.append(pParameter_subbasin)
+                sName = pParameter_subbasin.sName
+                if sName not in self.aParameter_subbasin_name:
+                    self.aParameter_subbasin_name.append(sName)
+        else:
+            pass
 
         return
 
