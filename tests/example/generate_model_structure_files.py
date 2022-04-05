@@ -28,11 +28,6 @@ else:
     print(len(sys.argv), 'Missing arguments')
     pass
 
-
-
-
-
-
 sPath = realpath(str( Path().resolve() ))
 #this is the temp path which has auxiliray data, not the SWAT input
 sWorkspace_data = ( sPath +  '/data/arw' )  

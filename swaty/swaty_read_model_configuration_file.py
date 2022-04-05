@@ -7,6 +7,7 @@ import datetime
 import json
 import numpy as np
 import pyearth.toolbox.date.julian as julian
+from swaty.auxiliary.text_reader_string import text_reader_string
 from swaty.classes.pycase import swatcase
 
 pDate = datetime.datetime.today()
@@ -130,6 +131,11 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
 
     #data
     oSwat = swatcase(aConfig)
+
+    #we need to initialize the discretization
+    sFilename_soil_info = oSwat.sFilename_soil_info
+    aSoil_info = np.array(text_reader_string(sFilename_soil_info)).astype(int)
+
     if iFlag_paramter ==1:
         for i in range(len(aParameter)):
             pParameter = aParameter[i]
@@ -173,7 +179,7 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
                     if iType == 3:
                         for j in np.arange(oSwat.nhru ):
                             iIndex_name = oSwat.aHru[j].aParameter_hru_name.index(sName) 
-                            pPara = oSwat.aSubbasin[j].aParameter_hru[iIndex_name]
+                            pPara = oSwat.aHru[j].aParameter_hru[iIndex_name]
                             sName1 = pPara.sName
                             iIndex1 = pPara.iIndex_hru
                             if  iIndex_hru == iIndex1:
@@ -184,7 +190,7 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
                         pass
                     else: #soil layer
                         for j in np.arange(oSwat.nhru ):
-                            for k in np.arange(oSwat.aHru[j].nsoil_layer):
+                            for k in np.arange(oSwat.aHru[j].nSoil_layer):
                                 iIndex_name = oSwat.aHru[j].aSoil[k].aParameter_soil_name.index(sName) 
                                 pPara = oSwat.aHru[j].aSoil[k].aParameter_soil[iIndex_name]
                                 sName1 = pPara.sName

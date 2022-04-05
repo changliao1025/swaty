@@ -288,6 +288,8 @@ class swatcase(object):
             self.sFilename_hru_info = aConfig_in['hru_info.txt'] 
             
         self.sFilename_hru_info = os.path.join(self.sWorkspace_input,  self.sFilename_hru_info )
+
+        #soil
         self.sFilename_soil_layer = os.path.join(self.sWorkspace_input, 'soil_layer.txt')
         self.sFilename_soil_info = os.path.join(self.sWorkspace_input, 'soil_info.txt')
         
@@ -408,9 +410,7 @@ class swatcase(object):
         Set up a SWAT case
         """
         #self.copy_TxtInOut_files()
-        #self.swaty_prepare_watershed_configuration()      
-        #self.swaty_retrieve_soil_info()
-        #self.swaty_setup_soil_parameter()
+        
         if (self.iFlag_replace_parameter == 1):
             self.swaty_prepare_watershed_parameter_file()
             self.swaty_write_watershed_input_file()    
