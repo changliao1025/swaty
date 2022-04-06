@@ -34,7 +34,7 @@ class SoilClassEncoder(JSONEncoder):
 
 class pysoil(object):
     __metaclass__ = ABCMeta
-    lIndex=-1
+    lIndex_soil_layer=-1
     iFlag_soil=0
     nSoil_layer = 1
     nParameter_soil=0

@@ -17,9 +17,9 @@ class swatpara(object):
     sName=''
     iParameter_type=1 #1 watershed, 2 subbsain 3 hru 4 soil layer
     #iIndex=1
-    iIndex_subbasin=1
-    iIndex_hru=1
-    iIndex_soil_layer=1
+    lIndex_subbasin=1
+    lIndex_hru=1
+    lIndex_soil_layer=1
     dValue_init=0.0
     dValue_current=0.5
     dValue_lower=-1
@@ -29,20 +29,20 @@ class swatpara(object):
         if 'iParameter_type' in aConfig_in:
             self.iParameter_type = int(aConfig_in['iParameter_type'])
         
-        if 'iIndex_subbasin' in aConfig_in:
-            self.iIndex_subbasin = int(aConfig_in['iIndex_subbasin'])
+        if 'lIndex_subbasin' in aConfig_in:
+            self.lIndex_subbasin = int(aConfig_in['lIndex_subbasin'])
         else:
-            self.iIndex_subbasin = 1
+            self.lIndex_subbasin = 1
         
-        if 'iIndex_hru' in aConfig_in:
-            self.iIndex_hru = int(aConfig_in['iIndex_hru'])
+        if 'lIndex_hru' in aConfig_in:
+            self.lIndex_hru = int(aConfig_in['lIndex_hru'])
         else:
-            self.iIndex_hru = 1
+            self.lIndex_hru = 1
 
-        if 'iIndex_soil_layer' in aConfig_in:
-            self.iIndex_soil_layer = int(aConfig_in['iIndex_soil_layer'])
+        if 'lIndex_soil_layer' in aConfig_in:
+            self.lIndex_soil_layer = int(aConfig_in['lIndex_soil_layer'])
         else:
-            self.iIndex_soil_layer =1
+            self.lIndex_soil_layer =1
 
         if 'sName' in aConfig_in:
             self.sName = aConfig_in['sName']

@@ -142,9 +142,9 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
             pParameter = aParameter[i]
             sName = pParameter.sName
             iType = pParameter.iParameter_type
-            iIndex_subbasin = pParameter.iIndex_subbasin
-            iIndex_hru = pParameter.iIndex_hru
-            iIndex_soil_layer = pParameter.iIndex_soil_layer
+            lIndex_subbasin = pParameter.lIndex_subbasin
+            lIndex_hru = pParameter.lIndex_hru
+            lIndex_soil_layer = pParameter.lIndex_soil_layer
             dValue = pParameter.dValue_current
             iFlag_found = 0
             if iType == 1:                
@@ -169,8 +169,8 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
                         iIndex_name = oSwat.aSubbasin[j].aParameter_subbasin_name.index(sName) 
                         pPara = oSwat.aSubbasin[j].aParameter_subbasin[iIndex_name]
                         sName1 = pPara.sName
-                        iIndex1 = pPara.iIndex_subbasin
-                        if  iIndex_subbasin == iIndex1:
+                        iIndex1 = pPara.lIndex_subbasin
+                        if  lIndex_subbasin == iIndex1:
                             #replace
                             oSwat.aSubbasin[j].aParameter_subbasin[iIndex_name].dValue_current = dValue
                             iFlag_found = 1
@@ -182,8 +182,8 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
                             iIndex_name = oSwat.aHru[j].aParameter_hru_name.index(sName) 
                             pPara = oSwat.aHru[j].aParameter_hru[iIndex_name]
                             sName1 = pPara.sName
-                            iIndex1 = pPara.iIndex_hru
-                            if  iIndex_hru == iIndex1:
+                            iIndex1 = pPara.lIndex_hru
+                            if  lIndex_hru == iIndex1:
                                 #replace
                                 oSwat.aSubbasin[j].aParameter_subbasin[iIndex_name].dValue_current = dValue
                                 iFlag_found = 1
@@ -195,9 +195,9 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
                                 iIndex_name = oSwat.aHru[j].aSoil[k].aParameter_soil_name.index(sName) 
                                 pPara = oSwat.aHru[j].aSoil[k].aParameter_soil[iIndex_name]
                                 sName1 = pPara.sName
-                                iIndex0 = pPara.iIndex_hru
-                                iIndex1 = pPara.iIndex_soil_layer
-                                if iIndex_hru ==iIndex0 and  iIndex_soil_layer == iIndex1:
+                                iIndex0 = pPara.lIndex_hru
+                                iIndex1 = pPara.lIndex_soil_layer
+                                if lIndex_hru ==iIndex0 and  lIndex_soil_layer == iIndex1:
                                     #replace
                                     oSwat.aHru[j].aSoil[k].aParameter_soil[iIndex_name].dValue_current = dValue
                                     iFlag_found = 1

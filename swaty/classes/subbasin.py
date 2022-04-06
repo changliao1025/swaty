@@ -34,7 +34,7 @@ class SubbasinClassEncoder(JSONEncoder):
 
 class pysubbasin(object):
     __metaclass__ = ABCMeta
-    lIndex=-1
+    lIndex_subbasin=-1
     iFlag_subbasin=0
     nSoil_layer = 1
     nParameter_subbasin=0

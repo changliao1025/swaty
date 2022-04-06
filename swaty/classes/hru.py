@@ -24,7 +24,9 @@ class HruClassEncoder(JSONEncoder):
             return float(obj)
         if isinstance(obj, np.ndarray):
             return obj.tolist()
-        
+
+        if isinstance(obj, pysoil):
+            return json.loads(obj.tojson()) 
          
         if isinstance(obj, swatpara):
             return json.loads(obj.tojson()) 
@@ -37,7 +39,7 @@ class HruClassEncoder(JSONEncoder):
 class pyhru(object):
     __metaclass__ = ABCMeta
 
-    lIndex=-1
+    lIndex_hru=-1    
     iFlag_hru=0
     nSoil_layer = 1
     nParameter_hru=0
@@ -49,7 +51,7 @@ class pyhru(object):
 
     aSoil=None
     
-    def __init__(self, aConfig_in):
+    def __init__(self, aConfig_in=None):
         
         if aConfig_in is not None:
             pass

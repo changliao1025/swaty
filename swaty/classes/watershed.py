@@ -34,7 +34,7 @@ class WatershedClassEncoder(JSONEncoder):
         
 class pywatershed(object):
     __metaclass__ = ABCMeta
-    lIndex=-1
+    lIndex_watershed=-1
     iFlag_watershed=0
     nSoil_layer = 1
     nParameter_watershed=0
