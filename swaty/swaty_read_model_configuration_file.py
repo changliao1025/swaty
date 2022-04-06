@@ -132,16 +132,9 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
     aConfig['nstress'] =   nstress     
    
     sFilename_swat = aConfig['sFilename_swat']   
-
-    if 'nhru' in aConfig:
-        pass
     
     #data
     oSwat = swatcase(aConfig)
-
-    
-
-
     
 
     if iFlag_paramter ==1:

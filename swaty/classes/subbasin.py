@@ -41,13 +41,23 @@ class pysubbasin(object):
     aParameter_subbasin=None
     aParameter_subbasin_name = None
 
-    def  __init__(self,aConfig_in = None):
+    def  __init__(self, aConfig_in =None):
+
         if aConfig_in is not None:
-            self.nParameter_subbasin = len(aConfig_in)
+            pass
+        else:
+            pass
+
+        return
+    
+    def setup_parameter(self, aPara_in= None):
+
+        if aPara_in is not None:
+            self.nParameter_subbasin = len(aPara_in)
             self.aParameter_subbasin=list()
             self.aParameter_subbasin_name =list()
             for i in range(self.nParameter_subbasin):
-                subbasin_dummy = aConfig_in[i]
+                subbasin_dummy = aPara_in[i]
                 pParameter_subbasin = swatpara(subbasin_dummy)
                 self.aParameter_subbasin.append(pParameter_subbasin)
                 sName = pParameter_subbasin.sName
@@ -57,6 +67,7 @@ class pysubbasin(object):
             pass
 
         return
+
 
     def tojson(self):
         aSkip = []      

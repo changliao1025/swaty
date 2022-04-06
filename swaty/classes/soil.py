@@ -41,22 +41,34 @@ class pysoil(object):
     aParameter_soil=None
     aParameter_soil_name = None
 
-    def  __init__(self,aConfig_in):
-        self.nParameter_soil = len(aConfig_in)
-        self.aParameter_soil=list()
-        self.aParameter_soil_name =list()
-        for i in range(self.nParameter_soil):
-            soil_dummy = aConfig_in[i]
-            pParameter_soil = swatpara(soil_dummy)
-            self.aParameter_soil.append(pParameter_soil)
-            sName = pParameter_soil.sName
-            if sName not in self.aParameter_soil_name:
-                self.aParameter_soil_name.append(sName)
+    def  __init__(self, aConfig_in=None):
+
+        if aConfig_in is not None:
+            pass
+        else:
+            pass
+        
+        return
+    
+    def setup_parameter(self, aPara_in= None):
+        if aPara_in is not None:
+            self.nParameter_soil = len(aPara_in)
+            self.aParameter_soil=list()
+            self.aParameter_soil_name =list()
+            for i in range(self.nParameter_soil):
+                soil_dummy = aPara_in[i]
+                pParameter_soil = swatpara(soil_dummy)
+                self.aParameter_soil.append(pParameter_soil)
+                sName = pParameter_soil.sName
+                if sName not in self.aParameter_soil_name:
+                    self.aParameter_soil_name.append(sName)
+        else:
+            pass
 
         return
 
     def tojson(self):
-        aSkip = []      
+        aSkip = []
 
         obj = self.__dict__.copy()
         for sKey in aSkip:

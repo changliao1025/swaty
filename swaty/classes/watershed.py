@@ -43,10 +43,17 @@ class pywatershed(object):
 
     def  __init__(self, aConfig_in=None):
         if aConfig_in is not None:
-            self.nParameter_watershed = len(aConfig_in)
+            pass
+        else:
+            pass
+        return
+    
+    def setup_parameter(self, aPara_in):
+        if aPara_in is not None:
+            self.nParameter_watershed = len(aPara_in)
             self.aParameter_watershed=list()
             for i in range(self.nParameter_watershed):
-                watershed_dummy = aConfig_in[i]
+                watershed_dummy = aPara_in[i]
                 pParameter_watershed = swatpara(watershed_dummy)
                 self.aParameter_watershed.append(pParameter_watershed)
         else:

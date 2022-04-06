@@ -49,13 +49,21 @@ class pyhru(object):
 
     aSoil=None
     
+    def __init__(self, aConfig_in):
+        
+        if aConfig_in is not None:
+            pass
+        else:
+            pass
+        return
+      
 
-    def  __init__(self,aConfig_in):
-        self.nParameter_hru = len(aConfig_in)
+    def setup_parameter(self,aPara_in):
+        self.nParameter_hru = len(aPara_in)
         self.aParameter_hru=list()
         self.aParameter_hru_name=list()
         for i in range(self.nParameter_hru):
-            hru_dummy = aConfig_in[i]
+            hru_dummy = aPara_in[i]
             pParameter_hru = swatpara(hru_dummy)
             self.aParameter_hru.append(pParameter_hru)
 

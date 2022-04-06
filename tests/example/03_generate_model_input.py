@@ -102,6 +102,7 @@ sPath_bin = str(Path(sPath)  /  'bin')
 
 sFilename_configuration_in = sPath +  '/tests/configurations/template.json'
 oSwat = swaty_read_model_configuration_file(sFilename_configuration_in, \
+    iFlag_read_discretization_in=1,\
     iFlag_standalone_in=iFlag_standalone,\
         iCase_index_in=iCase_index,\
         sDate_in=sDate, \

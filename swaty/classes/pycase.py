@@ -268,7 +268,6 @@ class swatcase(object):
             
         self.sFilename_watershed_configuration = os.path.join(self.sWorkspace_input, self.sFilename_watershed_configuration )
 
-    
         if 'sFilename_hru_info' in aConfig_in:
             self.sFilename_hru_info = aConfig_in['sFilename_hru_info'] 
         else:
@@ -282,39 +281,53 @@ class swatcase(object):
         
         if self.iFlag_read_discretization == 1:
             #read basin
-            aSubbasin_info = np.array(text_reader_string(self.sFilename_watershed_configuration)).astype(int)
-            self.nSubbasin = aSubbasin_info.shape[0]
-            
+            dummy = text_reader_string(self.sFilename_watershed_configuration, cDelimiter_in=',')
+            dummy1 = np.array(dummy[:,0])
+            aSubbasin_info = dummy1.astype(int)
+            self.nsubbasin = aSubbasin_info.shape[0]
+
+            self.aSubbasin=list()
+            for i in range(self.nsubbasin):
+                pdummy = pysubbasin()    
+                pdummy.lIndex = i+1
+                self.aSubbasin.append(pdummy)
 
             #read hru
-            aHru_info = np.array(text_reader_string(self.sFilename_hru_combination)).astype(int)
-            self.nHru = aHru_info.shape[0]
+            dummy = text_reader_string(self.sFilename_hru_combination, cDelimiter_in=',')
+            self.nhru = len(dummy)
+
+            aHru_info = text_reader_string(self.sFilename_hru_info, cDelimiter_in=',')
 
             #read soil
-            aSoil_info = np.array(text_reader_string(self.sFilename_soil_info)).astype(int)
+            aSoil_info = text_reader_string(self.sFilename_soil_info)
+            dummy1 = np.array(dummy[:,0])
+            aSoil_info = dummy1.astype(int)
 
+            self.aHru=list()
+            for i in range(self.nhru):
+                pdummy = pyhru()
+                pdummy.lIndex = i + 1
+                pdummy.nSoil_layer= aSoil_info[i]
+                pdummy.aSoil=list()
+                for j in range(pdummy.nSoil_layer):
+                    dummy_soil = pysoil()
+                    pdummy.aSoil.append(dummy_soil)
+                self.aHru.append(pdummy)
 
         else:
-
-
             if 'nsegment' in aConfig_in:
                 self.nsegment = int( aConfig_in[ 'nsegment'] )
             if 'nsubbasin' in aConfig_in:
                 self.nsubbasin = int (aConfig_in[ 'nsubbasin'])
             if 'nhru' in aConfig_in:
                 nhru = int( aConfig_in['nhru']) 
-                if nhru > 1:
-                    self.nhru = nhru
-                else:
-                    self.nhru = 9
+                
+        if 'sFilename_observation_discharge' in aConfig_in: 
+            self.sFilename_observation_discharge = aConfig_in['sFilename_observation_discharge']
         
-        if 'sFilename_observation_discharge' in aConfig_in:
-            self.sFilename_observation_discharge = aConfig_in[ 'sFilename_observation_discharge']
         if 'sFilename_swat' in aConfig_in:
             self.sFilename_swat = aConfig_in[ 'sFilename_swat']
 
-        
-        
         iMonth_count = 0
         for iYear in range( self.iYear_start, self.iYear_end +1):
             if iYear == self.iYear_start:
@@ -332,8 +345,6 @@ class swatcase(object):
                 pass     
 
         self.nstress_month = iMonth_count        
-
-        
         
         if 'nParameter_watershed' in aConfig_in:
             self.nParameter_watershed = int(aConfig_in['nParameter_watershed'] )
@@ -349,42 +360,26 @@ class swatcase(object):
         else:
             self.nParameter_hru = 0
 
-        if 'aParameter_watershed' in aConfig_in:            
+        if 'aParameter_watershed' in aConfig_in:
             dummy = aConfig_in['aParameter_watershed']
-            self.pWatershed = pywatershed(dummy)   
-        else:
-            self.pWatershed = pywatershed() 
-        
+            self.pWatershed.setup_parameter(dummy)
+  
         if 'aParameter_subbasin' in aConfig_in:
-            self.aSubbasin=list()
             for i in range(self.nsubbasin):
-                dummy =aConfig_in['aParameter_subbasin']
-                pdummy = pysubbasin(dummy)    
-                pdummy.lIndex = i+1
-                self.aSubbasin.append(pdummy)
-        else:
-            self.aSubbasin=list()
-            for i in range(self.nsubbasin):               
-                pdummy = pysubbasin()    
-                pdummy.lIndex = i+1
-                self.aSubbasin.append(pdummy)
-            pass
-        
+                dummy = aConfig_in['aParameter_subbasin']
+                self.aSubbasin[i].setup_parameter(dummy)
         
         if 'aParameter_hru' in aConfig_in:
-            self.aHru=list()
             for i in range(self.nhru):
-                dummy =aConfig_in['aParameter_hru']
-                pdummy = pyhru(dummy)    
-                pdummy.lIndex = i+1
-                self.aHru.append(pdummy)
-        else:
-            self.aHru=list()
-            for i in range(self.nhru):                
-                pdummy = pyhru()    
-                pdummy.lIndex = i+1
-                self.aHru.append(pdummy)
-       
+                dummy = aConfig_in['aParameter_hru']
+                self.aHru[i].setup_parameter(dummy)
+
+        if 'aParameter_soil' in aConfig_in:
+            for i in range(self.nhru):
+                nsoil_layer = self.aHru[i].nSoil_layer
+                for j in range(nsoil_layer):
+                    dummy = aConfig_in['aParameter_soil']
+                    self.aHru[i].aSoil[j].setup_parameter(dummy)
         
         return
 
