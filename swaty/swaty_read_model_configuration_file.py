@@ -178,7 +178,7 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
                     pass
                 else: #hru level
                     if iType == 3:
-                        for j in np.arange(oSwat.nhru ):
+                        for j in np.arange(oSwat.nhru_combination ):
                             iIndex_name = oSwat.aHru[j].aParameter_hru_name.index(sName) 
                             pPara = oSwat.aHru[j].aParameter_hru[iIndex_name]
                             sName1 = pPara.sName
@@ -190,7 +190,7 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
                                 break
                         pass
                     else: #soil layer
-                        for j in np.arange(oSwat.nhru ):
+                        for j in np.arange(oSwat.nhru_combination ):
                             for k in np.arange(oSwat.aHru[j].nSoil_layer):
                                 iIndex_name = oSwat.aHru[j].aSoil[k].aParameter_soil_name.index(sName) 
                                 pPara = oSwat.aHru[j].aSoil[k].aParameter_soil[iIndex_name]
