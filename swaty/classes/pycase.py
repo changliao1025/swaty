@@ -293,8 +293,8 @@ class swatcase(object):
                 self.aSubbasin.append(pdummy)
 
             #read hru
-            dummy = text_reader_string(self.sFilename_hru_combination, cDelimiter_in=',')
-            self.nhru = len(dummy)
+            aHru_combination = text_reader_string(self.sFilename_hru_combination, cDelimiter_in=',')
+            self.nhru = len(aHru_combination)
 
             aHru_info = text_reader_string(self.sFilename_hru_info, cDelimiter_in=',')
 
@@ -307,11 +307,15 @@ class swatcase(object):
             for i in range(self.nhru):
                 pdummy = pyhru()
                 pdummy.lIndex = i + 1
+
+                sHru = aHru_combination[i]
+                dummy_index = np.where()
                 pdummy.nSoil_layer= aSoil_info[i]
                 pdummy.aSoil=list()
                 for j in range(pdummy.nSoil_layer):
                     dummy_soil = pysoil()
                     pdummy.aSoil.append(dummy_soil)
+
                 self.aHru.append(pdummy)
 
         else:
