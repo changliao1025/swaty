@@ -520,6 +520,118 @@ class swatcase(object):
 
         return
 
+    def extract_default_parameter_value(self, aParameter_in):
+
+
+        #watershed
+        aParameter = list()
+        for p in aParameter_in:
+            if p.iParameter_type == 1:
+               aParameter.append(p) 
+        self.extract_default_parameter_value_watershed(aParameter)
+        #subbasin
+        aParameter.clear()
+        for p in aParameter_in:
+            if p.iParameter_type == 2:
+               aParameter.append(p)
+        self.extract_default_parameter_value_subbasin(aParameter)
+        #hru
+        aParameter.clear()
+        for p in aParameter_in:
+            if p.iParameter_type == 3:
+               aParameter.append(p)
+        self.extract_default_parameter_value_hru(aParameter)
+        #soil
+        aParameter.clear()
+        for p in aParameter_in:
+            if p.iParameter_type == 4:
+               aParameter.append(p)
+        self.extract_default_parameter_value_soil(aParameter)
+
+        return
+    def extract_default_parameter_value_watershed(self, aParameter_watershed):
+        nParameter_watershed = len(aParameter_watershed)
+        if nParameter_watershed > 0:
+            aData_out = np.full(nParameter_watershed, -9999, dtype=float)
+            sFilename_watershed_default =''
+            ofs = open(sFilename_watershed_default, 'w')
+
+            sLine = 'watershed'
+            for i in range(nParameter_watershed):
+                sVariable = aParameter_watershed[i].sName
+                sLine = sLine + ',' + sVariable
+            sLine = sLine + '\n'        
+            ofs.write(sLine)
+
+
+
+        return
+    def extract_default_parameter_value_subbasin(self, aParameter_subbasin):
+        nParameter_subbasin = len(aParameter_subbasin)
+        sFilename_subbasin_default=''
+        nsubbasin =1
+        if nParameter_subbasin ==1:    
+            ofs = open(sFilename_subbasin_default, 'w')
+
+           
+            aParameter_subbasin_name = self.aSubbasin[0].aParameter_subbasin_name
+            nParameter_subbasin = self.aSubbasin[0].nParameter_subbasin
+
+            sLine = 'subbasin'
+
+            for i in range(nParameter_subbasin):
+                sVariable = aParameter_subbasin_name[i]
+                sLine = sLine + ',' + sVariable
+            sLine = sLine + '\n'        
+            ofs.write(sLine)
+
+            for iSubbasin in range(0, nsubbasin):
+                pass
+        return
+    def extract_default_parameter_value_hru(self, aParameter_hru):
+        nParameter_hru = len(aParameter_hru)
+        sFilename_hru_default=''
+        nhru=9
+        if nParameter_subbasin ==1:    
+            ofs = open(sFilename_hru_default, 'w')
+
+           
+            aParameter_subbasin_name = self.aSubbasin[0].aParameter_subbasin_name
+            nParameter_subbasin = self.aSubbasin[0].nParameter_subbasin
+
+            sLine = 'subbasin'
+
+            for i in range(nParameter_subbasin):
+                sVariable = aParameter_subbasin_name[i]
+                sLine = sLine + ',' + sVariable
+            sLine = sLine + '\n'        
+            ofs.write(sLine)
+
+            for iSubbasin in range(0, nhru):
+                pass
+        return
+    def extract_default_parameter_value_soil(self, aParameter_soil):
+        nParameter_soil = len(aParameter_soil)
+        sFilename_soil_default=''
+        nsoil=8
+        if nParameter_subbasin ==1:    
+            ofs = open(sFilename_soil_default, 'w')
+           
+            aParameter_subbasin_name = self.aSubbasin[0].aParameter_subbasin_name
+            nParameter_subbasin = self.aSubbasin[0].nParameter_subbasin
+
+            sLine = 'subbasin'
+
+            for i in range(nParameter_subbasin):
+                sVariable = aParameter_subbasin_name[i]
+                sLine = sLine + ',' + sVariable
+            sLine = sLine + '\n'        
+            ofs.write(sLine)
+
+            for iSubbasin in range(0, nsoil):
+                pass
+        return
+
     def swaty_prepare_watershed_configuration(self):
         #process hru report if needed
         if(os.path.isfile(self.sFilename_hru_info) \
