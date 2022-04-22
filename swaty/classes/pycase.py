@@ -549,19 +549,148 @@ class swatcase(object):
         self.extract_default_parameter_value_soil(aParameter)
 
         return
-    def extract_default_parameter_value_watershed(self, aParameter_watershed):
-        nParameter_watershed = len(aParameter_watershed)
-        if nParameter_watershed > 0:
-            aData_out = np.full(nParameter_watershed, -9999, dtype=float)
-            sFilename_watershed_default =''
-            ofs = open(sFilename_watershed_default, 'w')
 
-            sLine = 'watershed'
-            for i in range(nParameter_watershed):
-                sVariable = aParameter_watershed[i].sName
-                sLine = sLine + ',' + sVariable
-            sLine = sLine + '\n'        
-            ofs.write(sLine)
+    def extract_default_parameter_value_watershed(self, aParameter_watershed):
+        sWorkspace_source_case = self.sWorkspace_simulation_copy
+        sWorkspace_target_case = self.sWorkspace_output_case
+        nParameter_watershed = len(aParameter_watershed)
+        if nParameter_watershed < 1:
+            return
+
+        #open the new file to write out
+        sFilename  = 'watershed_default_parameter.txt'
+        sFilename_watershed_out = os.path.join(str(Path(sWorkspace_target_case)) ,  sFilename )    
+        if os.path.exists(sFilename_watershed_out):                
+            os.remove(sFilename_watershed_out)
+
+        ofs=open(sFilename_watershed_out, 'w') 
+        
+        #we need to save the array and output them in the last step
+        aData_out = np.full(nParameter_watershed, -9999, dtype=float)
+        
+        
+
+        aExtension = ['.bsn','.wwq']
+        aBSN=['SFTMP','SMTMP','ESCO','SMFMX','TIMP','EPCO']
+        aWWQ=['AI0']
+        aExtension = np.asarray(aExtension)
+        nFile_type= len(aExtension)
+
+        #the parameter is located in the different files
+        aParameter_table = np.empty( (nFile_type)  , dtype = object )
+
+        #need a better way to control this 
+        for iVariable in range(nParameter_watershed):
+            sParameter_watershed = aParameter_watershed[iVariable].sName
+
+            if sParameter_watershed in aBSN:
+                if( aParameter_table[0] is None  ):
+                    aParameter_table[0] = np.array(sParameter_watershed)
+                else:
+                    aParameter_table[0] = np.append(aParameter_table[0],sParameter_watershed)
+                    
+                pass
+            else:
+                if sParameter_watershed in aWWQ:
+                    if( aParameter_table[1] is None  ):
+                        aParameter_table[1] = sParameter_watershed
+                    else:
+                        aParameter_table[1].append(sParameter_watershed) 
+                    pass
+                pass
+
+        aParameter_user = np.full( (nFile_type) , None , dtype = np.dtype(object) )
+        aParameter_count = np.full( (nFile_type) , 0 , dtype = int )
+        aParameter_flag = np.full( (nFile_type) , 0 , dtype = int )
+        aParameter_index = np.full( (nFile_type) , -1 , dtype = np.dtype(object) )
+        for p in range(0, nParameter_watershed):
+            para = aParameter_watershed[p].sName
+            for i in range(0, nFile_type):
+                aParameter_tmp = aParameter_table[i]
+                if aParameter_tmp is not None:
+                    if para in aParameter_tmp:
+                        aParameter_count[i]= aParameter_count[i]+1
+                        aParameter_flag[i]=1
+
+                        if(aParameter_count[i] ==1):
+                            aParameter_index[i] = [p]
+                            aParameter_user[i]= [para]
+                        else:
+                            aParameter_index[i] = np.append(aParameter_index[i],[p])
+                            aParameter_user[i] = np.append(aParameter_user[i],[para])
+                        continue
+
+        #write head
+        #write the head
+        sLine = 'watershed'
+        for i in range(nParameter_watershed):
+            sVariable = aParameter_watershed[i].sName
+            sLine = sLine + ',' + sVariable
+        sLine = sLine + '\n'        
+        ofs.write(sLine)
+
+        for iFile_type in range(0, nFile_type):
+            sExtension = aExtension[iFile_type]
+            iFlag = aParameter_flag[iFile_type]
+            if( iFlag == 1):
+                #there should be only one for each extension       
+
+                sFilename = 'basins' + sExtension
+                sFilename_watershed = os.path.join(str(Path(sWorkspace_source_case)) ,  sFilename )  
+                
+                #open the file to read
+
+                nline = line_count(sFilename_watershed)
+                ifs=open(sFilename_watershed, 'rb')   
+                
+                for iLine in range(nline):
+                    sLine0=(ifs.readline())
+                    if len(sLine0) < 1:
+                        continue
+                    sLine0=sLine0.rstrip()
+                    #print(sLine0)
+                    sLine= sLine0.decode("utf-8", 'ignore')
+
+                    for i in range(0, aParameter_count[iFile_type]):
+                        aParameter_indices = np.array(aParameter_index[iFile_type])
+                        aParameter_filetype = np.array(aParameter_user[iFile_type])
+                        if 'sftmp' in sLine.lower() and 'SFTMP' in aParameter_filetype : 
+                            
+                            
+                            break #important
+                        else:
+                            if 'smtmp' in sLine.lower() and 'SMTMP' in aParameter_filetype: 
+                                
+                                
+                                break  #important
+                            else:
+
+                                if 'esco' in sLine.lower() and 'ESCO' in aParameter_filetype: 
+                                    break  #important
+                                else:
+                                    if 'smfmx' in sLine.lower() and 'SMFMX' in aParameter_filetype: 
+                                        
+                                        break  #important
+                                    else:
+                                        if 'timp' in sLine.lower() and 'TIMP' in aParameter_filetype: 
+                                            
+                                            break  #important
+                                        else:
+                                            if 'epco' in sLine.lower() and 'EPCO' in aParameter_filetype: 
+                                                
+                                                break  #important
+                                            else:
+                                                pass
+                                break  #important
+
+
+                            
+                            
+                ifs.close()
+        ofs.close()
+
+        print('Finished writing watershed default parameter file!')
+        
 
 
 
