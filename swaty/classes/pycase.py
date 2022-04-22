@@ -277,7 +277,7 @@ class swatcase(object):
         self.sFilename_hru_info = os.path.join(self.sWorkspace_input,  self.sFilename_hru_info )
 
         #soil
-        self.sFilename_soil_layer = os.path.join(self.sWorkspace_input, 'soil_layer.txt')
+        self.sFilename_soil_combination = os.path.join(self.sWorkspace_input, 'soil_combination.txt')
         self.sFilename_soil_info = os.path.join(self.sWorkspace_input, 'soil_info.txt')
 
         #set up instance
@@ -303,18 +303,24 @@ class swatcase(object):
 
             aHru_info = text_reader_string(self.sFilename_hru_info, cDelimiter_in=',')
             self.nhru = len(aHru_info)
+
             #read soil
-            dummy = text_reader_string(self.sFilename_soil_info)
-            dummy1 = np.array(dummy[:,0])
-            aSoil_info = dummy1.astype(int)
+            aSoil_info = text_reader_string(self.sFilename_soil_info, cDelimiter_in=',')
+            aSoil_info = np.array(aSoil_info[:,0])
+            aSoil_info = aSoil_info.astype(int)
+
+            aSoil_combinaiton = text_reader_string(self.sFilename_soil_combination, cDelimiter_in=',')
+            self.nsoil_combination = len(aSoil_combinaiton)
+            
+            
             
 
-            self.aHru=list()
-            for i in range(self.nhru_combination):
+            self.aHru_combination=list()
+            for iHru_combination in range(1, self.nhru_combination+1):
                 pdummy = pyhru()
-                pdummy.lIndex = i + 1
+                pdummy.lIndex = iHru_combination
 
-                sHru = aHru_combination[i]
+                sHru = aHru_combination[iHru_combination-1]
                 dummy_index = np.where(aHru_info == sHru)
 
                 pdummy.nSoil_layer= aSoil_info[dummy_index[0][0]]
@@ -323,7 +329,7 @@ class swatcase(object):
                     dummy_soil = pysoil()
                     pdummy.aSoil.append(dummy_soil)
 
-                self.aHru.append(pdummy)
+                self.aHru_combination.append(pdummy)
 
         else:
             if 'nsegment' in aConfig_in:
@@ -383,14 +389,14 @@ class swatcase(object):
         if 'aParameter_hru' in aConfig_in:
             for i in range(self.nhru_combination):
                 dummy = aConfig_in['aParameter_hru']
-                self.aHru[i].setup_parameter(dummy)
+                self.aHru_combination[i].setup_parameter(dummy)
 
         if 'aParameter_soil' in aConfig_in:
             for i in range(self.nhru_combination):
-                nsoil_layer = self.aHru[i].nSoil_layer
+                nsoil_layer = self.aHru_combination[i].nSoil_layer
                 for j in range(nsoil_layer):
                     dummy = aConfig_in['aParameter_soil']
-                    self.aHru[i].aSoil[j].setup_parameter(dummy)
+                    self.aHru_combination[i].aSoil[j].setup_parameter(dummy)
         
         return
 
@@ -1239,19 +1245,44 @@ class swatcase(object):
             return
         else:
             pass   
-        #open the new file to write out
-        sFilename  = 'soil_default_parameter.txt'
-        sFilename_soil_out = os.path.join(str(Path(sWorkspace_target_case)) ,  sFilename )    
-        if os.path.exists(sFilename_soil_out):                
-            os.remove(sFilename_soil_out)
 
-        ofs=open(sFilename_soil_out, 'w') 
-        
-          
-           
+        #get soil layer info
+        nsubbasin = self.nsubbasin
+        nhru=self.nhru
+        nhru_combination = self.nhru_combination
+        nsoil_combination = self.nsoil_combination
+        iFlag_simulation = self.iFlag_simulation    
+        sWorkspace_output_case = self.sWorkspace_output_case
+        sWorkspace_simulation_copy =  self.sWorkspace_simulation_copy    
+        sWorkspace_pest_model = sWorkspace_output_case    
+        sFilename_watershed_configuration = self.sFilename_watershed_configuration
+        sFilename_hru_info = self.sFilename_hru_info     
+        aSubbasin_hru  = text_reader_string( sFilename_watershed_configuration, cDelimiter_in = ',' )
+        aHru_configuration = aSubbasin_hru[:,1].astype(int)     
+        aHru_info = text_reader_string(sFilename_hru_info)
+        aHru_info = np.asarray(aHru_info)      
+        aHru_info= aHru_info.reshape( nhru )
+        sFilename_hru_combination = self.sFilename_hru_combination        
+        aHru_combination = text_reader_string(sFilename_hru_combination)
+        aHru_combination = np.asarray(aHru_combination)
+        aHru_combination= aHru_combination.reshape(nhru_combination)
+        sFilename_soil_combination = self.sFilename_soil_combination
+        aSoil_combination = text_reader_string(sFilename_soil_combination)
+        aSoil_combination = np.asarray(aSoil_combination)
+        aSoil_combination= aSoil_combination.reshape(nsoil_combination) 
+
+        for iSoil in range(1, nsoil_combination+1):
+            sSoil_type =  "{:05d}".format( iSoil )
+            #open the new file to write out
+            sFilename  = 'soiltype ' + sSoil_type +'_default_parameter.txt'
+            sFilename_soil_out = os.path.join(str(Path(sWorkspace_target_case)) ,  sFilename )    
+            if os.path.exists(sFilename_soil_out):                
+                os.remove(sFilename_soil_out)
+
+            ofs=open(sFilename_soil_out, 'w') 
             
 
-        for iSoil in range(1, nsoil+1):
+
             pass
         return
 
@@ -1430,7 +1461,7 @@ class swatcase(object):
 
             pass
         #save 
-        ofs = open(self.sFilename_soil_layer, 'w')
+        ofs = open(self.sFilename_soil_combination, 'w')
         nsoil = len(aSoil_name)
         for i in range(nsoil):
             sLine = aSoil_name[i] + ', ' + "{:02d}".format( aSoil_layer[i]) + '\n'
