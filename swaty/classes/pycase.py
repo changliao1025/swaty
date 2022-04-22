@@ -75,8 +75,8 @@ class swatcase(object):
     iDay_end=0
     nstress=0
     nsegment =0
-    nhru=0
-    nhru_combination=0
+    nhru=0 #total nhru
+    nhru_combination=0  #unique hru
     aConfig_in=None
 
     #aParameter_watershed = None
@@ -568,11 +568,10 @@ class swatcase(object):
         #we need to save the array and output them in the last step
         aData_out = np.full(nParameter_watershed, -9999, dtype=float)
         
-        
-
+    
         aExtension = ['.bsn','.wwq']
-        aBSN=['SFTMP','SMTMP','ESCO','SMFMX','TIMP','EPCO']
-        aWWQ=['AI0']
+        aBSN=['sftmp','smtmp','esco','smfmx','timp','epco']
+        aWWQ=['ai0']
         aExtension = np.asarray(aExtension)
         nFile_type= len(aExtension)
 
@@ -595,7 +594,7 @@ class swatcase(object):
                     if( aParameter_table[1] is None  ):
                         aParameter_table[1] = sParameter_watershed
                     else:
-                        aParameter_table[1].append(sParameter_watershed) 
+                        aParameter_table[1]=np.append(aParameter_table[1],sParameter_watershed)
                     pass
                 pass
 
@@ -620,29 +619,35 @@ class swatcase(object):
                             aParameter_user[i] = np.append(aParameter_user[i],[para])
                         continue
 
-        #write head
+  
         #write the head
         sLine = 'watershed'
-        for i in range(nParameter_watershed):
-            sVariable = aParameter_watershed[i].sName
-            sLine = sLine + ',' + sVariable
+        for iFile_type in range(0, nFile_type):
+            sExtension = aExtension[iFile_type]
+            iFlag = aParameter_flag[iFile_type]
+            if( iFlag == 1):
+                aParameter_indices = np.array(aParameter_index[iFile_type])
+                for i in range(len(aParameter_indices)):
+                    dummy_index  = aParameter_indices[i]
+                    pParameter = aParameter_watershed[dummy_index]
+       
+                    sVariable = pParameter.sName
+                    sLine = sLine + ',' + sVariable
         sLine = sLine + '\n'        
         ofs.write(sLine)
 
+        aDate_out = np.full(nParameter_watershed, -9999, dtype=float)
+
+        #write value
         for iFile_type in range(0, nFile_type):
             sExtension = aExtension[iFile_type]
             iFlag = aParameter_flag[iFile_type]
             if( iFlag == 1):
                 #there should be only one for each extension       
-
                 sFilename = 'basins' + sExtension
-                sFilename_watershed = os.path.join(str(Path(sWorkspace_source_case)) ,  sFilename )  
-                
-                #open the file to read
-
+                sFilename_watershed = os.path.join(str(Path(sWorkspace_source_case)) ,  sFilename )             
                 nline = line_count(sFilename_watershed)
-                ifs=open(sFilename_watershed, 'rb')   
-                
+                ifs=open(sFilename_watershed, 'rb')                   
                 for iLine in range(nline):
                     sLine0=(ifs.readline())
                     if len(sLine0) < 1:
@@ -654,32 +659,67 @@ class swatcase(object):
                     for i in range(0, aParameter_count[iFile_type]):
                         aParameter_indices = np.array(aParameter_index[iFile_type])
                         aParameter_filetype = np.array(aParameter_user[iFile_type])
-                        if 'sftmp' in sLine.lower() and 'SFTMP' in aParameter_filetype : 
+                        if 'sftmp' in sLine.lower() and 'sftmp' in aParameter_filetype : 
                             
-                            
+                            #this one may not in the same order as shown in the actual fil
+                            sValue = (sLine.split('|'))[0].strip()
+                            dValue = float(sValue)
+                            dummy_index  = np.where( aParameter_filetype=='sftmp' )
+                            dummy_index2 = aParameter_indices[dummy_index]
+                            aData_out[dummy_index2] = dValue
                             break #important
                         else:
-                            if 'smtmp' in sLine.lower() and 'SMTMP' in aParameter_filetype: 
-                                
-                                
+                            if 'smtmp' in sLine.lower() and 'smtmp' in aParameter_filetype: 
+                                sValue = (sLine.split('|'))[0].strip()
+                                dValue = float(sValue)
+                                dummy_index  = np.where( aParameter_filetype=='smtmp' )
+                                dummy_index2 = aParameter_indices[dummy_index]
+                                aData_out[dummy_index2] = dValue                                
                                 break  #important
                             else:
 
-                                if 'esco' in sLine.lower() and 'ESCO' in aParameter_filetype: 
+                                if 'esco' in sLine.lower() and 'esco' in aParameter_filetype: 
+                                    sValue = (sLine.split('|'))[0].strip()
+                                    dValue = float(sValue)
+                                    dummy_index  = np.where( aParameter_filetype=='esco' )
+                                    dummy_index2 = aParameter_indices[dummy_index]
+                                    aData_out[dummy_index2] = dValue
                                     break  #important
                                 else:
-                                    if 'smfmx' in sLine.lower() and 'SMFMX' in aParameter_filetype: 
-                                        
+                                    if 'smfmx' in sLine.lower() and 'smfmx' in aParameter_filetype: 
+                                        sValue = (sLine.split('|'))[0].strip()
+                                        dValue = float(sValue)
+                                        dummy_index  = np.where( aParameter_filetype=='smfmx' )
+                                        dummy_index2 = aParameter_indices[dummy_index]
+                                        aData_out[dummy_index2] = dValue
                                         break  #important
                                     else:
-                                        if 'timp' in sLine.lower() and 'TIMP' in aParameter_filetype: 
-                                            
+                                        if 'timp' in sLine.lower() and 'timp' in aParameter_filetype: 
+                                            sValue = (sLine.split('|'))[0].strip()
+                                            dValue = float(sValue)
+                                            dummy_index  = np.where( aParameter_filetype=='timp' )
+                                            dummy_index2 = aParameter_indices[dummy_index]
+                                            aData_out[dummy_index2] = dValue
                                             break  #important
                                         else:
-                                            if 'epco' in sLine.lower() and 'EPCO' in aParameter_filetype: 
-                                                
+                                            if 'epco' in sLine.lower() and 'epco' in aParameter_filetype: 
+                                                sValue = (sLine.split('|'))[0].strip()
+                                                dValue = float(sValue)
+                                                dummy_index  = np.where( aParameter_filetype=='epco' )
+                                                dummy_index2 = aParameter_indices[dummy_index]
+                                                aData_out[dummy_index2] = dValue
                                                 break  #important
                                             else:
+                                                if 'ai0' in sLine.lower() and 'ai0' in aParameter_filetype: 
+                                                    sValue = (sLine.split('|'))[0].strip()
+                                                    dValue = float(sValue)
+                                                    dummy_index  = np.where( aParameter_filetype=='ai0' )
+                                                    dummy_index2 = aParameter_indices[dummy_index]
+                                                    aData_out[dummy_index2] = dValue
+                                                    break  #important
+                                                else:
+                                                    pass
+
                                                 pass
                                 break  #important
 
@@ -687,6 +727,16 @@ class swatcase(object):
                             
                             
                 ifs.close()
+
+        #write parameter value      
+        sLine = ''
+
+        for p in range(0, nParameter_watershed):
+            dValue = aData_out[p]
+            sValue = "{:0f}".format( dValue ) + ','
+            sLine = sLine + sValue
+
+        ofs.write(sLine)
         ofs.close()
 
         print('Finished writing watershed default parameter file!')
@@ -696,69 +746,513 @@ class swatcase(object):
 
         return
     def extract_default_parameter_value_subbasin(self, aParameter_subbasin):
+        sWorkspace_source_case = self.sWorkspace_simulation_copy
+        sWorkspace_target_case = self.sWorkspace_output_case
+   
         nParameter_subbasin = len(aParameter_subbasin)
-        sFilename_subbasin_default=''
-        nsubbasin =1
-        if nParameter_subbasin ==1:    
-            ofs = open(sFilename_subbasin_default, 'w')
+        if(nParameter_subbasin<1):
+            #there is nothing to be replaced at all
+            print("There is no subbasin parameter to be updated!")
+            return
+        else:
+            pass     
+    
+        #open the new file to write out
+        sFilename  = 'subbasin_default_parameter.txt'
+        sFilename_subbasin_out = os.path.join(str(Path(sWorkspace_target_case)) ,  sFilename )    
+        if os.path.exists(sFilename_subbasin_out):                
+            os.remove(sFilename_subbasin_out)
 
-           
-            aParameter_subbasin_name = self.aSubbasin[0].aParameter_subbasin_name
-            nParameter_subbasin = self.aSubbasin[0].nParameter_subbasin
+        ofs=open(sFilename_subbasin_out, 'w') 
+    
+        nsubbasin = self.nsubbasin
+    
+        # we need to identify a list of files that are HRU defined, you can add others later
+        aExtension = ['.rte', '.sub']
+        #now we can add corresponding possible variables
 
-            sLine = 'subbasin'
+        aRTE =['ch_k2','ch_n2' ]
+        aSUB=['plaps','tlaps']
 
-            for i in range(nParameter_subbasin):
-                sVariable = aParameter_subbasin_name[i]
-                sLine = sLine + ',' + sVariable
-            sLine = sLine + '\n'        
-            ofs.write(sLine)
+        aExtension = np.asarray(aExtension)
+        nFile_type= aExtension.size
 
-            for iSubbasin in range(0, nsubbasin):
+        #the parameter is located in the different files
+        aParameter_table = np.empty( (nFile_type)  , dtype = object )
+
+        #need a better way to control this 
+        for iVariable in range(nParameter_subbasin):
+            sParameter_subbasin = aParameter_subbasin[iVariable].sName
+
+            if sParameter_subbasin in aRTE:
+
+                if( aParameter_table[0] is None  ):
+                    aParameter_table[0] = np.array(sParameter_subbasin)
+                else:
+                    aParameter_table[0]= np.append(aParameter_table[0],sParameter_subbasin)            
+            else:
+                if sParameter_subbasin in aSUB:
+                    if( aParameter_table[1] is None  ):
+                        aParameter_table[1] = np.array(sParameter_subbasin)
+                    else:
+                        aParameter_table[1]= np.append(aParameter_table[1],sParameter_subbasin)   
+                    pass
                 pass
+
+
+        aParameter_user = np.full( (nFile_type) , None , dtype = np.dtype(object) )
+        aParameter_count = np.full( (nFile_type) , 0 , dtype = int )
+        aParameter_flag = np.full( (nFile_type) , 0 , dtype = int )
+        aParameter_index = np.full( (nFile_type) , -1 , dtype = np.dtype(object) )
+            
+
+        for p in range(0, nParameter_subbasin):
+            para = aParameter_subbasin[p].sName
+            for i in range(0, nFile_type):
+                aParameter_tmp = aParameter_table[i]
+                if aParameter_tmp is not None:
+                    if para in aParameter_tmp:
+                        aParameter_count[i]= aParameter_count[i]+1
+                        aParameter_flag[i]=1
+
+                        if(aParameter_count[i] ==1):
+                            aParameter_index[i] = [p]
+                            aParameter_user[i]= [para]
+                        else:
+                            aParameter_index[i] = np.append(aParameter_index[i],[p])
+                            aParameter_user[i] = np.append(aParameter_user[i],[para])
+                        continue
+
+        #write the head
+        aData_out = np.full((nParameter_subbasin), '', dtype=object)  
+        for iFile_type in range(0, nFile_type):
+            sExtension = aExtension[iFile_type]
+            iFlag = aParameter_flag[iFile_type]
+            if( iFlag == 1):
+                aParameter_indices = np.array(aParameter_index[iFile_type])
+                for i in range(len(aParameter_indices)):
+                    dummy_index  = aParameter_indices[i]
+                    pParameter = aParameter_subbasin[dummy_index]    
+                    sVariable = pParameter.sName   
+                    aData_out[dummy_index]= sVariable
+                    
+        sLine = 'subbasin'            
+        for i in range(1, nParameter_subbasin+1):    
+            sLine = sLine + ',' + aData_out[i-1]            
+        sLine = sLine + '\n'     
+             
+        ofs.write(sLine)
+
+        #write value
+        aData_out = np.full((nsubbasin, nParameter_subbasin), -9999, dtype=float)
+        
+        for iSubbasin in range(1, nsubbasin+1):
+            #subbasin string
+            sSubbasin = "{:05d}".format( iSubbasin )    
+            for iFile_type in range(0, nFile_type):                
+                sExtension = aExtension[iFile_type]
+                iFlag = aParameter_flag[iFile_type]
+                sFilename = sSubbasin + '0000' + sExtension
+                if( iFlag == 1):
+                    sFilename_subbasin = os.path.join(str(Path(sWorkspace_source_case)) ,  sFilename )   
+                    #open the file to read
+                    nline = line_count(sFilename_subbasin)
+                    ifs=open(sFilename_subbasin, 'rb')   
+                    sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')                        
+                    for iLine in range(nline):    
+                        sLine0=(ifs.readline())
+                        if len(sLine0) < 1:
+                            continue
+                        sLine0=sLine0.rstrip()
+                        #print(sLine0)
+                        sLine= sLine0.decode("utf-8", 'ignore')           
+                        for i in range(0, aParameter_count[iFile_type]):
+                            aParameter_indices = np.array(aParameter_index[iFile_type])
+                            aParameter_filetype = np.array(aParameter_user[iFile_type])
+                            if 'ch_k2' in sLine.lower()  and 'ch_k2' in aParameter_filetype:
+                                sValue = (sLine.split('|'))[0].strip()
+                                dValue = float(sValue)
+                                dummy_index  = np.where( aParameter_filetype=='ch_k2' )
+                                dummy_index2 = aParameter_indices[dummy_index]
+                                aData_out[iSubbasin-1, dummy_index2] = dValue    
+                                                          
+                                break                            
+                            else:
+                                if 'ch_n2' in sLine.lower() and 'ch_n2' in aParameter_filetype:                                
+                                    sValue = (sLine.split('|'))[0].strip()
+                                    dValue = float(sValue)
+                                    dummy_index  = np.where( aParameter_filetype=='ch_n2' )
+                                    dummy_index2 = aParameter_indices[dummy_index]
+                                    aData_out[iSubbasin-1, dummy_index2] = dValue   
+                                    break
+                                else:
+                                    if 'plaps' in sLine.lower() and 'plaps' in aParameter_filetype:                                
+                                        sValue = (sLine.split('|'))[0].strip()
+                                        dValue = float(sValue)
+                                        dummy_index  = np.where( aParameter_filetype=='plaps' )
+                                        dummy_index2 = aParameter_indices[dummy_index]
+                                        aData_out[iSubbasin-1, dummy_index2] = dValue   
+                                        break
+                                    else:
+                                        if 'tlaps' in sLine.lower() and 'tlaps' in aParameter_filetype:                                
+                                            sValue = (sLine.split('|'))[0].strip()
+                                            dValue = float(sValue)
+                                            dummy_index  = np.where( aParameter_filetype=='tlaps' )
+                                            dummy_index2 = aParameter_indices[dummy_index]
+                                            aData_out[iSubbasin-1, dummy_index2] = dValue   
+                                            break
+                                        else:
+                                            break     
+                        
+                    #close files
+                    ifs.close()
+                    
+                else:
+                    #this file does not need to changed
+                    pass
+            pass
+        
+        #write parameter value    
+        for iSubbasin in range(1, nsubbasin+1):
+            sSubbasin = "{:05d}".format( iSubbasin )   
+            sLine = sSubbasin + ','
+            for p in range(0, nParameter_subbasin):
+                dValue = aData_out[iSubbasin-1, p]
+                sValue = "{:0f}".format( dValue ) + ','
+                sLine = sLine + sValue
+            
+            sLine = sLine + '\n'
+
+            ofs.write(sLine)
+        ofs.close()
+        print('Finished writing subbasin default parameter file!')
         return
+
+
     def extract_default_parameter_value_hru(self, aParameter_hru):
+        sWorkspace_source_case = self.sWorkspace_simulation_copy
+        sWorkspace_target_case = self.sWorkspace_output_case
         nParameter_hru = len(aParameter_hru)
-        sFilename_hru_default=''
-        nhru=9
-        if nParameter_subbasin ==1:    
-            ofs = open(sFilename_hru_default, 'w')
+       
+        if(nParameter_hru<1):
+            #there is nothing to be replaced at all
+            print("There is no subbasin parameter to be updated!")
+            return
+        else:
+            pass   
+        #open the new file to write out
+        sFilename  = 'hru_default_parameter.txt'
+        sFilename_hru_out = os.path.join(str(Path(sWorkspace_target_case)) ,  sFilename )    
+        if os.path.exists(sFilename_hru_out):                
+            os.remove(sFilename_hru_out)
 
-           
-            aParameter_subbasin_name = self.aSubbasin[0].aParameter_subbasin_name
-            nParameter_subbasin = self.aSubbasin[0].nParameter_subbasin
+        ofs=open(sFilename_hru_out, 'w') 
+        nsubbasin = self.nsubbasin
+        nhru=self.nhru
+        nhru_combination = self.nhru_combination
+        iFlag_simulation = self.iFlag_simulation    
+        sWorkspace_output_case = self.sWorkspace_output_case
+        sWorkspace_simulation_copy =  self.sWorkspace_simulation_copy    
+        sWorkspace_pest_model = sWorkspace_output_case    
+        sFilename_watershed_configuration = self.sFilename_watershed_configuration
+        sFilename_hru_info = self.sFilename_hru_info     
+        aSubbasin_hru  = text_reader_string( sFilename_watershed_configuration, cDelimiter_in = ',' )
+        aHru_configuration = aSubbasin_hru[:,1].astype(int)     
+        aHru_info = text_reader_string(sFilename_hru_info)
+        aHru_info = np.asarray(aHru_info)      
+        aHru_info= aHru_info.reshape( nhru )
+        sFilename_hru_combination = self.sFilename_hru_combination        
+        aHru_combination = text_reader_string(sFilename_hru_combination)
+        aHru_combination = np.asarray(aHru_combination)
+        aHru_combination= aHru_combination.reshape(nhru_combination)
 
-            sLine = 'subbasin'
+        # we need to identify a list of files that are HRU defined, you can add others later
+        aExtension = ('.chm','.gw','.hru','.mgt','.sdr', '.sep')
+        #now we can add corresponding possible variables
+        aCHM =[]
+        aGW = ['rchrg_dp', 'gwqmn', 'gw_revap','revapmn','gw_delay','alpha_bf']
+        aHRU =['ov_n']
+        aMGT = ['cn2']
+        aSDR = []
+        aSEP =[]
+        #aSOL=['sol_awc','sol_k','sol_alb','sol_bd'] 
 
-            for i in range(nParameter_subbasin):
-                sVariable = aParameter_subbasin_name[i]
-                sLine = sLine + ',' + sVariable
-            sLine = sLine + '\n'        
-            ofs.write(sLine)
+        aExtension = np.asarray(aExtension)
+        nFile_type= len(aExtension)
 
-            for iSubbasin in range(0, nhru):
+        #the parameter is located in the different files
+        aParameter_table = np.empty( (nFile_type)  , dtype = object )
+
+        #hru level
+        for iVariable in range(nParameter_hru):
+            sParameter_hru = aParameter_hru[iVariable].sName
+
+            if sParameter_hru in aCHM:
                 pass
+            else:
+                if sParameter_hru in aGW:
+                    if( aParameter_table[1] is None  ):
+                        aParameter_table[1] = sParameter_hru
+                    else:
+                        aParameter_table[1]= np.append(aParameter_table[1],sParameter_hru)  
+                    pass
+                else:
+                    if sParameter_hru in aHRU:
+                        if( aParameter_table[2] is None  ):
+                            aParameter_table[2] = sParameter_hru
+                        else:
+                            aParameter_table[2]= np.append(aParameter_table[2],sParameter_hru) 
+                        pass
+                    else:
+                        if sParameter_hru in aMGT:
+                            if( aParameter_table[3] is None  ):
+                                aParameter_table[3] = sParameter_hru
+                            else:
+                                aParameter_table[3]= np.append(aParameter_table[3],sParameter_hru)                           
+                        else:
+                            if sParameter_hru in aSDR:
+                                pass
+                            else: 
+                                if sParameter_hru in aSEP:
+                                    pass
+                                else:                                    
+                                    pass           
+
+        aParameter_user = np.full( (nFile_type) , None , dtype = np.dtype(object) ) #list of parameter actually used in this file type
+        aParameter_count = np.full( (nFile_type) , 0 , dtype = int ) #how many parameter in this file type
+        aParameter_flag = np.full( (nFile_type) , 0 , dtype = int )  #whether there is parameter in this file type
+        aParameter_index = np.full( (nFile_type) , -1 , dtype = np.dtype(object) ) #the index of each parameter in this file type
+    
+        for p in range(0, nParameter_hru):
+            para = aParameter_hru[p].sName
+            for i in range(0, nFile_type):
+                aParameter_tmp = aParameter_table[i]
+                if aParameter_tmp is not None:
+                    if para in aParameter_tmp:
+                        aParameter_count[i]= aParameter_count[i]+1
+                        aParameter_flag[i]=1
+
+                        if(aParameter_count[i] ==1):
+                            aParameter_index[i] = [p]
+                            aParameter_user[i]= [para]
+                        else:
+                            aParameter_index[i] = np.append(aParameter_index[i],[p])
+                            aParameter_user[i] = np.append(aParameter_user[i],[para])
+                        continue
+        
+
+        #write the head
+        aData_out = np.full((nParameter_hru), '', dtype=object)    
+        
+        for iFile_type in range(0, nFile_type):
+            sExtension = aExtension[iFile_type]
+            iFlag = aParameter_flag[iFile_type]
+            if( iFlag == 1):
+                aParameter_indices = np.array(aParameter_index[iFile_type])
+                for i in range(len(aParameter_indices)):
+                    dummy_index  = aParameter_indices[i]
+                    pParameter = aParameter_hru[dummy_index]    
+                    sVariable = pParameter.sName   
+                    aData_out[dummy_index]= sVariable
+                    
+        sLine = 'hru'            
+        for i in range(1, nParameter_hru+1):    
+            sLine = sLine + ',' + aData_out[i-1]            
+        sLine = sLine + '\n'             
+        ofs.write(sLine)       
+
+        #write value
+        aData_out = np.full((nhru_combination, nParameter_hru), -9999, dtype=float)         
+       
+        iHru_index = 0 
+        for iSubbasin in range(1, nsubbasin+1):
+            sSubbasin = "{:05d}".format( iSubbasin )
+            nhru_subbasin = aHru_configuration[ iSubbasin-1]
+            for iHru in range(1, nhru_subbasin+1):
+                #hru string
+                sHru = "{:04d}".format( iHru)
+                #find the hry type 
+                sHru_code = aHru_info[iHru_index]
+                iIndex = np.where(aHru_combination == sHru_code)
+                iHru_index = iHru_index + 1
+                for iFile_type in range(0, nFile_type):
+                    #check whether these is parameter chanage or not
+                    sExtension = aExtension[iFile_type]
+                    iFlag = aParameter_flag[iFile_type]
+                    if( iFlag == 1):
+                        if sExtension == '.gw':                         
+                            sFilename = sSubbasin + sHru + sExtension
+                            sFilename_hru = os.path.join(sWorkspace_source_case , sFilename )                            
+                            nline = line_count(sFilename_hru)
+                            ifs=open(sFilename_hru, 'rb')   
+                            sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')                        
+                            for iLine in range(nline):    
+                                sLine0=(ifs.readline())
+                                if len(sLine0) < 1:
+                                    continue
+                                sLine0=sLine0.rstrip()                                
+                                sLine= sLine0.decode("utf-8", 'ignore')                                                            
+                                for i in range(0, aParameter_count[iFile_type]):       
+                                    aParameter_indices = np.array(aParameter_index[iFile_type])
+                                    aParameter_filetype = np.array(aParameter_user[iFile_type])                        
+                                    if 'rchrg_dp' in sLine.lower() and 'rchrg_dp' in aParameter_filetype:                                      
+                                        sValue = (sLine.split('|'))[0].strip()
+                                        dValue = float(sValue)
+                                        dummy_index  = np.where( aParameter_filetype=='rchrg_dp' )
+                                        dummy_index2 = aParameter_indices[dummy_index]
+                                        aData_out[iIndex, dummy_index2] = dValue  
+                                        pass                                        
+                                    else:
+                                        if 'gwqmn' in sLine.lower() and 'gwqmn' in aParameter_filetype:                                         
+                                            sValue = (sLine.split('|'))[0].strip()
+                                            dValue = float(sValue)
+                                            dummy_index  = np.where( aParameter_filetype=='gwqmn' )
+                                            dummy_index2 = aParameter_indices[dummy_index]
+                                            aData_out[iIndex, dummy_index2] = dValue  
+                                            pass
+                                        else:
+                                            if 'gw_revap' in sLine.lower() and 'gw_revap' in aParameter_filetype:                                         
+                                                sValue = (sLine.split('|'))[0].strip()
+                                                dValue = float(sValue)
+                                                dummy_index  = np.where( aParameter_filetype=='gw_revap' )
+                                                dummy_index2 = aParameter_indices[dummy_index]
+                                                aData_out[iIndex, dummy_index2] = dValue  
+                                                pass
+                                            else:
+                                                if 'revapmn' in sLine.lower() and 'revapmn' in aParameter_filetype:                                         
+                                                    sValue = (sLine.split('|'))[0].strip()
+                                                    dValue = float(sValue)
+                                                    dummy_index  = np.where( aParameter_filetype=='revapmn' )
+                                                    dummy_index2 = aParameter_indices[dummy_index]
+                                                    aData_out[iIndex, dummy_index2] = dValue  
+                                                    pass
+                                                else:
+                                                    if 'alpha_bf' in sLine.lower() and 'alpha_bf' in aParameter_filetype:                                         
+                                                        sValue = (sLine.split('|'))[0].strip()
+                                                        dValue = float(sValue)
+                                                        dummy_index  = np.where( aParameter_filetype=='alpha_bf' )
+                                                        dummy_index2 = aParameter_indices[dummy_index]
+                                                        aData_out[iIndex, dummy_index2] = dValue  
+                                                        pass
+                                                    else:
+                                                        if 'gw_delay' in sLine.lower() and 'gw_delay' in aParameter_filetype:                                         
+                                                            sValue = (sLine.split('|'))[0].strip()
+                                                            dValue = float(sValue)
+                                                            dummy_index  = np.where( aParameter_filetype=='gw_delay' )
+                                                            dummy_index2 = aParameter_indices[dummy_index]
+                                                            aData_out[iIndex, dummy_index2] = dValue  
+                                                            pass
+                                                        else:
+                                                            break
+                                        
+                                                                       
+                            #close files
+                            ifs.close()
+                         
+                            pass
+                        else:
+                            if sExtension == '.hru':
+                                sFilename = sSubbasin + sHru + sExtension
+                                sFilename_hru = os.path.join(sWorkspace_source_case , sFilename )
+                                sFilename_hru = os.path.join(sWorkspace_source_case , sFilename )                            
+                                nline = line_count(sFilename_hru)
+                                ifs=open(sFilename_hru, 'rb')   
+                                sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')                                                       
+                                for iLine in range(nline):    
+                                    sLine0=(ifs.readline())
+                                    if len(sLine0) < 1:
+                                        continue
+                                    sLine0=sLine0.rstrip()                                
+                                    sLine= sLine0.decode("utf-8", 'ignore')  
+                                    for i in range(0, aParameter_count[iFile_type]):       
+                                        aParameter_indices = np.array(aParameter_index[iFile_type])
+                                        aParameter_filetype = np.array(aParameter_user[iFile_type])                                                                        
+                                        if 'ov_n' in sLine.lower() and 'ov_n' in aParameter_filetype: 
+                                            sValue = (sLine.split('|'))[0].strip()
+                                            dValue = float(sValue)
+                                            dummy_index  = np.where( aParameter_filetype=='ov_n' )
+                                            dummy_index2 = aParameter_indices[dummy_index]
+                                            aData_out[iIndex, dummy_index2] = dValue  
+                                            break
+                                        else:                                                                                       
+                                            break
+                                pass
+                            else: #mgt
+                                sFilename = sSubbasin + sHru + sExtension
+                                sFilename_hru = os.path.join(sWorkspace_source_case , sFilename )
+                                sFilename_hru = os.path.join(sWorkspace_source_case , sFilename )                            
+                                nline = line_count(sFilename_hru)
+                                ifs=open(sFilename_hru, 'rb')   
+                                sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')                                                       
+                                for iLine in range(nline):    
+                                    sLine0=(ifs.readline())
+                                    if len(sLine0) < 1:
+                                        continue
+                                    sLine0=sLine0.rstrip()                                
+                                    sLine= sLine0.decode("utf-8", 'ignore')  
+                                    for i in range(0, aParameter_count[iFile_type]):       
+                                        aParameter_indices = np.array(aParameter_index[iFile_type])
+                                        aParameter_filetype = np.array(aParameter_user[iFile_type])                                                                        
+                                        if 'cn2' in sLine.lower() and 'cn2' in aParameter_filetype: 
+                                            sValue = (sLine.split('|'))[0].strip()
+                                            dValue = float(sValue)
+                                            dummy_index  = np.where( aParameter_filetype=='cn2' )
+                                            dummy_index2 = aParameter_indices[dummy_index]
+                                            aData_out[iIndex, dummy_index2] = dValue  
+
+                                            break
+                                        else:
+                                                                                       
+                                            break
+                               
+                           
+                                ifs.close()
+                           
+                    else:
+                        #this file does not need to changed
+                        pass
+
+                pass
+        
+        #write parameter value    
+        for iHru in range(1, nhru_combination+1):
+            sHru = "{:05d}".format( iHru )   
+            sLine = sHru +  ','
+            for p in range(0, nParameter_hru):
+                dValue = aData_out[iHru-1, p]
+                sValue = "{:0f}".format( dValue ) + ','
+                sLine = sLine + sValue
+            
+            sLine = sLine + '\n'
+            ofs.write(sLine)
+        ofs.close()
+        print('Finished writing hru default parameter file!')
         return
+
     def extract_default_parameter_value_soil(self, aParameter_soil):
+        sWorkspace_source_case = self.sWorkspace_simulation_copy
+        sWorkspace_target_case = self.sWorkspace_output_case
         nParameter_soil = len(aParameter_soil)
-        sFilename_soil_default=''
-        nsoil=8
-        if nParameter_subbasin ==1:    
-            ofs = open(sFilename_soil_default, 'w')
+        if(nParameter_soil<1):
+            #there is nothing to be replaced at all
+            print("There is no subbasin parameter to be updated!")
+            return
+        else:
+            pass   
+        #open the new file to write out
+        sFilename  = 'soil_default_parameter.txt'
+        sFilename_soil_out = os.path.join(str(Path(sWorkspace_target_case)) ,  sFilename )    
+        if os.path.exists(sFilename_soil_out):                
+            os.remove(sFilename_soil_out)
+
+        ofs=open(sFilename_soil_out, 'w') 
+        
+          
            
-            aParameter_subbasin_name = self.aSubbasin[0].aParameter_subbasin_name
-            nParameter_subbasin = self.aSubbasin[0].nParameter_subbasin
+            
 
-            sLine = 'subbasin'
-
-            for i in range(nParameter_subbasin):
-                sVariable = aParameter_subbasin_name[i]
-                sLine = sLine + ',' + sVariable
-            sLine = sLine + '\n'        
-            ofs.write(sLine)
-
-            for iSubbasin in range(0, nsoil):
-                pass
+        for iSoil in range(1, nsoil+1):
+            pass
         return
 
     def swaty_prepare_watershed_configuration(self):
@@ -888,14 +1382,14 @@ class swatcase(object):
         nhru = sum(aHru)
         #find how many soil layer in each hru
         sExtension='.sol'
-        for iSubbasin in range(self.nsubbasin):
+        for iSubbasin in range(1, self.nsubbasin+1):
             
-            sSubbasin = "{:05d}".format( iSubbasin + 1)
-            nhru = aHru[ iSubbasin]
+            sSubbasin = "{:05d}".format( iSubbasin )
+            nhru = aHru[ iSubbasin-1]
             #loop through all hru in this subbasin
-            for iHru in range(0, nhru):
+            for iHru in range(1, nhru+1):
                 #hru string
-                sHru = "{:04d}".format( iHru + 1)
+                sHru = "{:04d}".format( iHru )
                 sFilename = sSubbasin + sHru + sExtension
                 sFilename_hru = os.path.join(sWorkspace_source_case , sFilename )
                 ifs=open(sFilename_hru, 'rb')   
@@ -1019,11 +1513,11 @@ class swatcase(object):
             sLine = sLine + '\n'        
             ofs.write(sLine)
 
-            for iSubbasin in range(0, nsubbasin):
+            for iSubbasin in range(1, nsubbasin+1):
 
-                aParameter_subbasin = self.aSubbasin[iSubbasin].aParameter_subbasin
-                nParameter_subbasin = self.aSubbasin[iSubbasin].nParameter_subbasin
-                sSubbasin = "{:03d}".format( iSubbasin + 1)
+                aParameter_subbasin = self.aSubbasin[iSubbasin-1].aParameter_subbasin
+                nParameter_subbasin = self.aSubbasin[iSubbasin-1].nParameter_subbasin
+                sSubbasin = "{:03d}".format( iSubbasin )
                 sLine = 'subbasin' + sSubbasin 
                 for i in range(nParameter_subbasin):
                     sValue =  "{:5.2f}".format( aParameter_subbasin[i].dValue_init ) 
@@ -1116,8 +1610,8 @@ class swatcase(object):
         sWorkspace_pest_model = sWorkspace_output_case
         
         aExtension = ['.bsn','.wwq']
-        aBSN=['SFTMP','SMTMP','ESCO','SMFMX','TIMP','EPCO']
-        aWWQ=['AI0']
+        aBSN=['sftmp','smtmp','esco','smfmx','timp','epco']
+        aWWQ=['ai0']
 
 
         aExtension = np.asarray(aExtension)
@@ -1310,8 +1804,8 @@ class swatcase(object):
         aExtension = ['.rte', '.sub']
         #now we can add corresponding possible variables
 
-        aRTE =['CH_K2','CH_N2' ]
-        aSUB=['PLAPS','TLAPS']
+        aRTE =['ch_k2','ch_n2' ]
+        aSUB=['plaps','tlaps']
 
         aExtension = np.asarray(aExtension)
         nFile_type= aExtension.size
@@ -1375,10 +1869,10 @@ class swatcase(object):
                 sWorkspace_target_case = sPath_current
 
         
-        for iSubbasin in range(0, nsubbasin):
+        for iSubbasin in range(1, nsubbasin+1):
             #subbasin string
-            sSubbasin = "{:05d}".format( iSubbasin + 1)
-            aParameter_subbasin = self.aSubbasin[iSubbasin].aParameter_subbasin
+            sSubbasin = "{:05d}".format( iSubbasin )
+            aParameter_subbasin = self.aSubbasin[iSubbasin-1].aParameter_subbasin
 
             #loop through all basin in this subbasin
 
@@ -1466,27 +1960,18 @@ class swatcase(object):
         else:
             pass    
         
-        iFlag_simulation = self.iFlag_simulation
-    
+        iFlag_simulation = self.iFlag_simulation    
         sWorkspace_output_case = self.sWorkspace_output_case
-        sWorkspace_simulation_copy =  self.sWorkspace_simulation_copy
-    
-        sWorkspace_pest_model = sWorkspace_output_case
-    
+        sWorkspace_simulation_copy =  self.sWorkspace_simulation_copy    
+        sWorkspace_pest_model = sWorkspace_output_case    
         sFilename_watershed_configuration = self.sFilename_watershed_configuration
-        sFilename_hru_info = self.sFilename_hru_info
-        
-        
+        sFilename_hru_info = self.sFilename_hru_info     
         aSubbasin_hru  = text_reader_string( sFilename_watershed_configuration, cDelimiter_in = ',' )
-        aHru_configuration = aSubbasin_hru[:,1].astype(int)
-        
-        
+        aHru_configuration = aSubbasin_hru[:,1].astype(int)     
         aHru_info = text_reader_string(sFilename_hru_info)
         aHru_info = np.asarray(aHru_info)      
         aHru_info= aHru_info.reshape( nhru )
-
-        sFilename_hru_combination = self.sFilename_hru_combination
-        
+        sFilename_hru_combination = self.sFilename_hru_combination        
         aHru_combination = text_reader_string(sFilename_hru_combination)
         aHru_combination = np.asarray(aHru_combination)
         aHru_combination= aHru_combination.reshape(nhru_combination)
@@ -1494,15 +1979,13 @@ class swatcase(object):
         # we need to identify a list of files that are HRU defined, you can add others later
         aExtension = ('.chm','.gw','.hru','.mgt','.sdr', '.sep', '.sol')
         #now we can add corresponding possible variables
-
-
         aCHM =[]
-        aGW = ['RCHRG_DP', 'GWQMN', 'GW_REVAP','REVAPMN']
-        aHRU =['OV_N']
-        aMGT = ['CN2']
+        aGW = ['rchrg_dp', 'gwqmn', 'gw_revap','revapmn']
+        aHRU =['ov_n']
+        aMGT = ['cn2']
         aSDR = []
         aSEP =[]
-        aSOL=['SOL_AWC','SOL_K','SOL_ALB','SOL_BD']
+        aSOL=['sol_awc','sol_k','sol_alb','sol_bd'] 
 
         aExtension = np.asarray(aExtension)
         nFile_type= len(aExtension)
@@ -1610,14 +2093,14 @@ class swatcase(object):
                 sWorkspace_target_case = sWorkspace_output_case
 
         iHru_index = 0 
-        for iSubbasin in range(0, nsubbasin):
+        for iSubbasin in range(1, nsubbasin+1):
             #subbasin string
-            sSubbasin = "{:05d}".format( iSubbasin + 1)
-            nhru_subbasin = aHru_configuration[ iSubbasin]
+            sSubbasin = "{:05d}".format( iSubbasin )
+            nhru_subbasin = aHru_configuration[ iSubbasin-1]
             #loop through all hru in this subbasin
-            for iHru in range(0, nhru_subbasin):
+            for iHru in range(1, nhru_subbasin+1):
                 #hru string
-                sHru = "{:04d}".format( iHru + 1)
+                sHru = "{:04d}".format( iHru)
                 #find the hry type 
                 sHru_code = aHru_info[iHru_index]
                 iIndex = np.where(aHru_combination == sHru_code)

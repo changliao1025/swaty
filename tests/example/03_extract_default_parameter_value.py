@@ -40,28 +40,28 @@ sWorkspace_input = str(Path(sWorkspace_data)  /  'input')
 aParameter=list()
 aPara_in=dict()
 
-aParemeter_watershed = np.array['esco','sftmp','smtmp','timp','epco']
+aParemeter_watershed = np.array(['esco','ai0', 'sftmp','smtmp','timp','epco'])
 nParameter_watershed = len(aParemeter_watershed)
 
 
 for j in np.arange(1, nParameter_watershed+1):
     aPara_in['iParameter_type'] = 1
     aPara_in['iIndex_subbasin'] = j
-    aPara_in['sName']= aParemeter_watershed[j]
+    aPara_in['sName']= aParemeter_watershed[j-1]
     aPara_in['dValue_init']=0.0
     aPara_in['dValue_current']=0.01* j +0.01
     aPara_in['dValue_lower']=-1
     aPara_in['dValue_upper']=5
     pParameter = swatpara(aPara_in)
-    aParameter.append(    pParameter = swatpara(aPara_in)
-)
+    aParameter.append(    pParameter )
 
-aParemeter_subbasin = np.array['ch_n2','ch_k2','plaps','tlaps']
+
+aParemeter_subbasin = np.array(['ch_n2','ch_k2','plaps','tlaps'])
 nParameter_subbasin = len(aParemeter_subbasin)
 for j in np.arange(1, nParameter_subbasin+1):
     aPara_in['iParameter_type'] = 2
     aPara_in['iIndex_subbasin'] = j
-    aPara_in['sName']= aParemeter_subbasin[j]
+    aPara_in['sName']= aParemeter_subbasin[j-1]
     aPara_in['dValue_init']=0.0
     aPara_in['dValue_current']=0.01* j +0.01
     aPara_in['dValue_lower']=-1
@@ -69,12 +69,12 @@ for j in np.arange(1, nParameter_subbasin+1):
     pParameter = swatpara(aPara_in)
     aParameter.append(pParameter)
 
-aParemeter_hru = np.array['cn2','rchrg_dp','gwqmn','gw_revap','revapmn','gw_delay','alpha_bf','ov_n']
+aParemeter_hru = np.array(['cn2','rchrg_dp','gwqmn','gw_revap','revapmn','gw_delay','alpha_bf','ov_n'])
 nParameter_hru = len(aParemeter_hru)
 for j in np.arange(1, nParameter_hru+1):
     aPara_in['iParameter_type'] = 3
     aPara_in['iIndex_subbasin'] = j
-    aPara_in['sName']= aParemeter_hru[j]
+    aPara_in['sName']= aParemeter_hru[j-1]
     aPara_in['dValue_init']=0.0
     aPara_in['dValue_current']=0.01* j +0.01
     aPara_in['dValue_lower']=-1
@@ -84,12 +84,12 @@ for j in np.arange(1, nParameter_hru+1):
 
 
 
-aParemeter_soil = np.array['sol_k','sol_awc','sol_alb','sol_bd']
+aParemeter_soil = np.array(['sol_k','sol_awc','sol_alb','sol_bd'])
 nParameter_soil = len(aParemeter_soil)
 for j in np.arange(1, nParameter_soil+1):
     aPara_in['iParameter_type'] = 4
     aPara_in['iIndex_subbasin'] = j
-    aPara_in['sName']= aParemeter_soil[j]
+    aPara_in['sName']= aParemeter_soil[j-1]
     aPara_in['dValue_init']=0.0
     aPara_in['dValue_current']=0.01* j +0.01
     aPara_in['dValue_lower']=-1
