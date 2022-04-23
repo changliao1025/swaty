@@ -303,17 +303,15 @@ class swatcase(object):
 
             aHru_info = text_reader_string(self.sFilename_hru_info, cDelimiter_in=',')
             self.nhru = len(aHru_info)
+            aHru_info= np.reshape(aHru_info, (self.nhru))
 
             #read soil
             aSoil_info = text_reader_string(self.sFilename_soil_info, cDelimiter_in=',')
-            aSoil_info = np.array(aSoil_info[:,0])
-            aSoil_info = aSoil_info.astype(int)
+            aSoil_info = np.array(aSoil_info)            
 
             aSoil_combinaiton = text_reader_string(self.sFilename_soil_combination, cDelimiter_in=',')
             self.nsoil_combination = len(aSoil_combinaiton)
-            
-            
-            
+
 
             self.aHru_combination=list()
             for iHru_combination in range(1, self.nhru_combination+1):
@@ -322,8 +320,10 @@ class swatcase(object):
 
                 sHru = aHru_combination[iHru_combination-1]
                 dummy_index = np.where(aHru_info == sHru)
+                dummy_index2= dummy_index[0][0]
+                dummy = aSoil_info[dummy_index2,:]
 
-                pdummy.nSoil_layer= aSoil_info[dummy_index[0][0]]
+                pdummy.nSoil_layer= int( dummy[1])
                 pdummy.aSoil=list()
                 for j in range(pdummy.nSoil_layer):
                     dummy_soil = pysoil()
@@ -336,6 +336,11 @@ class swatcase(object):
                 self.nsegment = int( aConfig_in[ 'nsegment'] )
             if 'nsubbasin' in aConfig_in:
                 self.nsubbasin = int (aConfig_in[ 'nsubbasin'])
+                self.aSubbasin=list()
+                for i in range(self.nsubbasin):
+                    pdummy = pysubbasin()    
+                    pdummy.lIndex = i+1
+                    self.aSubbasin.append(pdummy)
             if 'nhru' in aConfig_in:
                 nhru = int( aConfig_in['nhru']) 
                 
@@ -534,19 +539,19 @@ class swatcase(object):
         for p in aParameter_in:
             if p.iParameter_type == 1:
                aParameter.append(p) 
-        self.extract_default_parameter_value_watershed(aParameter)
+        #self.extract_default_parameter_value_watershed(aParameter)
         #subbasin
         aParameter.clear()
         for p in aParameter_in:
             if p.iParameter_type == 2:
                aParameter.append(p)
-        self.extract_default_parameter_value_subbasin(aParameter)
+        #self.extract_default_parameter_value_subbasin(aParameter)
         #hru
         aParameter.clear()
         for p in aParameter_in:
             if p.iParameter_type == 3:
                aParameter.append(p)
-        self.extract_default_parameter_value_hru(aParameter)
+        #self.extract_default_parameter_value_hru(aParameter)
         #soil
         aParameter.clear()
         for p in aParameter_in:
@@ -635,8 +640,7 @@ class swatcase(object):
                 aParameter_indices = np.array(aParameter_index[iFile_type])
                 for i in range(len(aParameter_indices)):
                     dummy_index  = aParameter_indices[i]
-                    pParameter = aParameter_watershed[dummy_index]
-       
+                    pParameter = aParameter_watershed[dummy_index]       
                     sVariable = pParameter.sName
                     sLine = sLine + ',' + sVariable
         sLine = sLine + '\n'        
@@ -735,11 +739,12 @@ class swatcase(object):
                 ifs.close()
 
         #write parameter value      
-        sLine = ''
+        sLine = 'watershed'
 
         for p in range(0, nParameter_watershed):
             dValue = aData_out[p]
-            sValue = "{:0f}".format( dValue ) + ','
+
+            sValue =  ',' + "{:0f}".format( dValue ) 
             sLine = sLine + sValue
 
         ofs.write(sLine)
@@ -921,10 +926,11 @@ class swatcase(object):
         #write parameter value    
         for iSubbasin in range(1, nsubbasin+1):
             sSubbasin = "{:05d}".format( iSubbasin )   
-            sLine = sSubbasin + ','
+            sLine = sSubbasin 
             for p in range(0, nParameter_subbasin):
                 dValue = aData_out[iSubbasin-1, p]
-                sValue = "{:0f}".format( dValue ) + ','
+
+                sValue = ',' + "{:0f}".format( dValue ) 
                 sLine = sLine + sValue
             
             sLine = sLine + '\n'
@@ -1062,8 +1068,9 @@ class swatcase(object):
                     aData_out[dummy_index]= sVariable
                     
         sLine = 'hru'            
-        for i in range(1, nParameter_hru+1):    
-            sLine = sLine + ',' + aData_out[i-1]            
+        for i in range(1, nParameter_hru+1):                
+            sValue =  ',' + aData_out[i-1] 
+            sLine = sLine +   sValue    
         sLine = sLine + '\n'             
         ofs.write(sLine)       
 
@@ -1223,10 +1230,10 @@ class swatcase(object):
         #write parameter value    
         for iHru in range(1, nhru_combination+1):
             sHru = "{:05d}".format( iHru )   
-            sLine = sHru +  ','
+            sLine = sHru 
             for p in range(0, nParameter_hru):
                 dValue = aData_out[iHru-1, p]
-                sValue = "{:0f}".format( dValue ) + ','
+                sValue = ',' + "{:0f}".format( dValue ) 
                 sLine = sLine + sValue
             
             sLine = sLine + '\n'
@@ -1267,23 +1274,178 @@ class swatcase(object):
         aHru_combination = np.asarray(aHru_combination)
         aHru_combination= aHru_combination.reshape(nhru_combination)
         sFilename_soil_combination = self.sFilename_soil_combination
-        aSoil_combination = text_reader_string(sFilename_soil_combination)
+        aSoil_combination = text_reader_string(sFilename_soil_combination, cDelimiter_in = ',')
         aSoil_combination = np.asarray(aSoil_combination)
-        aSoil_combination= aSoil_combination.reshape(nsoil_combination) 
+        aSoil_combination= aSoil_combination.reshape(nsoil_combination, 2) 
+        aSoil_combination_dummy= aSoil_combination[:,0]
+        sFilename_soil_info = self.sFilename_soil_info
+        aSoil_info = text_reader_string(sFilename_soil_info, cDelimiter_in = ',')
+        aSoil_info = np.array(aSoil_info)[:,0]
+        aSoil_info= aSoil_info.reshape(nhru) 
+        aSOL=['sol_awc','sol_k','sol_alb','sol_bd'] 
+        aExtension = np.array(['.sol'])
+        nFile_type= (aExtension).size
+
+        #hru level
+        #the parameter is located in the different files
+        aParameter_table = np.empty( (nFile_type)  , dtype = object )
+        for iVariable in range(nParameter_soil):
+            sParameter_hru = aParameter_soil[iVariable].sName                
+            if sParameter_hru in aSOL:
+                if( aParameter_table[0] is None  ):
+                    aParameter_table[0] = sParameter_hru
+                else:
+                    aParameter_table[0]= np.append(aParameter_table[0],sParameter_hru)  
+                pass
+            else:
+                pass           
+        aParameter_user = np.full( (nFile_type) , None , dtype = np.dtype(object) ) #list of parameter actually used in this file type
+        aParameter_count = np.full( (nFile_type) , 0 , dtype = int ) #how many parameter in this file type
+        aParameter_flag = np.full( (nFile_type) , 0 , dtype = int )  #whether there is parameter in this file type
+        aParameter_index = np.full( (nFile_type) , -1 , dtype = np.dtype(object) ) #the index of each parameter in this file type
+        for p in range(0, nParameter_soil):
+            para = aParameter_soil[p].sName
+            for i in range(0, nFile_type):
+                aParameter_tmp = aParameter_table[i]
+                if aParameter_tmp is not None:
+                    if para in aParameter_tmp:
+                        aParameter_count[i]= aParameter_count[i]+1
+                        aParameter_flag[i]=1
+                        if(aParameter_count[i] ==1):
+                            aParameter_index[i] = [p]
+                            aParameter_user[i]= [para]
+                        else:
+                            aParameter_index[i] = np.append(aParameter_index[i],[p])
+                            aParameter_user[i] = np.append(aParameter_user[i],[para])
+                        continue
 
         for iSoil in range(1, nsoil_combination+1):
-            sSoil_type =  "{:05d}".format( iSoil )
+            sSoil_type =  "{:01d}".format( iSoil )
             #open the new file to write out
-            sFilename  = 'soiltype ' + sSoil_type +'_default_parameter.txt'
-            sFilename_soil_out = os.path.join(str(Path(sWorkspace_target_case)) ,  sFilename )    
+            sFilename  = 'soiltype_' + sSoil_type +'_default_parameter.txt'
+            sFilename_soil_out = os.path.join(str(Path(sWorkspace_target_case)) ,  sFilename ) 
+            ssoil_code = aSoil_combination[iSoil-1,0]
+            nsoil_layer = int(aSoil_combination[iSoil-1,1])
             if os.path.exists(sFilename_soil_out):                
                 os.remove(sFilename_soil_out)
 
-            ofs=open(sFilename_soil_out, 'w') 
+            ofs=open(sFilename_soil_out, 'w')          
+
+            #write the head
+            aData_out = np.full((nParameter_soil), '', dtype=object)    
+
+            for iFile_type in range(0, nFile_type):
+                sExtension = aExtension[iFile_type]
+                iFlag = aParameter_flag[iFile_type]
+                if( iFlag == 1):
+                    aParameter_indices = np.array(aParameter_index[iFile_type])
+                    for i in range(len(aParameter_indices)):
+                        dummy_index  = aParameter_indices[i]
+                        pParameter = aParameter_soil[dummy_index]    
+                        sVariable = pParameter.sName   
+                        aData_out[dummy_index]= sVariable
+
+            sLine = 'soil layer'            
+            for i in range(1, nParameter_soil+1):    
+                sLine = sLine + ', ' + aData_out[i-1]            
+            sLine = sLine + '\n'             
+            ofs.write(sLine)      
+
+            #write value
+            aData_out = np.full((nsoil_layer, nParameter_soil), -9999, dtype=float) 
+
+            iHru_index = 0 
+            for iSubbasin in range(1, nsubbasin+1):
+                sSubbasin = "{:05d}".format( iSubbasin )
+                nhru_subbasin = aHru_configuration[ iSubbasin-1]
+                for iHru in range(1, nhru_subbasin+1):
+                    #hru string
+                    sHru = "{:04d}".format( iHru)
+                    #find the hry type 
+                    #sHru_code = aHru_info[iHru_index]
+                    sSoil_code = aSoil_info[iHru_index]
+                    iHru_index = iHru_index + 1
+                    if ssoil_code != sSoil_code:
+                        #print(sSoil_code, ssoil_code)
+                        continue                    
+                    iIndex = np.where(aSoil_combination_dummy == sSoil_code)                    
+                    for iFile_type in range(0, nFile_type):
+                        #check whether these is parameter chanage or not
+                        sExtension = aExtension[iFile_type]
+                        iFlag = aParameter_flag[iFile_type]
+                        if( iFlag == 1):
+                            if sExtension == '.sol':                         
+                                sFilename = sSubbasin + sHru + sExtension
+                                sFilename_hru = os.path.join(sWorkspace_source_case , sFilename )                            
+                                nline = line_count(sFilename_hru)
+                                ifs=open(sFilename_hru, 'rb')   
+                                sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')                        
+                                for iLine in range(nline):    
+                                    sLine0=(ifs.readline())
+                                    if len(sLine0) < 1:
+                                        continue
+                                    sLine0=sLine0.rstrip()                                
+                                    sLine= sLine0.decode("utf-8", 'ignore')                                                            
+                                    for i in range(0, aParameter_count[iFile_type]):       
+                                        aParameter_indices = np.array(aParameter_index[iFile_type])
+                                        aParameter_filetype = np.array(aParameter_user[iFile_type])                        
+                                        if 'ave. aw incl. rock' in sLine.lower() and 'sol_awc' in aParameter_filetype:                                      
+                                            sValue = (sLine.split(':'))[1].strip()
+                                            aValue = np.array(sValue.split()).astype(float)   
+                                            aValue = np.reshape(aValue, (nsoil_layer,1))                                                     
+                                            dummy_index  = np.where( aParameter_filetype=='sol_awc' )
+                                            dummy_index2 = aParameter_indices[dummy_index]
+                                            aData_out[:, dummy_index2] = aValue
+                                            pass                                        
+                                        else:
+                                            if 'ksat.' in sLine.lower() and 'sol_k' in aParameter_filetype:                                         
+                                                sValue = (sLine.split(':'))[1].strip()
+                                                aValue = np.array(sValue.split()).astype(float)   
+                                                aValue = np.reshape(aValue, (nsoil_layer,1))                                                     
+                                                dummy_index  = np.where( aParameter_filetype=='sol_k' )
+                                                dummy_index2 = aParameter_indices[dummy_index]
+                                                aData_out[:, dummy_index2] = aValue 
+                                                pass
+                                            else:
+                                                if 'soil albedo' in sLine.lower() and 'sol_alb' in aParameter_filetype:                                         
+                                                    sValue = (sLine.split(':'))[1].strip()
+                                                    aValue = np.array(sValue.split()).astype(float)   
+                                                    aValue = np.reshape(aValue, (nsoil_layer,1))                                                     
+                                                    dummy_index  = np.where( aParameter_filetype=='sol_alb' )
+                                                    dummy_index2 = aParameter_indices[dummy_index]
+                                                    aData_out[:, dummy_index2] = aValue 
+                                                    pass
+                                                else:
+                                                    if 'bulk density moist' in sLine.lower() and 'sol_bd' in aParameter_filetype:                                         
+                                                        sValue = (sLine.split(':'))[1].strip()
+                                                        aValue = np.array(sValue.split()).astype(float)   
+                                                        aValue = np.reshape(aValue, (nsoil_layer,1))                                                     
+                                                        dummy_index  = np.where( aParameter_filetype=='sol_bd' )
+                                                        dummy_index2 = aParameter_indices[dummy_index]
+                                                        aData_out[:, dummy_index2] = aValue  
+                                                        break
+                                                    else:
+                                                        pass
+                                                
+
+                                #close files
+                                ifs.close()
+
             
+            for iSoil_layer in range(1, nsoil_layer+1):
+                sSoil_layer = "{:01d}".format( iSoil_layer )
+                sLine = sSoil_layer 
+                for i in range(0, nParameter_soil):
+                    dValue = aData_out[iSoil_layer-1, i]
+                    sValue =  ',' + "{:0f}".format( dValue ) 
+                    sLine = sLine  + sValue
 
+                sLine = sLine + '\n'
+                ofs.write(sLine)
 
+            ofs.close()
             pass
+            
         return
 
     def swaty_prepare_watershed_configuration(self):
@@ -1401,7 +1563,8 @@ class swatcase(object):
         
         aSoil_name=list()
         aSoil_layer=list()
-        aSoil_info = list()
+        aSoil_info_name = list()
+        aSoil_info_layer = list()
         #check whether file exist
         if os.path.isfile(sFilename_watershed_configuration):
             pass
@@ -1453,7 +1616,8 @@ class swatcase(object):
                             #sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')
                             pass
 
-                        aSoil_info.append(nSoil_layer )
+                        aSoil_info_name.append(dummy_soil)
+                        aSoil_info_layer.append(nSoil_layer)
                                 
                     else:
                         sLine=(ifs.readline()).rstrip().decode("utf-8", 'ignore')
@@ -1464,14 +1628,14 @@ class swatcase(object):
         ofs = open(self.sFilename_soil_combination, 'w')
         nsoil = len(aSoil_name)
         for i in range(nsoil):
-            sLine = aSoil_name[i] + ', ' + "{:02d}".format( aSoil_layer[i]) + '\n'
+            sLine = aSoil_name[i].strip() + ', ' + "{:02d}".format( aSoil_layer[i]) + '\n'
             ofs.write(sLine)
         ofs.close()
 
         ofs = open(self.sFilename_soil_info, 'w')
-        nsoil = len(aSoil_info)
+        nsoil = len(aSoil_info_layer)
         for i in range(nsoil):
-            sLine = "{:02d}".format( aSoil_info[i]) + '\n'
+            sLine = aSoil_info_name[i].strip() + ', '  + "{:02d}".format( aSoil_info_layer[i]) + '\n'
             ofs.write(sLine)
         ofs.close()
         return
