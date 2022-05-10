@@ -120,7 +120,7 @@ oSwat = swaty_read_model_configuration_file(sFilename_configuration_in, \
 
 print(oSwat.tojson())
 
-oSwat.setup()
+oSwat.prepare_pest_template_files()
 
 
 print('Finished')

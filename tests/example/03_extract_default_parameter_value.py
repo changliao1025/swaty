@@ -17,17 +17,10 @@ from swaty.swaty_read_model_configuration_file import swaty_read_model_configura
 parser = argparse.ArgumentParser()
 
 iFlag_standalone=1
-iCase_index = 2
-sDate='20220320'
+iCase_index = 1
+sDate='20220504'
 
-pArgs = parser.parse_args()
-if len(sys.argv)> 1:
-    iFlag_standalone= pArgs.iFlag_standalone
-    iCase_index = pArgs.iCase_index
-    sDate = pArgs.sDate
-else:
-    print(len(sys.argv), 'Missing arguments')
-    pass
+
 
 sPath = realpath(str( Path().resolve() ))
 #this is the temp path which has auxiliray data, not the SWAT input
@@ -73,7 +66,7 @@ aParemeter_hru = np.array(['cn2','rchrg_dp','gwqmn','gw_revap','revapmn','gw_del
 nParameter_hru = len(aParemeter_hru)
 for j in np.arange(1, nParameter_hru+1):
     aPara_in['iParameter_type'] = 3
-    aPara_in['iIndex_subbasin'] = j
+    aPara_in['iIndex_hru'] = j
     aPara_in['sName']= aParemeter_hru[j-1]
     aPara_in['dValue_init']=0.0
     aPara_in['dValue_current']=0.01* j +0.01
@@ -88,7 +81,7 @@ aParemeter_soil = np.array(['sol_k','sol_awc','sol_alb','sol_bd'])
 nParameter_soil = len(aParemeter_soil)
 for j in np.arange(1, nParameter_soil+1):
     aPara_in['iParameter_type'] = 4
-    aPara_in['iIndex_subbasin'] = j
+    aPara_in['lIndex_soil_layer'] = j
     aPara_in['sName']= aParemeter_soil[j-1]
     aPara_in['dValue_init']=0.0
     aPara_in['dValue_current']=0.01* j +0.01
@@ -118,6 +111,7 @@ oSwat = swaty_read_model_configuration_file(sFilename_configuration_in, \
 print(oSwat.tojson())
 
 oSwat.extract_default_parameter_value(aParameter)
+oSwat.generate_parameter_bounds()
 
 
 print('Finished')

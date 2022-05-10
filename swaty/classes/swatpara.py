@@ -20,6 +20,7 @@ class swatpara(object):
     lIndex_subbasin=1
     lIndex_hru=1
     lIndex_soil_layer=1
+    iFlag_pseudo = 0
     dValue_init=0.0
     dValue_current=0.5
     dValue_lower=-1
@@ -28,6 +29,9 @@ class swatpara(object):
 
         if 'iParameter_type' in aConfig_in:
             self.iParameter_type = int(aConfig_in['iParameter_type'])
+        
+        if 'iFlag_pseudo' in aConfig_in:
+            self.iFlag_pseudo = int(aConfig_in['iFlag_pseudo'])
         
         if 'lIndex_subbasin' in aConfig_in:
             self.lIndex_subbasin = int(aConfig_in['lIndex_subbasin'])

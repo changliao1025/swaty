@@ -52,10 +52,12 @@ class pywatershed(object):
         if aPara_in is not None:
             self.nParameter_watershed = len(aPara_in)
             self.aParameter_watershed=list()
+            self.aParameter_watershed_name=list()
             for i in range(self.nParameter_watershed):
                 watershed_dummy = aPara_in[i]
                 pParameter_watershed = swatpara(watershed_dummy)
                 self.aParameter_watershed.append(pParameter_watershed)
+                self.aParameter_watershed_name.append(pParameter_watershed.sName)
         else:
             pass
         return

@@ -8,7 +8,77 @@
             "iIndex": 1,
             "iParameter_type": 3,
             "iSoil_layer": 1,
-            "sName": "CN2"
+            "sName": "cn2"
+        },
+        {
+            "dValue_current": 1.0,
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iIndex": 1,
+            "iParameter_type": 3,
+            "iSoil_layer": 1,
+            "sName": "rchrg_dp"
+        },
+        {
+            "dValue_current": 1.0,
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iIndex": 1,
+            "iParameter_type": 3,
+            "iSoil_layer": 1,
+            "sName": "gwqmn"
+        },
+        {
+            "dValue_current": 1.0,
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iIndex": 1,
+            "iParameter_type": 3,
+            "iSoil_layer": 1,
+            "sName": "gw_revap"
+        },
+        {
+            "dValue_current": 1.0,
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iIndex": 1,
+            "iParameter_type": 3,
+            "iSoil_layer": 1,
+            "sName": "revapmn"
+        },
+        {
+            "dValue_current": 1.0,
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iIndex": 1,
+            "iParameter_type": 3,
+            "iSoil_layer": 1,
+            "sName": "gw_delay"
+        },
+        {
+            "dValue_current": 1.0,
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iIndex": 1,
+            "iParameter_type": 3,
+            "iSoil_layer": 1,
+            "sName": "alpha_bf"
+        },
+        {
+            "dValue_current": 1.0,
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iIndex": 1,
+            "iParameter_type": 3,
+            "iSoil_layer": 1,
+            "sName": "ov_n"
         }
     ],
     "aParameter_soil": [
@@ -20,7 +90,37 @@
             "iIndex": 1,
             "iParameter_type": 3,
             "iSoil_layer": 1,
-            "sName": "SOL_ALB"
+            "sName": "sol_k"
+        },
+        {
+            "dValue_current": 1.0,
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iIndex": 1,
+            "iParameter_type": 3,
+            "iSoil_layer": 1,
+            "sName": "sol_awc"
+        },
+        {
+            "dValue_current": 1.0,
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iIndex": 1,
+            "iParameter_type": 3,
+            "iSoil_layer": 1,
+            "sName": "sol_alb"
+        },
+        {
+            "dValue_current": 1.0,
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iIndex": 1,
+            "iParameter_type": 3,
+            "iSoil_layer": 1,
+            "sName": "sol_bd"
         }
     ],
     "aParameter_subbasin": [
@@ -32,7 +132,37 @@
             "iIndex": 1,
             "iParameter_type": 2,
             "iSoil_layer": 1,
-            "sName": "CH_K2"
+            "sName": "ch_n2"
+        },
+        {
+            "dValue_current": 1.0,
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iIndex": 1,
+            "iParameter_type": 2,
+            "iSoil_layer": 1,
+            "sName": "ch_k2"
+        },
+        {
+            "dValue_current": 1.0,
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iIndex": 1,
+            "iParameter_type": 2,
+            "iSoil_layer": 1,
+            "sName": "plaps"
+        },
+        {
+            "dValue_current": 1.0,
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iIndex": 1,
+            "iParameter_type": 2,
+            "iSoil_layer": 1,
+            "sName": "tlaps"
         }
     ],
     "aParameter_watershed": [
@@ -44,9 +174,59 @@
             "iIndex": 1,
             "iParameter_type": 1,
             "iSoil_layer": 1,
-            "sName": "SFTMP"
+            "sName": "esco"
+        },
+        {
+            "dValue_current": 1.0,
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iIndex": 1,
+            "iParameter_type": 1,
+            "iSoil_layer": 1,
+            "sName": "ai0"
+        },
+        {
+            "dValue_current": 1.0,
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iIndex": 1,
+            "iParameter_type": 1,
+            "iSoil_layer": 1,
+            "sName": "sftmp"
+        },
+        {
+            "dValue_current": 1.0,
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iIndex": 1,
+            "iParameter_type": 1,
+            "iSoil_layer": 1,
+            "sName": "smtmp"
+        },
+        {
+            "dValue_current": 1.0,
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iIndex": 1,
+            "iParameter_type": 1,
+            "iSoil_layer": 1,
+            "sName": "timp"
+        },
+        {
+            "dValue_current": 1.0,
+            "dValue_init": 1.0,
+            "dValue_lower": -5.0,
+            "dValue_upper": 5.0,
+            "iIndex": 1,
+            "iParameter_type": 1,
+            "iSoil_layer": 1,
+            "sName": "epco"
         }
-    ],
+    ],    
     "iCase_index": 1,
     "iDay_end": 31,
     "iDay_start": 1,
@@ -63,10 +243,10 @@
     "iMonth_start": 1,
     "iYear_end": 2009,
     "iYear_start": 1997,
-    "nParameter_hru": 1,
-    "nParameter_soil": 1,
-    "nParameter_subbasin": 1,
-    "nParameter_watershed": 1,
+    "nParameter_hru": 8,
+    "nParameter_soil": 4,
+    "nParameter_subbasin": 4,
+    "nParameter_watershed": 6,
     "nhru": 2231,
     "nsegment": 87,
     "nstress_month": 156,

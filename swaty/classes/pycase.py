@@ -94,6 +94,7 @@ class swatcase(object):
     nParameter_watershed=0
     nParameter_subbasin=0
     nParameter_hru=0
+    nParameter_soil=0
 
     sFilename_swat_current = ''
     sFilename_model_configuration=''
@@ -280,6 +281,8 @@ class swatcase(object):
         self.sFilename_soil_combination = os.path.join(self.sWorkspace_input, 'soil_combination.txt')
         self.sFilename_soil_info = os.path.join(self.sWorkspace_input, 'soil_info.txt')
 
+        self.sFilename_parameter_bounds = os.path.join(self.sWorkspace_input,  'parameter_bounds.txt' )
+
         #set up instance
         self.pWatershed = pywatershed()
         
@@ -330,6 +333,25 @@ class swatcase(object):
                     pdummy.aSoil.append(dummy_soil)
 
                 self.aHru_combination.append(pdummy)
+
+            #self.aHru=list()
+            #dummy_index = 0
+            #for i in range(self.nsubbasin):
+            #    nhru = aSubbasin_info[i]
+            #    for j in range(nhru):
+            #        sHru = aHru_info[dummy_index]
+            #        pdummy = pyhru()
+            #        pdummy.lIndex = dummy_index + 1
+            #        sHru = aHru_combination[iHru_combination-1]
+            #        dummy_index = np.where(aHru_info == sHru)
+            #        dummy_index2= dummy_index[0][0]
+            #        dummy = aSoil_info[dummy_index2,:]
+            #        pdummy.nSoil_layer= int( dummy[1])
+            #        pdummy.aSoil=list()
+            #        for j in range(pdummy.nSoil_layer):
+            #            dummy_soil = pysoil()
+            #            pdummy.aSoil.append(dummy_soil)
+            #        self.aHru_combination.append(pdummy)
 
         else:
             if 'nsegment' in aConfig_in:
@@ -479,18 +501,33 @@ class swatcase(object):
 
         print('Finished copying all input files')
     
+    def prepare_pest_template_files(self):
+
+        self.swaty_prepare_watershed_template_file()
+        self.swaty_prepare_subbasin_template_file()
+        self.swaty_prepare_hru_template_file()
+        self.swaty_prepare_soil_template_file()
+
+        return
+
     def setup(self):
         """
         Set up a SWAT case
         """
         #self.copy_TxtInOut_files()
+
+        
         
         if (self.iFlag_replace_parameter == 1):
+
             self.swaty_prepare_watershed_parameter_file()
-            self.swaty_write_watershed_input_file()    
             self.swaty_prepare_subbasin_parameter_file()
-            self.swaty_write_subbasin_input_file()      
             self.swaty_prepare_hru_parameter_file()
+            self.swaty_prepare_soil_parameter_file()
+
+            #actual update parameter
+            self.swaty_write_watershed_input_file()                
+            self.swaty_write_subbasin_input_file()                 
             self.swaty_write_hru_input_file()        
         else:
             pass
@@ -498,6 +535,41 @@ class swatcase(object):
         self.swaty_copy_executable_file()
         sFilename_bash = self.swaty_prepare_simulation_bash_file()
         sFilename_job = self.swaty_prepare_simulation_job_file() 
+        return
+
+    def convert_pest_parameter_to_actual_parameter(self):
+        
+        sWorkspace_simulation_case = self.sWorkspace_output_case
+
+        #read the default parameter value
+        sFilename_pest_watershed = os.path.join( sWorkspace_simulation_case, 'watershed.para' )
+        aData_dummy = text_reader_string(sFilename_pest_watershed, cDelimiter_in=',')
+
+        #read pest default parameter value
+        sFilename_pest_watershed = os.path.join( sWorkspace_simulation_case, 'watershed_default_parameter.txt' )
+        aData_dummy = text_reader_string(sFilename_pest_watershed, cDelimiter_in=',')
+        #replace watershed by writing into a new file
+        sFilename_watershed_out = os.path.join( sWorkspace_simulation_case, 'watershed_updated.para' )
+        ofs=open(sFilename_watershed_out, 'w') 
+        
+
+
+
+
+        #read the default parameter value
+        #read pest parameter value
+        #replace subbains
+
+        #read the default parameter value
+        #read pest parameter value
+        #replace hru
+
+        #read the default parameter value
+        #read pest parameter value
+        #replace soil
+
+        #write to the actual swat input files
+
         return
 
     def run(self):
@@ -530,6 +602,15 @@ class swatcase(object):
         self.swaty_retrieve_soil_info()
 
         return
+    
+    def generate_parameter_bounds(self):
+
+        sFilename_parameter_bounds = self.sFilename_parameter_bounds
+        aData_dummy = text_reader_string(sFilename_parameter_bounds, cDelimiter_in=',', iSkipline_in=1)
+
+        
+
+        return
 
     def extract_default_parameter_value(self, aParameter_in):
 
@@ -539,19 +620,19 @@ class swatcase(object):
         for p in aParameter_in:
             if p.iParameter_type == 1:
                aParameter.append(p) 
-        #self.extract_default_parameter_value_watershed(aParameter)
+        self.extract_default_parameter_value_watershed(aParameter)
         #subbasin
         aParameter.clear()
         for p in aParameter_in:
             if p.iParameter_type == 2:
                aParameter.append(p)
-        #self.extract_default_parameter_value_subbasin(aParameter)
+        self.extract_default_parameter_value_subbasin(aParameter)
         #hru
         aParameter.clear()
         for p in aParameter_in:
             if p.iParameter_type == 3:
                aParameter.append(p)
-        #self.extract_default_parameter_value_hru(aParameter)
+        self.extract_default_parameter_value_hru(aParameter)
         #soil
         aParameter.clear()
         for p in aParameter_in:
@@ -756,6 +837,7 @@ class swatcase(object):
 
 
         return
+    
     def extract_default_parameter_value_subbasin(self, aParameter_subbasin):
         sWorkspace_source_case = self.sWorkspace_simulation_copy
         sWorkspace_target_case = self.sWorkspace_output_case
@@ -926,7 +1008,7 @@ class swatcase(object):
         #write parameter value    
         for iSubbasin in range(1, nsubbasin+1):
             sSubbasin = "{:05d}".format( iSubbasin )   
-            sLine = sSubbasin 
+            sLine = 'subbasin'+sSubbasin 
             for p in range(0, nParameter_subbasin):
                 dValue = aData_out[iSubbasin-1, p]
 
@@ -1230,7 +1312,7 @@ class swatcase(object):
         #write parameter value    
         for iHru in range(1, nhru_combination+1):
             sHru = "{:05d}".format( iHru )   
-            sLine = sHru 
+            sLine = 'hru' +sHru 
             for p in range(0, nParameter_hru):
                 dValue = aData_out[iHru-1, p]
                 sValue = ',' + "{:0f}".format( dValue ) 
@@ -1320,9 +1402,9 @@ class swatcase(object):
                         continue
 
         for iSoil in range(1, nsoil_combination+1):
-            sSoil_type =  "{:01d}".format( iSoil )
+            sSoil_type =  "{:02d}".format( iSoil )
             #open the new file to write out
-            sFilename  = 'soiltype_' + sSoil_type +'_default_parameter.txt'
+            sFilename  = 'soiltype_' + sSoil_type + '_default_parameter.txt'
             sFilename_soil_out = os.path.join(str(Path(sWorkspace_target_case)) ,  sFilename ) 
             ssoil_code = aSoil_combination[iSoil-1,0]
             nsoil_layer = int(aSoil_combination[iSoil-1,1])
@@ -1444,7 +1526,9 @@ class swatcase(object):
                 ofs.write(sLine)
 
             ofs.close()
+            print('Finished writing soil default parameter file!')
             pass
+            
             
         return
 
@@ -1679,6 +1763,45 @@ class swatcase(object):
 
         return
 
+    def swaty_prepare_watershed_template_file(self):
+        """
+        #prepare the pest control file
+        """      
+        sWorkspace_output_case = self.sWorkspace_output_case    
+
+        iFlag_simulation = self.iFlag_simulation
+        iFlag_watershed = self.iFlag_watershed
+
+        aParameter_watershed = self.pWatershed.aParameter_watershed
+        nParameter_watershed = self.pWatershed.nParameter_watershed
+
+        sFilename_watershed_template = os.path.join(str(Path(sWorkspace_output_case)), 'watershed.tpl' )     
+        
+        if iFlag_watershed ==1:    
+            ofs = open(sFilename_watershed_template, 'w')
+
+            sLine = 'watershed'
+            for i in range(nParameter_watershed):
+                sVariable = aParameter_watershed[i].sName
+                sLine = sLine + ',' + sVariable
+            sLine = sLine + '\n'        
+            ofs.write(sLine)
+
+            sLine = 'watershed'
+            for i in range(nParameter_watershed):
+                sValue =   aParameter_watershed[i].sName            
+                sValue = ' $' +  sValue    + '$'     
+                sLine = sLine + ', ' + sValue                
+
+            sLine = sLine + '\n'
+            ofs.write(sLine)
+            ofs.close()
+            print('watershed template is ready!')
+
+
+
+        return
+    
     def swaty_prepare_subbasin_parameter_file(self):
         """
         #prepare the pest control file
@@ -1728,25 +1851,58 @@ class swatcase(object):
 
         return
 
+    def swaty_prepare_subbasin_template_file(self):
+        """
+        #prepare the pest control file
+        """      
+        sWorkspace_output_case = self.sWorkspace_output_case    
+        
+        iFlag_subbasin = self.iFlag_subbasin
+        
+        nsubbasin = self.nsubbasin
+
+        
+        
+        sFilename_subbasin_template = os.path.join(str(Path(sWorkspace_output_case)) ,  'subbasin.tpl' )  
+        
+        if iFlag_subbasin ==1:    
+            ofs = open(sFilename_subbasin_template, 'w')
+
+           
+            aParameter_subbasin_name = self.aSubbasin[0].aParameter_subbasin_name
+            nParameter_subbasin = self.aSubbasin[0].nParameter_subbasin
+
+            sLine = 'subbasin'
+
+            for i in range(nParameter_subbasin):
+                sVariable = aParameter_subbasin_name[i]
+                sLine = sLine + ',' + sVariable
+            sLine = sLine + '\n'        
+            ofs.write(sLine)
+
+            sLine = 'subbasin'
+            for i in range(nParameter_subbasin):                
+                sValue =   aParameter_subbasin_name[i]          
+                sValue = ' $' +  sValue    + '$'                 
+                sLine = sLine + ', ' + sValue 
+            sLine = sLine + '\n'
+            ofs.write(sLine)
+            ofs.close()
+            print('subbasin template is ready!')
+
+
+
+        return
+
     def swaty_prepare_hru_parameter_file(self):
         """
         #prepare the pest control file
         """      
    
         sWorkspace_output_case = self.sWorkspace_output_case    
-
-
-        iFlag_simulation = self.iFlag_simulation
-     
+        iFlag_simulation = self.iFlag_simulation    
         iFlag_hru = self.iFlag_hru
-
-        
-        aParameter_hru_name=self.aHru[0].aParameter_hru_name
-
-        
-
-        #read hru type
-        
+        aParameter_hru_name=self.aHru_combination[0].aParameter_hru_name
         if os.path.isfile(self.sFilename_hru_combination):
             pass
         else:
@@ -1754,14 +1910,11 @@ class swatcase(object):
             return
         aData_all = text_reader_string(self.sFilename_hru_combination)
         nhru_type = len(aData_all)
-
-       
         sFilename_hru_template = os.path.join(str(Path(sWorkspace_output_case)) ,  'hru.para' )  
-            #sFilename_hru_template = sWorkspace_output_case + slash + 'hru.para'   
         
         if iFlag_hru ==1:    
             ofs = open(sFilename_hru_template, 'w')
-            nParameter_hru = self.aHru[0].nParameter_hru
+            nParameter_hru = self.aHru_combination[0].nParameter_hru
             sLine = 'hru'
             for i in range(nParameter_hru):
                 sVariable = aParameter_hru_name[i]
@@ -1773,8 +1926,8 @@ class swatcase(object):
                 sHru_type = "{:04d}".format( iHru_type + 1)
                 sLine = 'hru'+ sHru_type 
 
-                nParameter_hru = self.aHru[iHru_type].nParameter_hru
-                aParameter_hru = self.aHru[iHru_type].aParameter_hru
+                nParameter_hru = self.aHru_combination[iHru_type].nParameter_hru
+                aParameter_hru = self.aHru_combination[iHru_type].aParameter_hru
 
 
                 for i in range(nParameter_hru):
@@ -1784,6 +1937,154 @@ class swatcase(object):
                 ofs.write(sLine)
             ofs.close()
             print('hru parameter is ready!')
+
+        return
+
+    def swaty_prepare_hru_template_file(self):
+        """
+        #prepare the pest control file
+        """      
+   
+        sWorkspace_output_case = self.sWorkspace_output_case    
+        iFlag_simulation = self.iFlag_simulation    
+        iFlag_hru = self.iFlag_hru
+        aParameter_hru_name=self.aHru_combination[0].aParameter_hru_name
+        if os.path.isfile(self.sFilename_hru_combination):
+            pass
+        else:
+            print('The file does not exist!')
+            return
+        aData_all = text_reader_string(self.sFilename_hru_combination)
+        nhru_type = len(aData_all)
+        sFilename_hru_template = os.path.join(str(Path(sWorkspace_output_case)) ,  'hru.tpl' )  
+        
+        if iFlag_hru ==1:    
+            ofs = open(sFilename_hru_template, 'w')
+            nParameter_hru = self.aHru_combination[0].nParameter_hru
+            sLine = 'hru'
+            for i in range(nParameter_hru):
+                sVariable = aParameter_hru_name[i]
+                sLine = sLine + ',' + sVariable
+            sLine = sLine + '\n'        
+            ofs.write(sLine)
+
+            sLine = 'hru'
+            for i in range(nParameter_hru):
+                sValue = aParameter_hru_name[i]    
+                sValue = ' $' +  sValue    + '$'       
+                sLine = sLine + ', ' + sValue 
+            sLine = sLine + '\n'
+            ofs.write(sLine)
+            ofs.close()
+            print('hru template is ready!')
+
+        return
+
+    def swaty_prepare_soil_parameter_file(self):
+        sWorkspace_output_case = self.sWorkspace_output_case    
+        iFlag_simulation = self.iFlag_simulation    
+        iFlag_hru = self.iFlag_hru
+        aParameter_hru_name=self.aHru_combination[0].aParameter_hru_name
+        if os.path.isfile(self.sFilename_hru_combination):
+            pass
+        else:
+            print('The file does not exist!')
+            return
+        aData_all = text_reader_string(self.sFilename_hru_combination)
+        nhru_type = len(aData_all)
+        
+        sFilename_soil_combination = self.sFilename_soil_combination
+        aSoil_combination = text_reader_string(sFilename_soil_combination, cDelimiter_in = ',')
+        aSoil_combination = np.asarray(aSoil_combination)
+        nsoil_combination = self.nsoil_combination
+        aSoil_combination= aSoil_combination.reshape(nsoil_combination, 2) 
+        aSoil_combination_dummy= aSoil_combination[:,0]
+        sFilename_soil_info = self.sFilename_soil_info
+        aSoil_info = text_reader_string(sFilename_soil_info, cDelimiter_in = ',')
+        aSoil_info = np.array(aSoil_info)[:,0]
+        
+
+        if iFlag_hru ==1:                
+
+            for iSoil_type in range(1, nsoil_combination+1):
+                sSoil_type = "{:02d}".format( iSoil_type )
+                ssoil_code = aSoil_combination[iSoil_type-1,0]
+                nsoil_layer = int(aSoil_combination[iSoil_type-1,1])
+                sFilename_soil_template = os.path.join(str(Path(sWorkspace_output_case)) ,  'soiltype'+sSoil_type+ '.para' )  
+                ofs = open(sFilename_soil_template, 'w')
+                nParameter_soil = self.aHru_combination[0].aSoil[0].nParameter_soil
+                aParameter_soil_name = self.aHru_combination[0].aSoil[0].aParameter_soil_name
+                sLine = 'soil layer'
+                for i in range(1,nParameter_soil+1):
+                    sVariable = aParameter_soil_name[i-1]
+                    sLine = sLine + ',' + sVariable
+                sLine = sLine + '\n'        
+                ofs.write(sLine)  
+                
+                           
+                for iSoil_layer in range(1, nsoil_layer + 1):  
+                    sSoil_layer = "{:02d}".format( iSoil_layer )      
+                    sLine = 'layer'+ sSoil_layer           
+                    aParameter_soil = self.aHru_combination[0].aSoil[0].aParameter_soil
+                    for i in range(nParameter_soil):
+                        sValue =  "{:5.2f}".format( aParameter_soil[i].dValue_init )            
+                        sLine = sLine + ', ' + sValue 
+                    sLine = sLine + '\n'
+                    ofs.write(sLine)
+            ofs.close()
+            print('hru parameter is ready!')
+
+        return
+
+    def swaty_prepare_soil_template_file(self):
+        sWorkspace_output_case = self.sWorkspace_output_case    
+        iFlag_simulation = self.iFlag_simulation    
+        iFlag_hru = self.iFlag_hru
+        aParameter_hru_name=self.aHru_combination[0].aParameter_hru_name
+        if os.path.isfile(self.sFilename_hru_combination):
+            pass
+        else:
+            print('The file does not exist!')
+            return
+        aData_all = text_reader_string(self.sFilename_hru_combination)
+        nhru_type = len(aData_all)
+        
+        sFilename_soil_combination = self.sFilename_soil_combination
+        aSoil_combination = text_reader_string(sFilename_soil_combination, cDelimiter_in = ',')
+        aSoil_combination = np.asarray(aSoil_combination)
+        nsoil_combination = self.nsoil_combination
+        aSoil_combination= aSoil_combination.reshape(nsoil_combination, 2) 
+        aSoil_combination_dummy= aSoil_combination[:,0]
+        sFilename_soil_info = self.sFilename_soil_info
+        aSoil_info = text_reader_string(sFilename_soil_info, cDelimiter_in = ',')
+        aSoil_info = np.array(aSoil_info)[:,0]
+        
+
+        if iFlag_hru ==1:                
+
+            sFilename_soil_template = os.path.join(str(Path(sWorkspace_output_case)) ,  'soil.tpl' )  
+            ofs = open(sFilename_soil_template, 'w')
+            nParameter_soil = self.aHru_combination[0].aSoil[0].nParameter_soil
+            aParameter_soil_name = self.aHru_combination[0].aSoil[0].aParameter_soil_name                 
+            sLine='soil'  
+            for i in range(nParameter_soil):
+                sValue =  aParameter_soil_name[i]       
+                sLine = sLine + ', ' + sValue 
+            sLine = sLine + '\n'
+            ofs.write(sLine)
+
+            sLine='soil' 
+            for i in range(nParameter_soil):
+                sValue =  aParameter_soil_name[i]   
+                sValue = ' $' +  sValue    + '$'     
+                sLine = sLine + ', ' + sValue 
+            sLine = sLine + '\n'
+            ofs.write(sLine)
+
+             
+            
+            ofs.close()
+            print('soil template is ready!')
 
         return
 
@@ -1928,32 +2229,32 @@ class swatcase(object):
                                 break  #important
                             else:
 
-                                if 'esco' in sLine.lower() and 'ESCO' in aParameter_filetype: 
-                                    dummy = 'ESCO'                             
+                                if 'esco' in sLine.lower() and 'esco' in aParameter_filetype: 
+                                    dummy = 'esco'                             
                                     dummy_index1 = np.where(aParameter_filetype == dummy)
                                     dummy_index2 = aParameter_indices[dummy_index1][0]
                                     sLine_new = "{:16.3f}".format(  aParameter_watershed[dummy_index2].dValue_current   )     + '    | pest parameter ESCO' + '\n'
                                     ofs.write(sLine_new)
                                     print(sLine_new)
                                 else:
-                                    if 'smfmx' in sLine.lower() and 'SMFMX' in aParameter_filetype: 
-                                        dummy = 'SMFMX'                             
+                                    if 'smfmx' in sLine.lower() and 'smfmx' in aParameter_filetype: 
+                                        dummy = 'smfmx'                             
                                         dummy_index1 = np.where(aParameter_filetype == dummy)
                                         dummy_index2 = aParameter_indices[dummy_index1][0]
                                         sLine_new = "{:16.3f}".format(  aParameter_watershed[dummy_index2].dValue_current   )     + '    | pest parameter SMFMX' + '\n'
                                         ofs.write(sLine_new)
                                         print(sLine_new)
                                     else:
-                                        if 'timp' in sLine.lower() and 'TIMP' in aParameter_filetype: 
-                                            dummy = 'TIMP'                             
+                                        if 'timp' in sLine.lower() and 'timp' in aParameter_filetype: 
+                                            dummy = 'timp'                             
                                             dummy_index1 = np.where(aParameter_filetype == dummy)
                                             dummy_index2 = aParameter_indices[dummy_index1][0]
                                             sLine_new = "{:16.3f}".format(  aParameter_watershed[dummy_index2].dValue_current   )     + '    | pest parameter TIMP' + '\n'
                                             ofs.write(sLine_new)
                                             print(sLine_new)
                                         else:
-                                            if 'epco' in sLine.lower() and 'EPCO' in aParameter_filetype: 
-                                                dummy = 'EPCO'                             
+                                            if 'epco' in sLine.lower() and 'epco' in aParameter_filetype: 
+                                                dummy = 'epco'                             
                                                 dummy_index1 = np.where(aParameter_filetype == dummy)
                                                 dummy_index2 = aParameter_indices[dummy_index1][0]
                                                 sLine_new = "{:16.3f}".format(  aParameter_watershed[dummy_index2].dValue_current   )     + '    | pest parameter EPCO' + '\n'
@@ -2101,15 +2402,15 @@ class swatcase(object):
                         for i in range(0, aParameter_count[iFile_type]):
                             aParameter_indices = np.array(aParameter_index[iFile_type])
                             aParameter_filetype = np.array(aParameter_user[iFile_type])
-                            if 'ch_k2' in sLine.lower()  and 'CH_K2' in aParameter_filetype:    
-                                dummy_index1 = np.where(aParameter_filetype == 'CH_K2')                            
+                            if 'ch_k2' in sLine.lower()  and 'ch_k2' in aParameter_filetype:    
+                                dummy_index1 = np.where(aParameter_filetype == 'ch_k2')                            
                                 dummy_index2 = aParameter_indices[dummy_index1][0]
                                 sLine_new = "{:14.5f}".format(  aValue[dummy_index2].dValue_current  )     + '    | pest parameter ch_k2 \n'
                                 ofs.write(sLine_new)                            
                                 break                            
                             else:
-                                if 'ch_n2' in sLine.lower() and 'CH_N2' in aParameter_filetype:                                
-                                    dummy_index1 = np.where(aParameter_filetype == 'CH_N2')                               
+                                if 'ch_n2' in sLine.lower() and 'ch_n2' in aParameter_filetype:                                
+                                    dummy_index1 = np.where(aParameter_filetype == 'ch_n2')                               
                                     dummy_index2 = aParameter_indices[dummy_index1][0]
                                     sLine_new = "{:14.5f}".format(  aValue[dummy_index2].dValue_current  )     + '    | pest parameter ch_n2 \n'
                                     ofs.write(sLine_new)    
@@ -2139,11 +2440,11 @@ class swatcase(object):
     
         #aParameter_hru = self.aParameter_hru
         
-        nParameter_hru = self.aHru[0].nParameter_hru
-        aParameter_hru_name = self.aHru[0].aParameter_hru_name
+        nParameter_hru = self.aHru_combination[0].nParameter_hru
+        aParameter_hru_name = self.aHru_combination[0].aParameter_hru_name
 
-        nParameter_soil= self.aHru[0].aSoil[0].nParameter_soil
-        aParameter_soil_name = self.aHru[0].aSoil[0].aParameter_soil_name
+        nParameter_soil= self.aHru_combination[0].aSoil[0].nParameter_soil
+        aParameter_soil_name = self.aHru_combination[0].aSoil[0].aParameter_soil_name
 
         nsubbasin = self.nsubbasin
         nhru = self.nhru
@@ -2175,7 +2476,7 @@ class swatcase(object):
         aExtension = ('.chm','.gw','.hru','.mgt','.sdr', '.sep', '.sol')
         #now we can add corresponding possible variables
         aCHM =[]
-        aGW = ['rchrg_dp', 'gwqmn', 'gw_revap','revapmn']
+        aGW = ['rchrg_dp', 'gwqmn', 'gw_revap','revapmn','gw_delay','alpha_bf']
         aHRU =['ov_n']
         aMGT = ['cn2']
         aSDR = []
@@ -2196,6 +2497,10 @@ class swatcase(object):
                 pass
             else:
                 if sParameter_hru in aGW:
+                    if( aParameter_table[1] is None  ):
+                        aParameter_table[1] = np.array(sParameter_hru)
+                    else:
+                        aParameter_table[1]=np.append(aParameter_table[1],sParameter_hru)  
                     pass
                 else:
                     if sParameter_hru in aHRU:
@@ -2203,9 +2508,9 @@ class swatcase(object):
                     else:
                         if sParameter_hru in aMGT:
                             if( aParameter_table[3] is None  ):
-                                aParameter_table[3] = sParameter_hru
+                                aParameter_table[3] = np.array(sParameter_hru)
                             else:
-                                aParameter_table[3].append(sParameter_hru)                             
+                                aParameter_table[3]=np.append(aParameter_table[3],sParameter_hru)                          
                         else:
                             if sParameter_hru in aSDR:
                                 pass
@@ -2213,22 +2518,17 @@ class swatcase(object):
                                 if sParameter_hru in aSEP:
                                     pass
                                 else:
-                                    if sParameter_hru in aSOL:
-                                        if( aParameter_table[6] is None  ):
-                                            aParameter_table[6] = sParameter_hru
-                                        else:
-                                            aParameter_table[6].append(sParameter_hru) 
-                                    else:
-                                        pass
+                                    
+                                    pass
 
         #soil level
         for iVariable in range(nParameter_soil):
             sParameter_soil = aParameter_soil_name[iVariable]           
             if sParameter_soil in aSOL:
                 if( aParameter_table[6] is None  ):
-                    aParameter_table[6] = sParameter_soil
+                    aParameter_table[6] = np.array(sParameter_soil)
                 else:
-                    aParameter_table[6].append(sParameter_soil) 
+                    aParameter_table[6]= np.append(aParameter_table[6],sParameter_soil)
             else:
                 pass                            
                                     
@@ -2301,7 +2601,7 @@ class swatcase(object):
                 iIndex = np.where(aHru_combination == sHru_code)
                 iHru_index = iHru_index + 1
 
-                aParameter_hru = self.aHru[iIndex[0][0]].aParameter_hru
+                aParameter_hru = self.aHru_combination[iIndex[0][0]].aParameter_hru
 
                 for iFile_type in range(0, nFile_type):
                     #check whether these is parameter chanage or not
@@ -2333,15 +2633,15 @@ class swatcase(object):
                                     if 'Soil Albedo (Moist)' in sLine:                                        
                                         dummy1 = np.array(aParameter_index[iFile_type])
                                         dummy2 = np.array(aParameter_user[iFile_type])
-                                        dummy_index1 = np.where(dummy2 == 'SOL_ALB')
-                                        dummy_index2 = dummy1[dummy_index1][0]
+                                        dummy_index1 = np.where(dummy2 == 'sol_alb')
+                                        dummy_index2 = dummy1[dummy_index1]
                                         sLine_new = '{0: <27}'.format(' Soil Albedo (Moist) ')
-                                        if 'SOL_ALB' in dummy2:
-                                            nSoil_layer = self.aHru[iIndex[0][0]].nSoil_layer                                                
-                                            dummy_index1 = np.where(dummy2 == 'SOL_ALB')                                            
+                                        if 'sol_alb' in dummy2:
+                                            nSoil_layer = self.aHru_combination[iIndex[0][0]].nSoil_layer                                                
+                                            dummy_index1 = np.where(dummy2 == 'sol_alb')                                            
                                             dummy_index2 = dummy1[dummy_index1][0]
                                             for j in range(nSoil_layer):
-                                                aParameter_soil = self.aHru[iIndex[0][0]].aSoil[j].aParameter_soil
+                                                aParameter_soil = self.aHru_combination[iIndex[0][0]].aSoil[j].aParameter_soil
                                                 sLine_new = sLine_new +  "{:12.2f}".format( aParameter_soil[dummy_index2].dValue_current  ) 
                                             sLine_new = sLine_new + '\n'
                                             ofs.write(sLine_new)
@@ -2354,12 +2654,12 @@ class swatcase(object):
                                             sLine_new = '{0: <27}'.format(' Ave. AW Incl. Rock: ')
                                             dummy1 = np.array(aParameter_index[iFile_type])
                                             dummy2 = np.array(aParameter_user[iFile_type])
-                                            if 'AWC' in dummy2:
-                                                nSoil_layer = self.aHru[iIndex[0][0]].nSoil_layer                                                
-                                                dummy_index1 = np.where(dummy2 == 'SOL_AWC')                                            
+                                            if 'sol_awc' in dummy2:
+                                                nSoil_layer = self.aHru_combination[iIndex[0][0]].nSoil_layer                                                
+                                                dummy_index1 = np.where(dummy2 == 'sol_awc')                                            
                                                 dummy_index2 = dummy1[dummy_index1][0]
                                                 for j in range(nSoil_layer):
-                                                    aParameter_soil = self.aHru[iIndex[0][0]].aSoil[j].aParameter_soil
+                                                    aParameter_soil = self.aHru_combination[iIndex[0][0]].aSoil[j].aParameter_soil
                                                     sLine_new = sLine_new +  "{:12.2f}".format( aParameter_soil[dummy_index2].dValue_current  ) 
                                                 sLine_new = sLine_new + '\n'
                                                 ofs.write(sLine_new)
@@ -2402,11 +2702,11 @@ class swatcase(object):
                                 for i in range(0, aParameter_count[iFile_type]):
                                     #sKey = aParameter[i]
                                     if 'cn2' in sLine.lower() : 
-                                        dummy = 'CN2' + "{:02d}".format(iSubbasin) \
+                                        dummy = 'cn2' + "{:02d}".format(iSubbasin) \
                                         + "{:02d}".format(iHru) 
                                         dummy1 = np.array(aParameter_index[iFile_type])
                                         dummy2 = np.array(aParameter_user[iFile_type])
-                                        dummy_index1 = np.where(dummy2 == 'CN2')
+                                        dummy_index1 = np.where(dummy2 == 'cn2')
                                         dummy_index2 = dummy1[dummy_index1][0]
                                         sLine_new = "{:16.2f}".format(  aValue[dummy_index2].dValue_current  )     + '    | pest parameter CN2 \n'
                                         ofs.write(sLine_new)

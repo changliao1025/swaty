@@ -138,6 +138,14 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
     
 
     if iFlag_paramter ==1:
+        #oSwat.nParameter_watershed = 0
+        #oSwat.nParameter_subbasin = 0
+        #oSwat.nParameter_hru = 0
+        #oSwat.nParameter_soil = 0
+        #oSwat.aParameter_watershed = list()
+        #oSwat.aParameter_subbasin = list()
+        #oSwat.aParameter_hru = list()
+        #oSwat.aParameter_soil = list()
         for i in range(len(aParameter)):
             pParameter = aParameter[i]
             sName = pParameter.sName
@@ -147,20 +155,21 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
             lIndex_soil_layer = pParameter.lIndex_soil_layer
             dValue = pParameter.dValue_current
             iFlag_found = 0
-            if iType == 1:                
-                for j in range(oSwat.nParameter_watershed):
-                    pPara = oSwat.aParameter_watershed[j]
+            if iType == 1:      
+                          
+                for j in range(oSwat.pWatershed.nParameter_watershed):
+                    pPara = oSwat.pWatershed.aParameter_watershed[j]
                     sName1 = pPara.sName
                     if sName.lower() == sName1.lower():
                         #replace
-                        oSwat.aParameter_watershed[j].dValue_current = dValue
+                        oSwat.pWatershed.aParameter_watershed[j].dValue_current = dValue
                         iFlag_found = 1
                         break
                 
                 #if iFlag_found == 0:
                 #    #this one is not in the list yet
                 #    pass
-                    
+                pass    
             else:
                 if iType == 2: #subbasin level
                     #get name index
@@ -179,27 +188,27 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
                 else: #hru level
                     if iType == 3:
                         for j in np.arange(oSwat.nhru_combination ):
-                            iIndex_name = oSwat.aHru[j].aParameter_hru_name.index(sName) 
-                            pPara = oSwat.aHru[j].aParameter_hru[iIndex_name]
+                            iIndex_name = oSwat.aHru_combination[j].aParameter_hru_name.index(sName) 
+                            pPara = oSwat.aHru_combination[j].aParameter_hru[iIndex_name]
                             sName1 = pPara.sName
                             iIndex1 = pPara.lIndex_hru
                             if  lIndex_hru == iIndex1:
                                 #replace
-                                oSwat.aSubbasin[j].aParameter_subbasin[iIndex_name].dValue_current = dValue
+                                oSwat.aHru_combination[j].aParameter_hru[iIndex_name].dValue_current = dValue
                                 iFlag_found = 1
                                 break
                         pass
                     else: #soil layer
                         for j in np.arange(oSwat.nhru_combination ):
-                            for k in np.arange(oSwat.aHru[j].nSoil_layer):
-                                iIndex_name = oSwat.aHru[j].aSoil[k].aParameter_soil_name.index(sName) 
-                                pPara = oSwat.aHru[j].aSoil[k].aParameter_soil[iIndex_name]
+                            for k in np.arange(oSwat.aHru_combination[j].nSoil_layer):
+                                iIndex_name = oSwat.aHru_combination[j].aSoil[k].aParameter_soil_name.index(sName) 
+                                pPara = oSwat.aHru_combination[j].aSoil[k].aParameter_soil[iIndex_name]
                                 sName1 = pPara.sName
                                 iIndex0 = pPara.lIndex_hru
                                 iIndex1 = pPara.lIndex_soil_layer
                                 if lIndex_hru ==iIndex0 and  lIndex_soil_layer == iIndex1:
                                     #replace
-                                    oSwat.aHru[j].aSoil[k].aParameter_soil[iIndex_name].dValue_current = dValue
+                                    oSwat.aHru_combination[j].aSoil[k].aParameter_soil[iIndex_name].dValue_current = dValue
                                     iFlag_found = 1
                                     break
                         pass
