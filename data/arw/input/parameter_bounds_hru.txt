@@ -1,0 +1,8 @@
+cn2,40,95
+rchrg_dp,0,1
+gwqmn,0,5000
+gw_revap,0,0.2
+revapmn,1,500
+gw_delay,1,100
+alpha_bf,0.01,0.99
+ov_n,0.008,0.6

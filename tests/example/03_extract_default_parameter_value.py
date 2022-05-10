@@ -110,7 +110,7 @@ oSwat = swaty_read_model_configuration_file(sFilename_configuration_in, \
 
 print(oSwat.tojson())
 
-oSwat.extract_default_parameter_value(aParameter)
+#oSwat.extract_default_parameter_value(aParameter)
 oSwat.generate_parameter_bounds()
 
 

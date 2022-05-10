@@ -1,0 +1,6 @@
+esco,0.01,1
+sftmp,-5,5
+smtmp,-5,5
+smfmx,4.15,6.9
+timp,0.01,1
+epco,0.01,1

@@ -608,7 +608,77 @@ class swatcase(object):
         sFilename_parameter_bounds = self.sFilename_parameter_bounds
         aData_dummy = text_reader_string(sFilename_parameter_bounds, cDelimiter_in=',', iSkipline_in=1)
 
-        
+        aName = aData_dummy[:, 1]
+        aLower = aData_dummy[:, 2]
+        aUpper = aData_dummy[:, 3]
+
+        nParameter = aName.size
+
+        aParameter_watershed = ['sftmp','smtmp','esco','smfmx','timp','epco']
+        aParameter_subbasin = ['ch_k2','ch_n2','plaps','tlaps']
+        aParameter_hru = ['cn2', 'rchrg_dp', 'gwqmn', 'gw_revap','revapmn','gw_delay','alpha_bf','ov_n']
+        aParameter_soil = ['sol_awc','sol_k','sol_alb','sol_bd']
+        #split into different group?
+
+        aData_out_watershed = list()
+        aData_out_subbasin = list()
+        aData_out_hru = list()
+        aData_out_soil = list()
+        for i in range(nParameter):
+            sPara = aName[i].lower()
+            dValue_lower = aLower[i]
+            dValue_upper = aUpper[i]
+            #sLower = "{:0f}".format( dValue_lower )
+            #sUpper = "{:0f}".format( dValue_upper )
+
+            if sPara in aParameter_watershed:
+                sLine = sPara + ',' + dValue_lower + ',' + dValue_upper
+                aData_out_watershed.append(sLine)
+                pass
+            else:
+                if sPara in aParameter_subbasin:
+                    sLine = sPara + ',' + dValue_lower + ',' + dValue_upper
+                    aData_out_subbasin.append(sLine)
+                    pass
+                else:
+                    if sPara in aParameter_hru:
+                        sLine = sPara + ',' + dValue_lower + ',' + dValue_upper
+                        aData_out_hru.append(sLine)
+                        pass
+                    else:
+                        sLine = sPara + ',' + dValue_lower + ',' + dValue_upper
+                        aData_out_soil.append(sLine)
+                        pass
+
+                    pass
+                pass
+            pass
+
+        #export
+        sFilename_parameter_bounds_watershed = os.path.join(self.sWorkspace_input,  'parameter_bounds_watershed.txt' )
+        ofs=open(sFilename_parameter_bounds_watershed, 'w') 
+        for i in aData_out_watershed:
+            ofs.write(i + '\n')
+        ofs.close()
+
+        sFilename_parameter_bounds_subbasin = os.path.join(self.sWorkspace_input,  'parameter_bounds_subbasin.txt' )
+        ofs=open(sFilename_parameter_bounds_subbasin, 'w') 
+        for i in aData_out_subbasin:
+            ofs.write(i + '\n')
+        ofs.close()
+
+        sFilename_parameter_bounds_hru = os.path.join(self.sWorkspace_input,  'parameter_bounds_hru.txt' )
+        ofs=open(sFilename_parameter_bounds_hru, 'w') 
+        for i in aData_out_hru:
+            ofs.write(i + '\n')
+        ofs.close()
+
+        sFilename_parameter_bounds_soil = os.path.join(self.sWorkspace_input,  'parameter_bounds_soil.txt' )
+        ofs=open(sFilename_parameter_bounds_soil, 'w') 
+        for i in aData_out_soil:
+            ofs.write(i + '\n')
+        ofs.close()
+
 
         return
 
