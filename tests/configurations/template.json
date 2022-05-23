@@ -231,6 +231,7 @@
     "iDay_end": 31,
     "iDay_start": 1,
     "iFlag_calibration": 0,
+    "iFlag_initialization": 1,
     "iFlag_hru": 1,
     "iFlag_mode": 1,
     "iFlag_replace_parameter": 1,

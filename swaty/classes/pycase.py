@@ -62,6 +62,7 @@ class swatcase(object):
     iFlag_run =0
     iFlag_standalone=1
     iFlag_simulation=1
+    iFlag_initialization=1
     iFlag_calibration=0
     iFlag_watershed=0
     iFlag_subbasin=0
@@ -136,6 +137,9 @@ class swatcase(object):
             else:
                 self.iFlag_read_discretization=0
 
+        
+        if 'iFlag_initialization' in aConfig_in:
+            self.iFlag_initialization =  int(aConfig_in['iFlag_initialization']) 
         
         if 'iFlag_calibration' in aConfig_in:
             self.iFlag_calibration =  int(aConfig_in['iFlag_calibration']) 
@@ -281,7 +285,7 @@ class swatcase(object):
         self.sFilename_soil_combination = os.path.join(self.sWorkspace_input, 'soil_combination.txt')
         self.sFilename_soil_info = os.path.join(self.sWorkspace_input, 'soil_info.txt')
 
-        self.sFilename_parameter_bounds = os.path.join(self.sWorkspace_input,  'parameter_bounds.txt' )
+        
 
         #set up instance
         self.pWatershed = pywatershed()
@@ -514,27 +518,48 @@ class swatcase(object):
         """
         Set up a SWAT case
         """
-        #self.copy_TxtInOut_files()
-
         
-        
-        if (self.iFlag_replace_parameter == 1):
 
-            self.swaty_prepare_watershed_parameter_file()
-            self.swaty_prepare_subbasin_parameter_file()
-            self.swaty_prepare_hru_parameter_file()
-            self.swaty_prepare_soil_parameter_file()
+        if (self.iFlag_initialization ==1):
+            #self.copy_TxtInOut_files()
+            if (self.iFlag_replace_parameter == 1):            
+                self.swaty_prepare_watershed_parameter_file()
+                self.swaty_prepare_subbasin_parameter_file()
+                self.swaty_prepare_hru_parameter_file()
+                self.swaty_prepare_soil_parameter_file()
 
-            #actual update parameter
+                #actual update parameter
+                self.swaty_write_watershed_input_file()                
+                self.swaty_write_subbasin_input_file()                 
+                self.swaty_write_hru_input_file()        
+            else:
+                pass    
+
+            pass
+        else: #during calibration
+            #an inital simulation is needed?
+                      
+            self.convert_pest_parameter_to_model_input()   #this step only construct object
             self.swaty_write_watershed_input_file()                
             self.swaty_write_subbasin_input_file()                 
-            self.swaty_write_hru_input_file()        
-        else:
+            self.swaty_write_hru_input_file()
             pass
+
+        
+        
+        
 
         self.swaty_copy_executable_file()
         sFilename_bash = self.swaty_prepare_simulation_bash_file()
         sFilename_job = self.swaty_prepare_simulation_job_file() 
+        return
+    
+    def convert_pest_parameter_to_model_input(self):
+        self.convert_pest_parameter_to_actual_parameter()
+
+        #build object
+
+
         return
 
     def convert_pest_parameter_to_actual_parameter(self):
@@ -543,30 +568,105 @@ class swatcase(object):
 
         #read the default parameter value
         sFilename_pest_watershed = os.path.join( sWorkspace_simulation_case, 'watershed.para' )
-        aData_dummy = text_reader_string(sFilename_pest_watershed, cDelimiter_in=',')
+        aData_dummy0 = text_reader_string(sFilename_pest_watershed, cDelimiter_in=',')
 
         #read pest default parameter value
         sFilename_pest_watershed = os.path.join( sWorkspace_simulation_case, 'watershed_default_parameter.txt' )
-        aData_dummy = text_reader_string(sFilename_pest_watershed, cDelimiter_in=',')
+        aData_dummy1 = text_reader_string(sFilename_pest_watershed, cDelimiter_in=',')
+
+        #read the bound        
+        sFilename_parameter_bounds_watershed = os.path.join(self.sWorkspace_input,  'parameter_bounds_watershed.txt' )
+        aData_dummy2 = text_reader_string(sFilename_parameter_bounds_watershed, cDelimiter_in=',')
+
         #replace watershed by writing into a new file
         sFilename_watershed_out = os.path.join( sWorkspace_simulation_case, 'watershed_updated.para' )
         ofs=open(sFilename_watershed_out, 'w') 
+
+        #assume the paramete may be out of bound because of the ratio operations
+        #maintain the order of the parameter
+
+        sLine_header = aData_dummy0[0,:]
+        nParameter_watershed  = sLine_header.shape[0] - 1
+        sLine_header = ','.join(sLine_header)
+        sLine = sLine_header + '\n'
+        ofs.write(sLine)
         
+        aData_dummy00 = aData_dummy0[1,1:(nParameter_watershed+1)]
+        self.nParameter_watershed = nParameter_watershed
+        sLine = 'watershed'
+        for i in range(nParameter_watershed):
+            # we assume the order are the same as well, because the default parameter should be extracted using the same configuration
 
+            # we must verify that the bounds have a same order 
+          
+            dValue = float(aData_dummy00[i])
+            dValue_lower = float(aData_dummy2[i,1])
+            dValue_upper = float(aData_dummy2[i,2])
+            if dValue < dValue_lower:
+                dValue = dValue_lower
+            if dValue > dValue_upper:
+                dValue = dValue_upper
 
+            sLine = sLine + ',' + "{:0f}".format( dValue )
+    
+            pass
+        sLine = sLine + '\n'
+        ofs.write(sLine)
+        ofs.close()
 
-
+        
+        #subbasin
         #read the default parameter value
-        #read pest parameter value
-        #replace subbains
+        sFilename_pest_subbasin = os.path.join( sWorkspace_simulation_case, 'subbasin.para' )
+        aData_dummy0 = text_reader_string(sFilename_pest_subbasin, cDelimiter_in=',')
 
-        #read the default parameter value
-        #read pest parameter value
-        #replace hru
+        #read pest default parameter value
+        sFilename_pest_subbasin = os.path.join( sWorkspace_simulation_case, 'subbasin_default_parameter.txt' )
+        aData_dummy1 = text_reader_string(sFilename_pest_subbasin, cDelimiter_in=',')
 
-        #read the default parameter value
-        #read pest parameter value
-        #replace soil
+        #read the bound        
+        sFilename_parameter_bounds_subbasin = os.path.join(self.sWorkspace_input,  'parameter_bounds_subbasin.txt' )
+        aData_dummy2 = text_reader_string(sFilename_parameter_bounds_subbasin, cDelimiter_in=',')
+
+        #replace subbasin by writing into a new file
+        sFilename_subbasin_out = os.path.join( sWorkspace_simulation_case, 'subbasin_updated.para' )
+        ofs=open(sFilename_subbasin_out, 'w') 
+
+        #assume the paramete may be out of bound because of the ratio operations
+        #maintain the order of the parameter
+
+        sLine_header = aData_dummy0[0,:]
+        nParameter_subbasin  = sLine_header.shape[0] - 1
+        sLine_header = ','.join(sLine_header)
+        sLine = sLine_header + '\n'
+        ofs.write(sLine)
+        
+        aData_dummy00 = aData_dummy0[1,1:(nParameter_subbasin+1)]
+        self.nParameter_subbasin = nParameter_subbasin
+        
+        for iSubbasin in range(1, self.nsubbasin):
+            sSubbasin = "{:05d}".format( iSubbasin )   
+            sLine = sSubbasin
+            for j in range(nParameter_subbasin):
+                # we assume the order are the same as well, because the default parameter should be extracted using the same configuration
+
+                # we must verify that the bounds have a same order 
+
+                dValue = float(aData_dummy00[j])
+                dValue_lower = float(aData_dummy2[j,1])
+                dValue_upper = float(aData_dummy2[j,2])
+                if dValue < dValue_lower:
+                    dValue = dValue_lower
+                if dValue > dValue_upper:
+                    dValue = dValue_upper
+
+                sLine = sLine + ',' + "{:0f}".format( dValue )
+
+                pass
+            sLine = sLine + '\n'
+            ofs.write(sLine)
+        ofs.close()
+       
 
         #write to the actual swat input files
 
@@ -2102,7 +2202,7 @@ class swatcase(object):
                     sLine = sLine + '\n'
                     ofs.write(sLine)
             ofs.close()
-            print('hru parameter is ready!')
+            print('soil parameter is ready!')
 
         return
 
