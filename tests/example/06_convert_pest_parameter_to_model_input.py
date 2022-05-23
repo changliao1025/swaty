@@ -27,12 +27,6 @@ sWorkspace_data = ( sPath +  '/data/arw' )
 #the actual path to input data
 sWorkspace_input = str(Path(sWorkspace_data)  /  'input')
 
-#set up a parameter
-
-
-
-
-
 #the desired output workspace
 sWorkspace_output = '/global/cscratch1/sd/liao313/04model/swat/arw/simulation'
 #where is the swat binary is stored
