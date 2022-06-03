@@ -554,6 +554,15 @@ class swatcase(object):
         sFilename_job = self.swaty_prepare_simulation_job_file() 
         return
     
+    def setup_pest_calibration(self):
+        #to setup a pest calibration, there are multiple steps
+
+        #cope swat file
+        #copy swat binary
+        
+
+
+        return
     def convert_pest_parameter_to_model_input(self):
         self.convert_pest_parameter_to_actual_parameter()
 
@@ -599,17 +608,18 @@ class swatcase(object):
         sLine = sLine_header + '\n'
         ofs.write(sLine)
         
-        aData_dummy00 = aData_dummy0[1,1:(nParameter_watershed+1)]
+        aData_dummy00 = aData_dummy0[0,1:(nParameter_watershed+1)]
+        aData_dummy01 = aData_dummy0[1,1:(nParameter_watershed+1)]
         self.nParameter_watershed = nParameter_watershed
         sLine = 'watershed'
         for i in range(nParameter_watershed):
             # we assume the order are the same as well, because the default parameter should be extracted using the same configuration
 
             # we must verify that the bounds have a same order 
-          
-            dValue = float(aData_dummy00[i])
-            dValue_lower = float(aData_dummy2[i,1])
-            dValue_upper = float(aData_dummy2[i,2])
+            sName = aData_dummy00[i] #not used since no ratio consider
+            dValue = float(aData_dummy01[i].strip())
+            dValue_lower = float(aData_dummy2[i,1].strip())
+            dValue_upper = float(aData_dummy2[i,2].strip())
             if dValue < dValue_lower:
                 dValue = dValue_lower
             if dValue > dValue_upper:
@@ -622,6 +632,7 @@ class swatcase(object):
         ofs.write(sLine)
         ofs.close()
         pass
+    
     def convert_pest_subbasin_parameter_to_actual_parameter(self):
         sWorkspace_simulation_case = self.sWorkspace_output_case
         #subbasin
@@ -650,7 +661,8 @@ class swatcase(object):
         sLine = sLine_header + '\n'
         ofs.write(sLine)
         
-        aData_dummy00 = aData_dummy0[1,1:(nParameter_subbasin+1)]
+        aData_dummy00 = aData_dummy0[0,1:(nParameter_subbasin+1)]
+        aData_dummy01 = aData_dummy0[1,1:(nParameter_subbasin+1)]
         self.nParameter_subbasin = nParameter_subbasin
         
         for iSubbasin in range(1, self.nsubbasin):
@@ -660,10 +672,10 @@ class swatcase(object):
                 # we assume the order are the same as well, because the default parameter should be extracted using the same configuration
 
                 # we must verify that the bounds have a same order 
-
-                dValue = float(aData_dummy00[j])
-                dValue_lower = float(aData_dummy2[j,1])
-                dValue_upper = float(aData_dummy2[j,2])
+                sName = aData_dummy00[j]
+                dValue = float(aData_dummy01[j].strip())
+                dValue_lower = float(aData_dummy2[j,1].strip())
+                dValue_upper = float(aData_dummy2[j,2].strip())
                 if dValue < dValue_lower:
                     dValue = dValue_lower
                 if dValue > dValue_upper:
@@ -699,8 +711,11 @@ class swatcase(object):
         sLine = sLine_header + '\n'
         ofs.write(sLine)
         
-        aData_dummy00 = aData_dummy0[1,1:(nParameter_hru+1)]
+        aData_dummy00 = aData_dummy0[0,1:(nParameter_hru+1)]
+        aData_dummy01 = aData_dummy0[1:,1:(nParameter_hru+1)]
         self.nParameter_hru = nParameter_hru
+
+        aName_ratio= ['cn2','ov_n']
         
         for iHru in range(1, self.nhru_combination):
             sHRU = "{:04d}".format( iHru )   
@@ -708,9 +723,18 @@ class swatcase(object):
             for j in range(nParameter_hru):
                 # we assume the order are the same as well, because the default parameter should be extracted using the same configuration
                 # we must verify that the bounds have a same order
-                dValue = float(aData_dummy00[j])
-                dValue_lower = float(aData_dummy2[j,1])
-                dValue_upper = float(aData_dummy2[j,2])
+
+                sName = aData_dummy00[j].strip()
+                if sName in aName_ratio:
+                    dValue_default = float(aData_dummy1[iHru,j+1].strip())
+                    dRatio = float(aData_dummy01[iHru-1,j].strip())
+                    dValue =  dValue_default * dRatio
+                else:
+                    dRatio = 1.0
+                    dValue = float(aData_dummy01[iHru-1,j].strip()) * dRatio
+
+                dValue_lower = float(aData_dummy2[j,1].strip())
+                dValue_upper = float(aData_dummy2[j,2].strip())
                 if dValue < dValue_lower:
                     dValue = dValue_lower
                 if dValue > dValue_upper:
@@ -733,7 +757,7 @@ class swatcase(object):
         aSoil_combination = text_reader_string(sFilename_soil_combination, cDelimiter_in = ',')
         aSoil_combination = np.asarray(aSoil_combination)
         aSoil_combination= aSoil_combination.reshape(nsoil_combination, 2) 
-
+        aName_ratio= ['sol_k','sol_awc','sol_alb','sol_bd']
         for iSoil_type in range(1, nsoil_combination+1 ):
 
             sSoil_type = "{:02d}".format( iSoil_type )
@@ -760,18 +784,28 @@ class swatcase(object):
             sLine = sLine_header + '\n'
             ofs.write(sLine)
 
-            aData_dummy00 = aData_dummy0[1,1:(nParameter_soil+1)]
+            aData_dummy00 = aData_dummy0[0,1:(nParameter_soil+1)]
+            aData_dummy01 = aData_dummy0[1,1:(nParameter_soil+1)]
             self.nParameter_soil = nParameter_soil
 
-            #only replace the first line
+            #only replace the first line/soil layer
             sSoil_layer = "{:02d}".format( 1 ) 
             sLine = 'soillayer'+sSoil_layer
             for j in range(nParameter_soil):
                 # we assume the order are the same as well, because the default parameter should be extracted using the same configuration
                 # we must verify that the bounds have a same order 
-                dValue = float(aData_dummy00[j])
-                dValue_lower = float(aData_dummy2[j,1])
-                dValue_upper = float(aData_dummy2[j,2])
+                sName = aData_dummy00[j].strip()
+                if sName in aName_ratio:
+                    dValue_default = float(aData_dummy1[1,j+1].strip())
+                    dRatio = float(aData_dummy01[j].strip())
+                    dValue =  dValue_default * dRatio
+                else:
+                    dRatio = 1.0
+                    dValue = float(aData_dummy01[j].strip()) * dRatio
+
+                
+                dValue_lower = float(aData_dummy2[j,1].strip())
+                dValue_upper = float(aData_dummy2[j,2].strip())
                 if dValue < dValue_lower:
                     dValue = dValue_lower
                 if dValue > dValue_upper:
@@ -2297,7 +2331,29 @@ class swatcase(object):
         aSoil_info = np.array(aSoil_info)[:,0]
         
 
-        if iFlag_hru ==1:                
+        if iFlag_hru ==1:       
+
+            #single para for testing  
+            sFilename_soil_template = os.path.join(str(Path(sWorkspace_output_case)) ,  'soil.para' )  
+            ofs = open(sFilename_soil_template, 'w')
+            nParameter_soil = self.aHru_combination[0].aSoil[0].nParameter_soil
+            aParameter_soil_name = self.aHru_combination[0].aSoil[0].aParameter_soil_name
+            sLine = 'soil'
+            for i in range(1,nParameter_soil+1):
+                sVariable = aParameter_soil_name[i-1]
+                sLine = sLine + ',' + sVariable
+            sLine = sLine + '\n'        
+            ofs.write(sLine)      
+            
+            sSoil_layer = "{:02d}".format( 1 )      
+            sLine = 'soillayer'+ sSoil_layer           
+            aParameter_soil = self.aHru_combination[0].aSoil[0].aParameter_soil
+            for i in range(nParameter_soil):
+                sValue =  "{:5.2f}".format( aParameter_soil[i].dValue_init )            
+                sLine = sLine + ',' + sValue 
+            sLine = sLine + '\n'
+            ofs.write(sLine)
+
 
             for iSoil_type in range(1, nsoil_combination+1):
                 sSoil_type = "{:02d}".format( iSoil_type )
@@ -2321,7 +2377,7 @@ class swatcase(object):
                     aParameter_soil = self.aHru_combination[0].aSoil[0].aParameter_soil
                     for i in range(nParameter_soil):
                         sValue =  "{:5.2f}".format( aParameter_soil[i].dValue_init )            
-                        sLine = sLine + ', ' + sValue 
+                        sLine = sLine + ',' + sValue 
                     sLine = sLine + '\n'
                     ofs.write(sLine)
             ofs.close()
@@ -3200,18 +3256,26 @@ class swatcase(object):
         print('Finished extracting stream discharge: ' + sFilename_out)
 
     def export_config_to_json(self, sFilename_output):
+        aSkip = [ 'aSubbasin'    ]
+        obj = self.__dict__.copy()
+        for sKey in aSkip:
+            obj.pop(sKey, None)
+            pass
+        
+
         with open(sFilename_output, 'w', encoding='utf-8') as f:
-            json.dump(self.__dict__, f,sort_keys=True, \
+            json.dump(obj, f,sort_keys=True, \
                 ensure_ascii=False, \
                 indent=4, cls=CaseClassEncoder)
         return
 
     def tojson(self):
-        aSkip = []      
+        aSkip = [ 'aSubbasin'    ]  
 
         obj = self.__dict__.copy()
         for sKey in aSkip:
             obj.pop(sKey, None)
+
         sJson = json.dumps(obj,\
             sort_keys=True, \
                 indent = 4, \

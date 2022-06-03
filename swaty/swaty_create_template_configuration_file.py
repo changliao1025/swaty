@@ -9,7 +9,7 @@ from swaty.classes.pycase import swatcase
 
 from swaty.classes.swatpara import swatpara
 
-def swaty_generate_template_configuration_file(sFilename_json, sWorkspace_input, sWorkspace_output,sPath_bin, iFlag_standalone_in=None, iCase_index_in = None, sDate_in = None):
+def swaty_create_template_configuration_file(sFilename_json,sPath_bin, sWorkspace_input, sWorkspace_output,  iFlag_standalone_in=None, iCase_index_in = None, sDate_in = None):
     if iCase_index_in is not None:        
         iCase_index = iCase_index_in
     else:       

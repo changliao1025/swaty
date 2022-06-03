@@ -9,7 +9,7 @@ for handler in logging.root.handlers[:]:
 logging.basicConfig(format='%(asctime)s %(message)s')
 logging.warning('is the time swaty simulation started.')
 
-from swaty.swaty_generate_template_configuration_file import swaty_generate_template_configuration_file
+from swaty.swaty_create_template_configuration_file import swaty_generate_template_configuration_file
 
 #used the parser if you want to run this script from the command line 
 parser = argparse.ArgumentParser()
