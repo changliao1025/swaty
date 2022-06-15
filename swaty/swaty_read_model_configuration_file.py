@@ -222,5 +222,5 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
 
 
    
-    
+    oSwat.sFilename_model_configuration = sFilename_configuration_in
     return oSwat

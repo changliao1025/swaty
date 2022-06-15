@@ -45,10 +45,8 @@ def swaty_create_template_configuration_file(sFilename_json,sPath_bin, sWorkspac
     aConfig['iFlag_hru'] = 1
 
     aConfig['iFlag_mode'] = 1 
-    aConfig['iFlag_replace_parameter'] = 1 
-    
-    
-    
+    aConfig['iFlag_replace_parameter'] = 1  
+        
     #the python bin on your system
     aConfig['sPython']  = '/global/homes/l/liao313/.conda/envs/swatenv/bin/python'
     
@@ -164,6 +162,8 @@ def swaty_create_template_configuration_file(sFilename_json,sPath_bin, sWorkspac
 
     oModel.aParameter_soil=aParameter_soil
     oModel.nParameter_soil = len(aParameter_soil)
+
+    oModel.sFilename_model_configuration = sFilename_json
 
     oModel.export_config_to_json(sFilename_json)
     return oModel

@@ -9,7 +9,7 @@ for handler in logging.root.handlers[:]:
 logging.basicConfig(format='%(asctime)s %(message)s')
 logging.warning('is the time swaty simulation started.')
 
-from swaty.swaty_create_template_configuration_file import swaty_generate_template_configuration_file
+from swaty.swaty_create_template_configuration_file import swaty_create_template_configuration_file
 
 #used the parser if you want to run this script from the command line 
 parser = argparse.ArgumentParser()
@@ -48,7 +48,7 @@ sPath_bin = str(Path(sPath)  /  'bin')
 sFilename_configuration_in = sPath +  '/tests/configurations/template.json'
 
 #the module to generate a confiug file
-oSwat = swaty_generate_template_configuration_file(sFilename_configuration_in, \
+oSwat = swaty_create_template_configuration_file(sFilename_configuration_in, \
     sWorkspace_input, \
         sWorkspace_output, sPath_bin, \
             iFlag_standalone_in=iFlag_standalone, iCase_index_in=iCase_index, sDate_in=sDate)

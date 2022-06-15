@@ -122,5 +122,4 @@ print(oSwat.tojson())
 
 oSwat.setup()
 
-
 print('Finished')
