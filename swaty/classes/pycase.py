@@ -186,8 +186,7 @@ class swatcase(object):
         if 'sFilename_model_configuration' in aConfig_in:
             self.sFilename_model_configuration    = aConfig_in[ 'sFilename_model_configuration']
         
-        if 'sWorkspace_home' in aConfig_in:
-            self.sWorkspace_home = aConfig_in[ 'sWorkspace_home']
+       
         if 'sWorkspace_input' in aConfig_in:
             self.sWorkspace_input = aConfig_in[ 'sWorkspace_input']
        
@@ -246,8 +245,6 @@ class swatcase(object):
             self.sWorkspace_simulation_copy='TxtInOut.tar'
             self.sWorkspace_simulation_copy = os.path.join(self.sWorkspace_input,  self.sWorkspace_simulation_copy )
 
-        
-
         if 'sFilename_LandUseSoilsReport' in aConfig_in:
             self.sFilename_LandUseSoilsReport = aConfig_in[ 'sFilename_LandUseSoilsReport']
         else:
@@ -259,36 +256,22 @@ class swatcase(object):
         else:
             self.sFilename_HRULandUseSoilsReport = 'HRULandUseSoilsReport.txt'
         self.sFilename_HRULandUseSoilsReport =  os.path.join(self.sWorkspace_input,  self.sFilename_HRULandUseSoilsReport )
-          
-        
-        
-        if 'sFilename_hru_combination' in aConfig_in:
-            self.sFilename_hru_combination =   aConfig_in['sFilename_hru_combination'] 
-        else:
-            self.sFilename_hru_combination = 'hru_combination.txt'
-        
-        self.sFilename_hru_combination = os.path.join(self.sWorkspace_output,  self.sFilename_hru_combination )
-            
 
-        if 'sFilename_watershed_configuration' in aConfig_in:
-            self.sFilename_watershed_configuration = aConfig_in['sFilename_watershed_configuration'] 
+        if 'sFilename_parameter_bounds' in aConfig_in:
+            self.sFilename_parameter_bounds = aConfig_in[ 'sFilename_parameter_bounds']
         else:
-            self.sFilename_watershed_configuration =  'watershed_configuration.txt'
-            
-        self.sFilename_watershed_configuration = os.path.join(self.sWorkspace_output, self.sFilename_watershed_configuration )
-
-        if 'sFilename_hru_info' in aConfig_in:
-            self.sFilename_hru_info = aConfig_in['sFilename_hru_info'] 
-        else:
-            self.sFilename_hru_info = aConfig_in['hru_info.txt'] 
-            
-        self.sFilename_hru_info = os.path.join(self.sWorkspace_output,  self.sFilename_hru_info )
+            self.sFilename_parameter_bounds = 'parameter_bounds.txt'
+        self.sFilename_parameter_bounds =  os.path.join(self.sWorkspace_input,  self.sFilename_parameter_bounds )
+        
+        self.sFilename_hru_combination = os.path.join(self.sWorkspace_output,  'hru_combination.txt' )
+                        
+        self.sFilename_watershed_configuration = os.path.join(self.sWorkspace_output, 'watershed_configuration.txt' )
+        
+        self.sFilename_hru_info = os.path.join(self.sWorkspace_output,  'hru_info.txt' )
 
         #soil
         self.sFilename_soil_combination = os.path.join(self.sWorkspace_output, 'soil_combination.txt')
         self.sFilename_soil_info = os.path.join(self.sWorkspace_output, 'soil_info.txt')
-
-        
 
         #set up instance
         self.pWatershed = pywatershed()
@@ -340,25 +323,6 @@ class swatcase(object):
                     pdummy.aSoil.append(dummy_soil)
 
                 self.aHru_combination.append(pdummy)
-
-            #self.aHru=list()
-            #dummy_index = 0
-            #for i in range(self.nsubbasin):
-            #    nhru = aSubbasin_info[i]
-            #    for j in range(nhru):
-            #        sHru = aHru_info[dummy_index]
-            #        pdummy = pyhru()
-            #        pdummy.lIndex = dummy_index + 1
-            #        sHru = aHru_combination[iHru_combination-1]
-            #        dummy_index = np.where(aHru_info == sHru)
-            #        dummy_index2= dummy_index[0][0]
-            #        dummy = aSoil_info[dummy_index2,:]
-            #        pdummy.nSoil_layer= int( dummy[1])
-            #        pdummy.aSoil=list()
-            #        for j in range(pdummy.nSoil_layer):
-            #            dummy_soil = pysoil()
-            #            pdummy.aSoil.append(dummy_soil)
-            #        self.aHru_combination.append(pdummy)
 
         else:
             if 'nsegment' in aConfig_in:
@@ -439,13 +403,9 @@ class swatcase(object):
         """
         sFilename_configuration_in
         sModel
-        """
-        sWorkspace_output = self.sWorkspace_output      
-
-        if self.iFlag_calibration == 1:
-            sWorkspace_target_case = os.getcwd()
-        else:
-            sWorkspace_target_case = sWorkspace_output   
+        """        
+        
+        sWorkspace_target_case = self.sWorkspace_output   
 
         Path(sWorkspace_target_case).mkdir(parents=True, exist_ok=True)
 
@@ -524,23 +484,27 @@ class swatcase(object):
         
 
         if (self.iFlag_initialization ==1):
-            #self.copy_TxtInOut_files()
-            if (self.iFlag_replace_parameter == 1):            
-                self.swaty_prepare_watershed_parameter_file()
-                self.swaty_prepare_subbasin_parameter_file()
-                self.swaty_prepare_hru_parameter_file()
-                self.swaty_prepare_soil_parameter_file()
+            #self.copy_TxtInOut_files()                       
+            self.swaty_prepare_watershed_parameter_file()
+            self.swaty_prepare_subbasin_parameter_file()
+            self.swaty_prepare_hru_parameter_file()
+            self.swaty_prepare_soil_parameter_file()
+            #actual update parameter
+            #self.swaty_write_watershed_input_file()                
+            #self.swaty_write_subbasin_input_file()                 
+            #self.swaty_write_hru_input_file()        
+               
 
+            pass
+        else: #during calibration
+            #an inital simulation is needed?
+            if (self.iFlag_replace_parameter == 1):                           
                 #actual update parameter
                 self.swaty_write_watershed_input_file()                
                 self.swaty_write_subbasin_input_file()                 
                 self.swaty_write_hru_input_file()        
             else:
-                pass    
-
-            pass
-        else: #during calibration
-            #an inital simulation is needed?
+                pass               
                       
             self.convert_pest_parameter_to_model_input()   #this step only construct object
             self.swaty_write_watershed_input_file()                
@@ -555,14 +519,9 @@ class swatcase(object):
         self.swaty_copy_executable_file()
         sFilename_bash = self.swaty_prepare_simulation_bash_file()
         sFilename_job = self.swaty_prepare_simulation_job_file() 
-        return
-    
-    def setup_pest_calibration(self):
-        #to setup a pest calibration, there are multiple steps
-
-        #cope swat file
-        #copy swat binary
         
+    
+    
 
 
         return
@@ -862,6 +821,8 @@ class swatcase(object):
         self.swaty_prepare_watershed_configuration()
         self.swaty_retrieve_soil_info()
 
+        #update?
+
         return
     
     def generate_parameter_bounds(self):
@@ -916,25 +877,25 @@ class swatcase(object):
             pass
 
         #export
-        sFilename_parameter_bounds_watershed = os.path.join(self.sWorkspace_input,  'parameter_bounds_watershed.txt' )
+        sFilename_parameter_bounds_watershed = os.path.join(self.sWorkspace_output,  'parameter_bounds_watershed.txt' )
         ofs=open(sFilename_parameter_bounds_watershed, 'w') 
         for i in aData_out_watershed:
             ofs.write(i + '\n')
         ofs.close()
 
-        sFilename_parameter_bounds_subbasin = os.path.join(self.sWorkspace_input,  'parameter_bounds_subbasin.txt' )
+        sFilename_parameter_bounds_subbasin = os.path.join(self.sWorkspace_output,  'parameter_bounds_subbasin.txt' )
         ofs=open(sFilename_parameter_bounds_subbasin, 'w') 
         for i in aData_out_subbasin:
             ofs.write(i + '\n')
         ofs.close()
 
-        sFilename_parameter_bounds_hru = os.path.join(self.sWorkspace_input,  'parameter_bounds_hru.txt' )
+        sFilename_parameter_bounds_hru = os.path.join(self.sWorkspace_output,  'parameter_bounds_hru.txt' )
         ofs=open(sFilename_parameter_bounds_hru, 'w') 
         for i in aData_out_hru:
             ofs.write(i + '\n')
         ofs.close()
 
-        sFilename_parameter_bounds_soil = os.path.join(self.sWorkspace_input,  'parameter_bounds_soil.txt' )
+        sFilename_parameter_bounds_soil = os.path.join(self.sWorkspace_output,  'parameter_bounds_soil.txt' )
         ofs=open(sFilename_parameter_bounds_soil, 'w') 
         for i in aData_out_soil:
             ofs.write(i + '\n')
@@ -944,6 +905,8 @@ class swatcase(object):
         return
 
     def extract_default_parameter_value(self, aParameter_in):
+
+
 
 
         #watershed
@@ -3153,15 +3116,8 @@ class swatcase(object):
         #copy swat
         
         sFilename_swat_source = os.path.join(str(Path(sWorkspace_bin)) ,  sFilename_swat )
-
-        
-        if self.iFlag_simulation ==1:
-            sPath_current = sWorkspace_output
-        else:
-            sPath_current = os.getcwd()
-        
-     
-        sFilename_swat_new = os.path.join(str(Path(sPath_current)) ,  'swat' )
+             
+        sFilename_swat_new = os.path.join(str(Path(sWorkspace_output)) ,  'swat' )
 
         print(sFilename_swat_source)
         print(sFilename_swat_new)
@@ -3377,7 +3333,7 @@ class swatcase(object):
         print('Finished extracting stream discharge: ' + sFilename_out)
 
     def export_config_to_json(self, sFilename_output):
-        aSkip = [ 'aSubbasin'    ]
+        aSkip = [ 'aSubbasin' ,'aHru_combination' ]
         obj = self.__dict__.copy()
         for sKey in aSkip:
             obj.pop(sKey, None)
