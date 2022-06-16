@@ -2441,7 +2441,6 @@ class swatcase(object):
         nan_index = np.where(aDischarge_observation == missing_value)
 
         #write instruction
-        #sFilename_instruction = sWorkspace_pest_model + slash + self.sFilename_instruction
         ofs= open(sFilename_instruction,'w')
         ofs.write('pif $\n')
 
