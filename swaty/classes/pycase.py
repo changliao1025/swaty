@@ -68,6 +68,7 @@ class swatcase(object):
     iFlag_watershed=0
     iFlag_subbasin=0
     iFlag_hru=0
+    iFlag_soil=0
     iFlag_mode=0
     iYear_start=0
     iYear_end=0
@@ -88,6 +89,8 @@ class swatcase(object):
     pWatershed = None
     aSubbasin=None
     aHru=None
+    aHru_combination=None
+    aSoil_combinaiton = None
 
     #aParameter_hru = None
     #aParameter_hru_name = None
@@ -152,6 +155,9 @@ class swatcase(object):
             self.iFlag_subbasin =  int(aConfig_in['iFlag_subbasin']) 
         if 'iFlag_hru' in aConfig_in:
             self.iFlag_hru =  int(aConfig_in['iFlag_hru']) 
+        if 'iFlag_soil' in aConfig_in:
+            self.iFlag_soil =  int(aConfig_in['iFlag_soil']) 
+            
         
         if 'iFlag_mode' in aConfig_in:
             self.iFlag_mode   = int( aConfig_in['iFlag_mode']) 
@@ -304,6 +310,7 @@ class swatcase(object):
 
             aSoil_combinaiton = text_reader_string(self.sFilename_soil_combination, cDelimiter_in=',')
             self.nsoil_combination = len(aSoil_combinaiton)
+            self.aSoil_combinaiton= aSoil_combinaiton
 
 
             self.aHru_combination=list()
@@ -2006,14 +2013,14 @@ class swatcase(object):
         ofs = open(self.sFilename_soil_combination, 'w')
         nsoil = len(aSoil_name)
         for i in range(nsoil):
-            sLine = aSoil_name[i].strip() + ', ' + "{:02d}".format( aSoil_layer[i]) + '\n'
+            sLine = aSoil_name[i].strip() + ',' + "{:0d}".format( aSoil_layer[i]) + '\n'
             ofs.write(sLine)
         ofs.close()
 
         ofs = open(self.sFilename_soil_info, 'w')
         nsoil = len(aSoil_info_layer)
         for i in range(nsoil):
-            sLine = aSoil_info_name[i].strip() + ', '  + "{:02d}".format( aSoil_info_layer[i]) + '\n'
+            sLine = aSoil_info_name[i].strip() + ','  + "{:0d}".format( aSoil_info_layer[i]) + '\n'
             ofs.write(sLine)
         ofs.close()
         return
@@ -2407,27 +2414,10 @@ class swatcase(object):
     def swaty_create_pest_instruction_file(self, sFilename_instruction):
         """
         prepare pest instruction file
-        """
-        sWorkspace_scratch=self.sWorkspace_scratch 
-        sWorkspace_data =  self.sWorkspace_data 
-        sWorkspace_project =  self.sWorkspace_project    
-        sRegion =  self.sRegion 
-        sModel =  self.sModel 
-        sWorkspace_data_project = sWorkspace_data + slash + sWorkspace_project
-        sWorkspace_calibration_case = self.sWorkspace_calibration_case
-
-        sWorkspace_pest_model = sWorkspace_calibration_case 
-        sWorkspace_simulation_copy = self.sWorkspace_simulation_copy
-
-        iYear_start =  self.iYear_start  
-        iYear_end  =   self.iYear_end  
-        #nsegment =  self.nsegment  
-    
-        nstress = self.nstress
+        """            
         nstress_month = self.nstress_month
 
-        sFilename_observation = sWorkspace_data_project + slash + 'auxiliary' + slash \
-            + 'usgs' + slash + 'discharge' + slash + 'discharge_observation_monthly.txt'
+        sFilename_observation = os.path.join( self.sWorkspace_input,'discharge_observation_monthly.txt' )
         if os.path.isfile(sFilename_observation):
             pass
         else:
@@ -2441,11 +2431,11 @@ class swatcase(object):
         nan_index = np.where(aDischarge_observation == missing_value)
 
         #write instruction
+    
         ofs= open(sFilename_instruction,'w')
         ofs.write('pif $\n')
 
         #we need to consider that there is missing value in the observations
-
         #changed from daily to monthly
         for i in range(0, nstress_month):
             dDummy = aDischarge_observation[i]

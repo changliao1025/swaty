@@ -50,6 +50,7 @@ def swaty_create_template_configuration_file(sFilename_json,sPath_bin, sWorkspac
     aConfig['iFlag_watershed'] = 1  
     aConfig['iFlag_subbasin'] = 1
     aConfig['iFlag_hru'] = 1
+    aConfig['iFlag_soil'] = 1
 
     aConfig['iFlag_mode'] = 1 
     aConfig['iFlag_replace_parameter'] = 1  
