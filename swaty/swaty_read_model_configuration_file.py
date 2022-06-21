@@ -50,7 +50,7 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
         pass
 
     if iFlag_read_discretization_in is not None:
-        iFlag_read_discretization=1
+        iFlag_read_discretization=iFlag_read_discretization_in
     else:
         iFlag_read_discretization=0
         pass
@@ -134,18 +134,11 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
     sFilename_swat = aConfig['sFilename_swat']   
     
     #data
-    oSwat = swatcase(aConfig)
+    oSwat = swatcase(aConfig, aParameter_in = aParameter_in)
     
 
-    if iFlag_paramter ==1:
-        #oSwat.nParameter_watershed = 0
-        #oSwat.nParameter_subbasin = 0
-        #oSwat.nParameter_hru = 0
-        #oSwat.nParameter_soil = 0
-        #oSwat.aParameter_watershed = list()
-        #oSwat.aParameter_subbasin = list()
-        #oSwat.aParameter_hru = list()
-        #oSwat.aParameter_soil = list()
+    if iFlag_paramter ==1:        
+        
         for i in range(len(aParameter)):
             pParameter = aParameter[i]
             sName = pParameter.sName
@@ -172,8 +165,7 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
                 pass    
             else:
                 if iType == 2: #subbasin level
-                    #get name index
-                                       
+                    #get name index                                       
                     for j in np.arange(oSwat.nsubbasin ):
                         iIndex_name = oSwat.aSubbasin[j].aParameter_subbasin_name.index(sName) 
                         pPara = oSwat.aSubbasin[j].aParameter_subbasin[iIndex_name]

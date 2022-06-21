@@ -82,18 +82,16 @@ class swatcase(object):
     nhru_combination=0  #unique hru
     aConfig_in=None
 
-    #aParameter_watershed = None
-    #aParameter_subbasin = None
-    #aParameter_subbasin_name = None
+    aParameter_watershed_name = None    
+    aParameter_subbasin_name = None
+    aParameter_hru_name = None
+    aParameter_soil_name = None
 
     pWatershed = None
     aSubbasin=None
     aHru=None
     aHru_combination=None
     aSoil_combinaiton = None
-
-    #aParameter_hru = None
-    #aParameter_hru_name = None
 
     nParameter=0
     nParameter_watershed=0
@@ -121,7 +119,7 @@ class swatcase(object):
     def __init__(self, aConfig_in,\
         iFlag_read_discretization_in=None,\
         iFlag_standalone_in= None,\
-        sDate_in=None, sWorkspace_output_in=None):
+        sDate_in=None, sWorkspace_output_in=None, aParameter_in = None):
 
         if 'iFlag_run' in aConfig_in:
             self.iFlag_run =  int(aConfig_in['iFlag_run']) 
@@ -134,7 +132,7 @@ class swatcase(object):
                 self.iFlag_standalone=1
 
         if iFlag_read_discretization_in is not None:
-            self.iFlag_read_discretization = 1
+            self.iFlag_read_discretization = int(iFlag_read_discretization_in)
         else:
             if 'iFlag_read_discretization' in aConfig_in:
                 self.iFlag_read_discretization =int(aConfig_in['iFlag_read_discretization'])
@@ -366,43 +364,135 @@ class swatcase(object):
                 iMonth_count = iMonth_count  + 1
                 pass     
 
-        self.nstress_month = iMonth_count        
+        self.nstress_month = iMonth_count    
+      
+            
         
-        if 'nParameter_watershed' in aConfig_in:
-            self.nParameter_watershed = int(aConfig_in['nParameter_watershed'] )
-        else:
-            self.nParameter_watershed = 0
-        if 'nParameter_subbasin' in aConfig_in:
-            self.nParameter_subbasin = int(aConfig_in['nParameter_subbasin'] )
-        else:
-            self.nParameter_subbasin = 0
+        if self.iFlag_read_discretization == 1:
+            if 'aParameter_watershed_name' in aConfig_in:
+                dummy = aConfig_in['aParameter_watershed_name']
+                self.pWatershed.aParameter_watershed_name = dummy
+                self.aParameter_watershed_name = dummy
+                aParameter_watershed=list()
+                for i in range(len(self.aParameter_watershed_name)):
+                    aPara_in = {}
+                    aPara_in['iParameter_type']=1
+                    aPara_in['sName']=self.aParameter_watershed_name[i]
+                    aPara_in['dValue_init']=0
+                    aPara_in['dValue_lower']=0
+                    aPara_in['dValue_upper']=0
+                    pPara_watershed = swatpara(aPara_in)
+                    aParameter_watershed.append(pPara_watershed)
+                
+                self.pWatershed.aParameter_watershed=aParameter_watershed
+                self.pWatershed.nParameter_watershed=len(aParameter_watershed)
+                    
+    
+            if 'aParameter_subbasin_name' in aConfig_in:
+                dummy = aConfig_in['aParameter_subbasin_name']
+                self.aParameter_subbasin_name = dummy
 
-        if 'nParameter_hru' in aConfig_in:
-            self.nParameter_hru = int(aConfig_in['nParameter_hru'] )
+                aParameter_subbasin=list()
+                for i in range(len(self.aParameter_subbasin_name)):
+                    aPara_in = {}
+                    aPara_in['iParameter_type']=2
+                    aPara_in['sName']=self.aParameter_subbasin_name[i]
+                    aPara_in['dValue_init']=0.0
+                    aPara_in['dValue_lower']=0.0
+                    aPara_in['dValue_upper']=0.0
+                    pPara_subbasin = swatpara(aPara_in)
+                    aParameter_subbasin.append(pPara_subbasin)                   
+
+                for i in range(self.nsubbasin):                    
+                    self.aSubbasin[i].aParameter_subbasin_name = dummy
+                    self.aSubbasin[i].aParameter_subbasin = aParameter_subbasin     
+                    self.aSubbasin[i].nParameter_subbasin = len(aParameter_subbasin )             
+                
+            if 'aParameter_hru_name' in aConfig_in:
+                dummy = aConfig_in['aParameter_hru_name']
+                self.aParameter_hru_name = dummy
+                aParameter_hru=list()
+                for i in range(len(self.aParameter_hru_name)):
+                    aPara_in = {}
+                    aPara_in['iParameter_type']=3
+                    aPara_in['sName']=self.aParameter_hru_name[i]
+                    aPara_in['dValue_init']=0.0
+                    aPara_in['dValue_lower']=0.0
+                    aPara_in['dValue_upper']=0.0
+                    pPara_hru = swatpara(aPara_in)
+                    aParameter_hru.append(pPara_hru)  
+
+                for i in range(self.nhru_combination):                    
+                    self.aHru_combination[i].aParameter_hru_name = dummy
+                    self.aHru_combination[i].aParameter_hru = aParameter_hru  
+                    self.aHru_combination[i].nParameter_hru = len(aParameter_hru)  
+
+            if 'aParameter_soil_name' in aConfig_in:
+                dummy = aConfig_in['aParameter_soil_name']
+                self.aParameter_soil_name = dummy
+                aParameter_soil=list()
+                for i in range(len(self.aParameter_soil_name)):
+                    aPara_in = {}
+                    aPara_in['iParameter_type']=4
+                    aPara_in['sName']=self.aParameter_soil_name[i]
+                    aPara_in['dValue_init']=0.0
+                    aPara_in['dValue_lower']=0.0
+                    aPara_in['dValue_upper']=0.0
+                    pPara_hru = swatpara(aPara_in)
+                    aParameter_soil.append(pPara_hru) 
+
+                for i in range(self.nhru_combination):
+                    nsoil_layer = self.aHru_combination[i].nSoil_layer
+                    for j in range(nsoil_layer):                        
+                        self.aHru_combination[i].aSoil[j].aParameter_soil_name = dummy
+                        self.aHru_combination[i].aSoil[j].aParameter_soil = aParameter_soil
+                        self.aHru_combination[i].aSoil[j].nParameter_soil = len(aParameter_soil)
+
+            if aParameter_in is not None:                                  
+                pass
+            else:            
+                if 'nParameter_watershed' in aConfig_in:
+                    self.nParameter_watershed = int(aConfig_in['nParameter_watershed'] )
+                else:
+                    self.nParameter_watershed = 0
+                if 'nParameter_subbasin' in aConfig_in:
+                    self.nParameter_subbasin = int(aConfig_in['nParameter_subbasin'] )
+                else:
+                    self.nParameter_subbasin = 0
+    
+                if 'nParameter_hru' in aConfig_in:
+                    self.nParameter_hru = int(aConfig_in['nParameter_hru'] )
+                else:
+                    self.nParameter_hru = 0
+                
+                if 'nParameter_soil' in aConfig_in:
+                    self.nParameter_soil = int(aConfig_in['nParameter_soil'] )
+                else:
+                    self.nParameter_soil = 0
+
+            
         else:
-            self.nParameter_hru = 0
+            if aParameter_in is not None:                                      
+                pass
+            else:            
+                if 'nParameter_watershed' in aConfig_in:
+                    self.nParameter_watershed = int(aConfig_in['nParameter_watershed'] )
+                else:
+                    self.nParameter_watershed = 0
+                if 'nParameter_subbasin' in aConfig_in:
+                    self.nParameter_subbasin = int(aConfig_in['nParameter_subbasin'] )
+                else:
+                    self.nParameter_subbasin = 0
 
-        if 'aParameter_watershed' in aConfig_in:
-            dummy = aConfig_in['aParameter_watershed']
-            self.pWatershed.setup_parameter(dummy)
-  
-        if 'aParameter_subbasin' in aConfig_in:
-            for i in range(self.nsubbasin):
-                dummy = aConfig_in['aParameter_subbasin']
-                self.aSubbasin[i].setup_parameter(dummy)
-        
-        if 'aParameter_hru' in aConfig_in:
-            for i in range(self.nhru_combination):
-                dummy = aConfig_in['aParameter_hru']
-                self.aHru_combination[i].setup_parameter(dummy)
+                if 'nParameter_hru' in aConfig_in:
+                    self.nParameter_hru = int(aConfig_in['nParameter_hru'] )
+                else:
+                    self.nParameter_hru = 0
 
-        if 'aParameter_soil' in aConfig_in:
-            for i in range(self.nhru_combination):
-                nsoil_layer = self.aHru_combination[i].nSoil_layer
-                for j in range(nsoil_layer):
-                    dummy = aConfig_in['aParameter_soil']
-                    self.aHru_combination[i].aSoil[j].setup_parameter(dummy)
-        
+                if 'nParameter_soil' in aConfig_in:
+                    self.nParameter_soil = int(aConfig_in['nParameter_soil'] )
+                else:
+                    self.nParameter_soil = 0
         return
 
 
@@ -3336,7 +3426,7 @@ class swatcase(object):
         return
 
     def tojson(self):
-        aSkip = [ 'aSubbasin'    ]  
+        aSkip = [ 'aSubbasin', 'aHru_combination'    ]  
 
         obj = self.__dict__.copy()
         for sKey in aSkip:

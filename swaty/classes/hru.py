@@ -57,16 +57,30 @@ class pyhru(object):
             pass
         else:
             pass
+        
         return
       
 
-    def setup_parameter(self,aPara_in):
+    def setup_parameter(self,aPara_in= None):
         self.nParameter_hru = len(aPara_in)
         self.aParameter_hru=list()
         self.aParameter_hru_name=list()
         for i in range(self.nParameter_hru):
             hru_dummy = aPara_in[i]
             pParameter_hru = swatpara(hru_dummy)
+            self.aParameter_hru.append(pParameter_hru)
+
+            sName = pParameter_hru.sName
+            if sName not in self.aParameter_hru_name:
+                self.aParameter_hru_name.append(sName)
+        return
+    def setup_parameter2(self,aPara_in= None):
+        self.nParameter_hru = len(aPara_in)
+        self.aParameter_hru=list()
+        self.aParameter_hru_name=list()
+        for i in range(self.nParameter_hru):
+            pParameter_hru = aPara_in[i]
+            #pParameter_hru = swatpara(hru_dummy)
             self.aParameter_hru.append(pParameter_hru)
 
             sName = pParameter_hru.sName
