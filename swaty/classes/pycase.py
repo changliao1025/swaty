@@ -287,6 +287,7 @@ class swatcase(object):
             dummy1 = np.array(dummy[:,0])
             aSubbasin_info = dummy1.astype(int)
             self.nsubbasin = aSubbasin_info.shape[0]
+            self.nsegment = self.nsubbasin
 
             self.aSubbasin=list()
             for i in range(1, self.nsubbasin+1):
