@@ -17,9 +17,10 @@ class swatpara(object):
     sName=''
     iParameter_type=1 #1 watershed, 2 subbsain 3 hru 4 soil layer
     #iIndex=1
-    lIndex_subbasin=1
-    lIndex_hru=1
-    lIndex_soil_layer=1
+    lIndex_subbasin=-1
+    lIndex_hru=-1
+    lIndex_soil_layer=-1
+    
     iFlag_pseudo = 0
     dValue_init=0.0
     dValue_current=0.5
@@ -41,12 +42,12 @@ class swatpara(object):
         if 'lIndex_hru' in aConfig_in:
             self.lIndex_hru = int(aConfig_in['lIndex_hru'])
         else:
-            self.lIndex_hru = 1
+            self.lIndex_hru = -1
 
         if 'lIndex_soil_layer' in aConfig_in:
             self.lIndex_soil_layer = int(aConfig_in['lIndex_soil_layer'])
         else:
-            self.lIndex_soil_layer =1
+            self.lIndex_soil_layer =-1
 
         if 'sName' in aConfig_in:
             self.sName = aConfig_in['sName']

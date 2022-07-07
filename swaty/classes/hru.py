@@ -47,9 +47,9 @@ class pyhru(object):
     aParameter_hru_name = None
 
     #soil layer
-    aParameter_soil = None
-
+    #aParameter_soil = None
     aSoil=None
+    sSoil_type=''
     
     def __init__(self, aConfig_in=None):
         

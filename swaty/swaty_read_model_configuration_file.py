@@ -147,6 +147,8 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
             lIndex_hru = pParameter.lIndex_hru
             lIndex_soil_layer = pParameter.lIndex_soil_layer
             dValue = pParameter.dValue_current
+            dValue_lower = pParameter.dValue_lower
+            dValue_upper = pParameter.dValue_upper
             iFlag_found = 0
             if iType == 1:      
                           
@@ -156,8 +158,10 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
                     if sName.lower() == sName1.lower():
                         #replace
                         oSwat.pWatershed.aParameter_watershed[j].dValue_current = dValue
+                        oSwat.pWatershed.aParameter_watershed[j].dValue_lower = dValue_lower
+                        oSwat.pWatershed.aParameter_watershed[j].dValue_upper = dValue_upper
                         iFlag_found = 1
-                        break
+                        #break
                 
                 #if iFlag_found == 0:
                 #    #this one is not in the list yet
@@ -174,6 +178,8 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
                         if  lIndex_subbasin == iIndex1:
                             #replace
                             oSwat.aSubbasin[j].aParameter_subbasin[iIndex_name].dValue_current = dValue
+                            oSwat.aSubbasin[j].aParameter_subbasin[iIndex_name].dValue_lower = dValue_lower
+                            oSwat.aSubbasin[j].aParameter_subbasin[iIndex_name].dValue_upper = dValue_upper
                             iFlag_found = 1
                             break
                     pass
@@ -187,8 +193,10 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
                             if  lIndex_hru == iIndex1:
                                 #replace
                                 oSwat.aHru_combination[j].aParameter_hru[iIndex_name].dValue_current = dValue
+                                oSwat.aHru_combination[j].aParameter_hru[iIndex_name].dValue_lower = dValue_lower
+                                oSwat.aHru_combination[j].aParameter_hru[iIndex_name].dValue_upper = dValue_upper
                                 iFlag_found = 1
-                                break
+                                #break
                         pass
                     else: #soil layer
                         for j in np.arange(oSwat.nhru_combination ):
@@ -198,21 +206,17 @@ def swaty_read_model_configuration_file(sFilename_configuration_in , \
                                 sName1 = pPara.sName
                                 iIndex0 = pPara.lIndex_hru
                                 iIndex1 = pPara.lIndex_soil_layer
-                                if lIndex_hru ==iIndex0 and  lIndex_soil_layer == iIndex1:
+                                if  lIndex_soil_layer == iIndex1 and lIndex_hru ==iIndex0 :
                                     #replace
                                     oSwat.aHru_combination[j].aSoil[k].aParameter_soil[iIndex_name].dValue_current = dValue
+                                    oSwat.aHru_combination[j].aSoil[k].aParameter_soil[iIndex_name].dValue_lower = dValue_lower
+                                    oSwat.aHru_combination[j].aSoil[k].aParameter_soil[iIndex_name].dValue_upper = dValue_upper
                                     iFlag_found = 1
-                                    break
+                                    #break
                         pass
                     pass #
-
-            
+         
         pass
     
-    
-    
-
-
-   
     oSwat.sFilename_model_configuration = sFilename_configuration_in
     return oSwat

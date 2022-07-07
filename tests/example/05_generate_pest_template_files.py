@@ -75,7 +75,7 @@ nParameter_hru = len(aParemeter_hru)
 for i in np.arange(1, nhru_combination+1):
     for j in np.arange(1, nParameter_hru+1):
         aPara_in['iParameter_type'] = 3
-        aPara_in['iIndex_hru'] = i
+        aPara_in['lIndex_hru'] = i
         aPara_in['sName']= aParemeter_hru[j-1]
         aPara_in['dValue_init']=0.0
         aPara_in['dValue_current']=0.01* j +0.01

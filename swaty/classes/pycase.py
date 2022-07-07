@@ -80,6 +80,7 @@ class swatcase(object):
     nsegment =0
     nhru=0 #total nhru
     nhru_combination=0  #unique hru
+    nsoil_combination =0
     aConfig_in=None
 
     aParameter_watershed_name = None    
@@ -288,9 +289,9 @@ class swatcase(object):
             self.nsubbasin = aSubbasin_info.shape[0]
 
             self.aSubbasin=list()
-            for i in range(self.nsubbasin):
+            for i in range(1, self.nsubbasin+1):
                 pdummy = pysubbasin()    
-                pdummy.lIndex = i+1
+                pdummy.lIndex_subbasin = i
                 self.aSubbasin.append(pdummy)
 
             #read hru
@@ -314,7 +315,7 @@ class swatcase(object):
             self.aHru_combination=list()
             for iHru_combination in range(1, self.nhru_combination+1):
                 pdummy = pyhru()
-                pdummy.lIndex = iHru_combination
+                pdummy.lIndex_hru = iHru_combination
 
                 sHru = aHru_combination[iHru_combination-1]
                 dummy_index = np.where(aHru_info == sHru)
@@ -322,9 +323,13 @@ class swatcase(object):
                 dummy = aSoil_info[dummy_index2,:]
 
                 pdummy.nSoil_layer= int( dummy[1])
+                pdummy.sSoil_type = dummy[0].strip()
                 pdummy.aSoil=list()
-                for j in range(pdummy.nSoil_layer):
+                for j in range(1, pdummy.nSoil_layer+1):
                     dummy_soil = pysoil()
+                    dummy_soil.lIndex_hru = iHru_combination
+                    dummy_soil.lIndex_soil_layer = j
+                    dummy_soil.sSoil_type = pdummy.sSoil_type
                     pdummy.aSoil.append(dummy_soil)
 
                 self.aHru_combination.append(pdummy)
@@ -391,62 +396,63 @@ class swatcase(object):
             if 'aParameter_subbasin_name' in aConfig_in:
                 dummy = aConfig_in['aParameter_subbasin_name']
                 self.aParameter_subbasin_name = dummy
+                aPara_in = {}
+                for i in range(1, self.nsubbasin+1):                    
+                    self.aSubbasin[i-1].aParameter_subbasin_name = dummy
+                    aParameter_subbasin=list()
+                    for j in range(len(self.aParameter_subbasin_name)):
+                        aPara_in['iParameter_type']=2
+                        aPara_in['lIndex_subbasin']=i
+                        aPara_in['sName']=self.aParameter_subbasin_name[j]
+                        aPara_in['dValue_init']=0.0
+                        aPara_in['dValue_lower']=0.0
+                        aPara_in['dValue_upper']=0.0
+                        pPara_subbasin = swatpara(aPara_in)
+                        aParameter_subbasin.append(pPara_subbasin) 
 
-                aParameter_subbasin=list()
-                for i in range(len(self.aParameter_subbasin_name)):
-                    aPara_in = {}
-                    aPara_in['iParameter_type']=2
-                    aPara_in['sName']=self.aParameter_subbasin_name[i]
-                    aPara_in['dValue_init']=0.0
-                    aPara_in['dValue_lower']=0.0
-                    aPara_in['dValue_upper']=0.0
-                    pPara_subbasin = swatpara(aPara_in)
-                    aParameter_subbasin.append(pPara_subbasin)                   
-
-                for i in range(self.nsubbasin):                    
-                    self.aSubbasin[i].aParameter_subbasin_name = dummy
-                    self.aSubbasin[i].aParameter_subbasin = aParameter_subbasin     
-                    self.aSubbasin[i].nParameter_subbasin = len(aParameter_subbasin )             
+                    self.aSubbasin[i-1].aParameter_subbasin = aParameter_subbasin     
+                    self.aSubbasin[i-1].nParameter_subbasin = len(aParameter_subbasin )             
                 
             if 'aParameter_hru_name' in aConfig_in:
                 dummy = aConfig_in['aParameter_hru_name']
                 self.aParameter_hru_name = dummy
-                aParameter_hru=list()
-                for i in range(len(self.aParameter_hru_name)):
-                    aPara_in = {}
-                    aPara_in['iParameter_type']=3
-                    aPara_in['sName']=self.aParameter_hru_name[i]
-                    aPara_in['dValue_init']=0.0
-                    aPara_in['dValue_lower']=0.0
-                    aPara_in['dValue_upper']=0.0
-                    pPara_hru = swatpara(aPara_in)
-                    aParameter_hru.append(pPara_hru)  
-
-                for i in range(self.nhru_combination):                    
-                    self.aHru_combination[i].aParameter_hru_name = dummy
-                    self.aHru_combination[i].aParameter_hru = aParameter_hru  
-                    self.aHru_combination[i].nParameter_hru = len(aParameter_hru)  
+                aPara_in = {}
+                for i in range(1, self.nhru_combination+1):      
+                    aParameter_hru=list()
+                    for j in range(len(self.aParameter_hru_name)):
+                        aPara_in['lIndex_hru']=i
+                        aPara_in['iParameter_type']=3
+                        aPara_in['sName']=self.aParameter_hru_name[j]
+                        aPara_in['dValue_init']=0.0
+                        aPara_in['dValue_lower']=0.0
+                        aPara_in['dValue_upper']=0.0
+                        pPara_hru = swatpara(aPara_in)
+                        aParameter_hru.append(pPara_hru)
+                    self.aHru_combination[i-1].aParameter_hru_name = dummy
+                    self.aHru_combination[i-1].aParameter_hru = aParameter_hru  
+                    self.aHru_combination[i-1].nParameter_hru = len(aParameter_hru)  
 
             if 'aParameter_soil_name' in aConfig_in:
                 dummy = aConfig_in['aParameter_soil_name']
                 self.aParameter_soil_name = dummy
-                aParameter_soil=list()
-                for i in range(len(self.aParameter_soil_name)):
-                    aPara_in = {}
-                    aPara_in['iParameter_type']=4
-                    aPara_in['sName']=self.aParameter_soil_name[i]
-                    aPara_in['dValue_init']=0.0
-                    aPara_in['dValue_lower']=0.0
-                    aPara_in['dValue_upper']=0.0
-                    pPara_hru = swatpara(aPara_in)
-                    aParameter_soil.append(pPara_hru) 
-
-                for i in range(self.nhru_combination):
-                    nsoil_layer = self.aHru_combination[i].nSoil_layer
-                    for j in range(nsoil_layer):                        
-                        self.aHru_combination[i].aSoil[j].aParameter_soil_name = dummy
-                        self.aHru_combination[i].aSoil[j].aParameter_soil = aParameter_soil
-                        self.aHru_combination[i].aSoil[j].nParameter_soil = len(aParameter_soil)
+                for i in range(1, self.nhru_combination+1):
+                    nsoil_layer = self.aHru_combination[i-1].nSoil_layer
+                    for j in range(1, nsoil_layer+1):    
+                        aParameter_soil=list()
+                        for k in range(len(self.aParameter_soil_name)):
+                            aPara_in = {}
+                            aPara_in['iParameter_type']=4
+                            aPara_in['lIndex_hru']=i
+                            aPara_in['lIndex_soil_layer']=j
+                            aPara_in['sName']=self.aParameter_soil_name[k]
+                            aPara_in['dValue_init']=0.0
+                            aPara_in['dValue_lower']=0.0
+                            aPara_in['dValue_upper']=0.0
+                            pPara_hru = swatpara(aPara_in)
+                            aParameter_soil.append(pPara_hru)                     
+                        self.aHru_combination[i-1].aSoil[j-1].aParameter_soil_name = dummy
+                        self.aHru_combination[i-1].aSoil[j-1].aParameter_soil = aParameter_soil
+                        self.aHru_combination[i-1].aSoil[j-1].nParameter_soil = len(aParameter_soil)
 
             if aParameter_in is not None:                                  
                 pass
@@ -944,7 +950,7 @@ class swatcase(object):
         aData_out_hru = list()
         aData_out_soil = list()
         for i in range(nParameter):
-            sPara = aName[i].lower()
+            sPara = aName[i].lower().strip()
             dValue_lower = aLower[i]
             dValue_upper = aUpper[i]
             #sLower = "{:0f}".format( dValue_lower )
@@ -1075,7 +1081,7 @@ class swatcase(object):
             else:
                 if sParameter_watershed in aWWQ:
                     if( aParameter_table[1] is None  ):
-                        aParameter_table[1] = sParameter_watershed
+                        aParameter_table[1] = np.array(sParameter_watershed)
                     else:
                         aParameter_table[1]=np.append(aParameter_table[1],sParameter_watershed)
                     pass
@@ -2154,7 +2160,7 @@ class swatcase(object):
 
         return
 
-    def swaty_prepare_watershed_template_file(self):
+    def swaty_prepare_watershed_template_file(self, sFilename_watershed_template_in=None):
         """
         #prepare the pest control file
         """      
@@ -2165,12 +2171,15 @@ class swatcase(object):
 
         aParameter_watershed = self.pWatershed.aParameter_watershed
         nParameter_watershed = self.pWatershed.nParameter_watershed
+        if sFilename_watershed_template_in is None:
+            sFilename_watershed_template = os.path.join(str(Path(sWorkspace_output)), 'watershed.tpl' )     
+        else:
+            sFilename_watershed_template = sFilename_watershed_template_in
 
-        sFilename_watershed_template = os.path.join(str(Path(sWorkspace_output)), 'watershed.tpl' )     
-        
         if iFlag_watershed ==1:    
             ofs = open(sFilename_watershed_template, 'w')
-
+            sLine = 'ptf $\n'
+            ofs.write(sLine)
             sLine = 'watershed'
             for i in range(nParameter_watershed):
                 sVariable = aParameter_watershed[i].sName
@@ -2242,7 +2251,7 @@ class swatcase(object):
 
         return
 
-    def swaty_prepare_subbasin_template_file(self):
+    def swaty_prepare_subbasin_template_file(self, sFilename_subbasin_template_in=None):
         """
         #prepare the pest control file
         """      
@@ -2252,13 +2261,16 @@ class swatcase(object):
         
         nsubbasin = self.nsubbasin
 
+        if sFilename_subbasin_template_in is None:
         
-        
-        sFilename_subbasin_template = os.path.join(str(Path(sWorkspace_output)) ,  'subbasin.tpl' )  
-        
+            sFilename_subbasin_template = os.path.join(str(Path(sWorkspace_output)) ,  'subbasin.tpl' )  
+        else:
+            sFilename_subbasin_template = sFilename_subbasin_template_in
+
         if iFlag_subbasin ==1:    
             ofs = open(sFilename_subbasin_template, 'w')
-
+            sLine = 'ptf $\n'
+            ofs.write(sLine)
            
             aParameter_subbasin_name = self.aSubbasin[0].aParameter_subbasin_name
             nParameter_subbasin = self.aSubbasin[0].nParameter_subbasin
@@ -2331,7 +2343,7 @@ class swatcase(object):
 
         return
 
-    def swaty_prepare_hru_template_file(self):
+    def swaty_prepare_hru_template_file(self, sFilename_hru_template_in = None):
         """
         #prepare the pest control file
         """      
@@ -2347,10 +2359,16 @@ class swatcase(object):
             return
         aData_all = text_reader_string(self.sFilename_hru_combination)
         nhru_type = len(aData_all)
-        sFilename_hru_template = os.path.join(str(Path(sWorkspace_output)) ,  'hru.tpl' )  
+
+        if sFilename_hru_template_in is None:
+            sFilename_hru_template = os.path.join(str(Path(sWorkspace_output)) ,  'hru.tpl' )  
+        else:
+            sFilename_hru_template = sFilename_hru_template_in
         
         if iFlag_hru ==1:    
             ofs = open(sFilename_hru_template, 'w')
+            sLine = 'ptf $\n'
+            ofs.write(sLine)
             nParameter_hru = self.aHru_combination[0].nParameter_hru
             sLine = 'hru'
             for i in range(nParameter_hru):
@@ -2449,7 +2467,7 @@ class swatcase(object):
 
         return
 
-    def swaty_prepare_soil_template_file(self):
+    def swaty_prepare_soil_template_file(self, sFilename_soil_template_in = None):
         sWorkspace_output = self.sWorkspace_output    
         iFlag_simulation = self.iFlag_simulation    
         iFlag_hru = self.iFlag_hru
@@ -2474,9 +2492,13 @@ class swatcase(object):
         
 
         if iFlag_hru ==1:                
-
-            sFilename_soil_template = os.path.join(str(Path(sWorkspace_output)) ,  'soil.tpl' )  
+            if sFilename_soil_template_in is None:
+                sFilename_soil_template = os.path.join(str(Path(sWorkspace_output)) ,  'soil.tpl' )  
+            else:
+                sFilename_soil_template = sFilename_soil_template_in
             ofs = open(sFilename_soil_template, 'w')
+            sLine = 'ptf $\n'
+            ofs.write(sLine)
             nParameter_soil = self.aHru_combination[0].aSoil[0].nParameter_soil
             aParameter_soil_name = self.aHru_combination[0].aSoil[0].aParameter_soil_name                 
             sLine='soil'  
