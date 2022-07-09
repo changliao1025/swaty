@@ -104,7 +104,7 @@ class swatcase(object):
     sFilename_model_configuration=''
     sWorkspace_input=''
     sWorkspace_output=''   
-    sWorkspace_output=''
+ 
    
     sFilename_observation_discharge=''
     sFilename_LandUseSoilsReport=''
@@ -602,6 +602,8 @@ class swatcase(object):
             pass
         else: #during calibration
             #an inital simulation is needed?
+
+            #self.convert_pest_parameter_to_model_input()   #this step only construct object
             if (self.iFlag_replace_parameter == 1):                           
                 #actual update parameter
                 self.swaty_write_watershed_input_file()                
@@ -610,7 +612,7 @@ class swatcase(object):
             else:
                 pass               
                       
-            self.convert_pest_parameter_to_model_input()   #this step only construct object
+            
             self.swaty_write_watershed_input_file()                
             self.swaty_write_subbasin_input_file()                 
             self.swaty_write_hru_input_file()
@@ -624,45 +626,109 @@ class swatcase(object):
         sFilename_bash = self.swaty_prepare_simulation_bash_file()
         sFilename_job = self.swaty_prepare_simulation_job_file() 
         
-    
-    
-
-
         return
-    def convert_pest_parameter_to_model_input(self):
-        self.convert_pest_parameter_to_actual_parameter()
+
+    def convert_pest_parameter_to_model_input(self, \
+        
+        sFilename_pest_parameter_watershed_in = None,\
+        sFilename_watershed_parameter_default_in = None,\
+        sFilename_watershed_parameter_bounds_in = None,\
+
+        sFilename_pest_parameter_subbasin_in = None,\
+        sFilename_subbasin_parameter_default_in = None,\
+            sFilename_subbasin_parameter_bounds_in = None,\
+            
+        sFilename_pest_parameter_hru_in = None,\
+        sFilename_hru_parameter_default_in = None,\
+            sFilename_hru_parameter_bounds_in = None,\
+            
+        sFilename_pest_parameter_soil_in = None,\
+        sFilename_soil_parameter_bounds_in = None, \
+            sWorkspace_soil_parameter_default_in = None ):
+
+        self.convert_pest_parameter_to_actual_parameter(\
+        
+        sFilename_pest_parameter_watershed_in = sFilename_pest_parameter_watershed_in,\
+        sFilename_watershed_parameter_default_in = sFilename_watershed_parameter_default_in,\
+            sFilename_watershed_parameter_bounds_in = sFilename_watershed_parameter_bounds_in,\
+
+        sFilename_pest_parameter_subbasin_in = sFilename_pest_parameter_subbasin_in,\
+        sFilename_subbasin_parameter_default_in = sFilename_subbasin_parameter_default_in,\
+            sFilename_subbasin_parameter_bounds_in = sFilename_subbasin_parameter_bounds_in,\
+            
+        sFilename_pest_parameter_hru_in = sFilename_pest_parameter_hru_in,\
+        sFilename_hru_parameter_default_in = sFilename_hru_parameter_default_in,\
+            sFilename_hru_parameter_bounds_in = sFilename_hru_parameter_bounds_in,\
+            
+        sFilename_pest_parameter_soil_in = sFilename_pest_parameter_soil_in,\
+        sFilename_soil_parameter_bounds_in = sFilename_soil_parameter_bounds_in,\
+            sWorkspace_soil_parameter_default_in = sWorkspace_soil_parameter_default_in )
 
         #build object
 
 
         return
 
-    def convert_pest_parameter_to_actual_parameter(self):
+    def convert_pest_parameter_to_actual_parameter(self, \
         
-        self.convert_pest_watershed_parameter_to_actual_parameter()
-        self.convert_pest_subbasin_parameter_to_actual_parameter()        
-        self.convert_pest_hru_parameter_to_actual_parameter()
-        self.convert_pest_soil_parameter_to_actual_parameter()
+        sFilename_pest_parameter_watershed_in = None,\
+        sFilename_watershed_parameter_default_in = None,\
+            sFilename_watershed_parameter_bounds_in = None,\
+
+        sFilename_pest_parameter_subbasin_in = None,\
+        sFilename_subbasin_parameter_default_in = None,\
+            sFilename_subbasin_parameter_bounds_in = None,\
+            
+        sFilename_pest_parameter_hru_in = None,\
+        sFilename_hru_parameter_default_in = None,\
+            sFilename_hru_parameter_bounds_in = None,\
+            
+        sFilename_pest_parameter_soil_in = None,\
+        sFilename_soil_parameter_bounds_in = None,\
+            sWorkspace_soil_parameter_default_in = None    ):
+        
+        self.convert_pest_watershed_parameter_to_actual_parameter(sFilename_pest_parameter_watershed_in = sFilename_pest_parameter_watershed_in,\
+        sFilename_watershed_parameter_default_in = sFilename_watershed_parameter_default_in,sFilename_watershed_parameter_bounds_in = sFilename_watershed_parameter_bounds_in)
+        
+        self.convert_pest_subbasin_parameter_to_actual_parameter(sFilename_pest_parameter_subbasin_in = sFilename_pest_parameter_subbasin_in,\
+        sFilename_subbasin_parameter_default_in = sFilename_subbasin_parameter_default_in,sFilename_subbasin_parameter_bounds_in = sFilename_subbasin_parameter_bounds_in)        
+        
+        self.convert_pest_hru_parameter_to_actual_parameter(sFilename_pest_parameter_hru_in = sFilename_pest_parameter_hru_in,\
+        sFilename_hru_parameter_default_in = sFilename_hru_parameter_default_in,sFilename_hru_parameter_bounds_in = sFilename_hru_parameter_bounds_in)
+        
+        self.convert_pest_soil_parameter_to_actual_parameter(sFilename_pest_parameter_soil_in = sFilename_pest_parameter_soil_in,\
+        sFilename_soil_parameter_bounds_in = sFilename_soil_parameter_bounds_in,sWorkspace_soil_parameter_default_in= sWorkspace_soil_parameter_default_in)
 
         return
 
-    def convert_pest_watershed_parameter_to_actual_parameter(self):
-        sWorkspace_simulation_case = self.sWorkspace_output
+    def convert_pest_watershed_parameter_to_actual_parameter(self, sFilename_pest_parameter_watershed_in = None,\
+        sFilename_watershed_parameter_default_in = None,sFilename_watershed_parameter_bounds_in = None ):
 
         #read the default parameter value
-        sFilename_pest_watershed = os.path.join( sWorkspace_simulation_case, 'watershed.para' )
-        aData_dummy0 = text_reader_string(sFilename_pest_watershed, cDelimiter_in=',')
+        if sFilename_pest_parameter_watershed_in is None:
+            sFilename_pest_parameter_watershed = os.path.join( self.sWorkspace_output, 'watershed.para' )
+        else:
+            sFilename_pest_parameter_watershed = sFilename_pest_parameter_watershed_in
+
+        aData_dummy0 = text_reader_string(sFilename_pest_parameter_watershed, cDelimiter_in=',')
 
         #read pest default parameter value
-        sFilename_pest_watershed = os.path.join( sWorkspace_simulation_case, 'watershed_default_parameter.txt' )
-        aData_dummy1 = text_reader_string(sFilename_pest_watershed, cDelimiter_in=',')
+        if sFilename_watershed_parameter_default_in is None:
+            sFilename_watershed_parameter_default = os.path.join( self.sWorkspace_output, 'watershed_parameter_default.txt' )
+        else:
+            sFilename_watershed_parameter_default = sFilename_watershed_parameter_default_in
+        aData_dummy1 = text_reader_string(sFilename_watershed_parameter_default, cDelimiter_in=',')
 
         #read the bound        
-        sFilename_parameter_bounds_watershed = os.path.join(self.sWorkspace_input,  'parameter_bounds_watershed.txt' )
-        aData_dummy2 = text_reader_string(sFilename_parameter_bounds_watershed, cDelimiter_in=',')
+        if sFilename_watershed_parameter_bounds_in is None:
+            sFilename_watershed_parameter_bounds = os.path.join(self.sWorkspace_output,  'watershed_parameter_bounds.txt' )
+        else:
+            sFilename_watershed_parameter_bounds = sFilename_watershed_parameter_bounds_in
+
+        aData_dummy2 = text_reader_string(sFilename_watershed_parameter_bounds, cDelimiter_in=',')
 
         #replace watershed by writing into a new file
-        sFilename_watershed_out = os.path.join( sWorkspace_simulation_case, 'watershed_updated.para' )
+        sFilename_watershed_out = os.path.join( self.sWorkspace_output, 'watershed_updated.para' )
         ofs=open(sFilename_watershed_out, 'w') 
 
         #assume the paramete may be out of bound because of the ratio operations
@@ -699,23 +765,33 @@ class swatcase(object):
         ofs.close()
         pass
     
-    def convert_pest_subbasin_parameter_to_actual_parameter(self):
-        sWorkspace_simulation_case = self.sWorkspace_output
+    def convert_pest_subbasin_parameter_to_actual_parameter(self,  sFilename_pest_parameter_subbasin_in = None,\
+        sFilename_subbasin_parameter_default_in = None,sFilename_subbasin_parameter_bounds_in = None):
+        sWorkspace_output = self.sWorkspace_output
         #subbasin
         #read the default parameter value
-        sFilename_pest_subbasin = os.path.join( sWorkspace_simulation_case, 'subbasin.para' )
-        aData_dummy0 = text_reader_string(sFilename_pest_subbasin, cDelimiter_in=',')
+        if sFilename_pest_parameter_subbasin_in is None:
+            sFilename_pest_subbasin = os.path.join( sWorkspace_output, 'subbasin.para' )
+        else:
+            sFilename_pest_parameter_subbasin = sFilename_pest_parameter_subbasin_in
+        aData_dummy0 = text_reader_string(sFilename_pest_parameter_subbasin, cDelimiter_in=',')
 
         #read pest default parameter value
-        sFilename_pest_subbasin = os.path.join( sWorkspace_simulation_case, 'subbasin_default_parameter.txt' )
-        aData_dummy1 = text_reader_string(sFilename_pest_subbasin, cDelimiter_in=',')
+        if sFilename_subbasin_parameter_default_in is None:
+            sFilename_subbasin_parameter_default = os.path.join( sWorkspace_output, 'subbasin_parameter_default.txt' )
+        else:
+            sFilename_subbasin_parameter_default = sFilename_subbasin_parameter_default_in
+        aData_dummy1 = text_reader_string(sFilename_subbasin_parameter_default, cDelimiter_in=',')
 
         #read the bound        
-        sFilename_parameter_bounds_subbasin = os.path.join(self.sWorkspace_input,  'parameter_bounds_subbasin.txt' )
-        aData_dummy2 = text_reader_string(sFilename_parameter_bounds_subbasin, cDelimiter_in=',')
+        if sFilename_subbasin_parameter_bounds_in is None:
+            sFilename_subbasin_parameter_bounds = os.path.join(sWorkspace_output,  'subbasin_parameter_bounds.txt' )
+        else:
+            sFilename_subbasin_parameter_bounds = sFilename_subbasin_parameter_bounds_in
+        aData_dummy2 = text_reader_string(sFilename_subbasin_parameter_bounds, cDelimiter_in=',')
 
         #replace subbasin by writing into a new file
-        sFilename_subbasin_out = os.path.join( sWorkspace_simulation_case, 'subbasin_updated.para' )
+        sFilename_subbasin_out = os.path.join( sWorkspace_output, 'subbasin_updated.para' )
         ofs=open(sFilename_subbasin_out, 'w') 
 
         #assume the paramete may be out of bound because of the ratio operations
@@ -754,19 +830,32 @@ class swatcase(object):
             ofs.write(sLine)
         ofs.close()
         pass
-    def convert_pest_hru_parameter_to_actual_parameter(self):
-        sWorkspace_simulation_case = self.sWorkspace_output
+    
+    def convert_pest_hru_parameter_to_actual_parameter(self, sFilename_pest_parameter_hru_in = None,\
+        sFilename_hru_parameter_default_in = None,sFilename_hru_parameter_bounds_in = None):
+
+        
         #subbasin
         #read the default parameter value
-        sFilename_pest_hru = os.path.join( sWorkspace_simulation_case, 'hru.para' )
-        aData_dummy0 = text_reader_string(sFilename_pest_hru, cDelimiter_in=',')
+        if sFilename_pest_parameter_hru_in is None:
+            sFilename_pest_parameter_hru = os.path.join(  self.sWorkspace_output, 'hru.para' )
+        else:
+            sFilename_pest_parameter_hru = sFilename_pest_parameter_hru_in
+        aData_dummy0 = text_reader_string(sFilename_pest_parameter_hru, cDelimiter_in=',')
         #read pest default parameter value
-        sFilename_pest_hru = os.path.join( sWorkspace_simulation_case, 'hru_default_parameter.txt' )
-        aData_dummy1 = text_reader_string(sFilename_pest_hru, cDelimiter_in=',')
+        if sFilename_hru_parameter_default_in is None:
+            sFilename_hru_parameter_default = os.path.join(  self.sWorkspace_output, 'hru_parameter_default.txt' )
+        else:
+            sFilename_hru_parameter_default = sFilename_hru_parameter_default_in
+        aData_dummy1 = text_reader_string(sFilename_hru_parameter_default, cDelimiter_in=',')
         #read the bound        
-        sFilename_parameter_bounds_hru = os.path.join(self.sWorkspace_input,  'parameter_bounds_hru.txt' )
-        aData_dummy2 = text_reader_string(sFilename_parameter_bounds_hru, cDelimiter_in=',')  
-        sFilename_hru_out = os.path.join( sWorkspace_simulation_case, 'hru_updated.para' )
+        if sFilename_hru_parameter_bounds_in is None:
+            sFilename_hru_parameter_bounds = os.path.join(self.sWorkspace_output,  'hru_parameter_bounds.txt' )
+        else:
+            sFilename_hru_parameter_bounds = sFilename_hru_parameter_bounds_in
+        aData_dummy2 = text_reader_string(sFilename_hru_parameter_bounds, cDelimiter_in=',')  
+
+        sFilename_hru_out = os.path.join(  self.sWorkspace_output, 'hru_updated.para' )
         ofs=open(sFilename_hru_out, 'w') 
         #assume the paramete may be out of bound because of the ratio operations
         #maintain the order of the parameter
@@ -793,11 +882,11 @@ class swatcase(object):
                 sName = aData_dummy00[j].strip()
                 if sName in aName_ratio:
                     dValue_default = float(aData_dummy1[iHru,j+1].strip())
-                    dRatio = float(aData_dummy01[iHru-1,j].strip())
+                    dRatio = float(aData_dummy01[0][j].strip())
                     dValue =  dValue_default * dRatio
                 else:
                     dRatio = 1.0
-                    dValue = float(aData_dummy01[iHru-1,j].strip()) * dRatio
+                    dValue = float(aData_dummy01[0][j].strip()) * dRatio
 
                 dValue_lower = float(aData_dummy2[j,1].strip())
                 dValue_upper = float(aData_dummy2[j,2].strip())
@@ -812,30 +901,50 @@ class swatcase(object):
             ofs.write(sLine)
         ofs.close()
         pass
-    def convert_pest_soil_parameter_to_actual_parameter(self):
+    def convert_pest_soil_parameter_to_actual_parameter(self, sFilename_pest_parameter_soil_in = None,\
+        sFilename_soil_parameter_bounds_in = None,sWorkspace_soil_parameter_default_in = None ):
         sWorkspace_simulation_case = self.sWorkspace_output
         #subbasin
         #read the default parameter value
-        sFilename_pest_soil = os.path.join( sWorkspace_simulation_case, 'soil.para' )
-        aData_dummy0 = text_reader_string(sFilename_pest_soil, cDelimiter_in=',')
+        if sFilename_pest_parameter_soil_in is None:
+            sFilename_pest_parameter_soil = os.path.join( sWorkspace_simulation_case, 'soil.para' )
+        else: 
+            sFilename_pest_parameter_soil= sFilename_pest_parameter_soil_in
+
+        if sWorkspace_soil_parameter_default_in is None:
+            sWorkspace_soil_parameter_default = self.sWorkspace_output
+        else:
+            sWorkspace_soil_parameter_default = sWorkspace_soil_parameter_default_in
+        
+        
+
+        aData_dummy0 = text_reader_string(sFilename_pest_parameter_soil, cDelimiter_in=',')
         sFilename_soil_combination = self.sFilename_soil_combination
         nsoil_combination = self.nsoil_combination
         aSoil_combination = text_reader_string(sFilename_soil_combination, cDelimiter_in = ',')
         aSoil_combination = np.asarray(aSoil_combination)
         aSoil_combination= aSoil_combination.reshape(nsoil_combination, 2) 
         aName_ratio= ['sol_k','sol_awc','sol_alb','sol_bd']
+
+        #read the bound        
+        if sFilename_soil_parameter_bounds_in is None :    
+            sFilename_soil_parameter_bounds = os.path.join(self.sWorkspace_input,  'soil_parameter_bounds.txt' )
+        else:
+            sFilename_soil_parameter_bounds = sFilename_soil_parameter_bounds_in
+        aData_dummy2 = text_reader_string(sFilename_soil_parameter_bounds, cDelimiter_in=',')
+
         for iSoil_type in range(1, nsoil_combination+1 ):
 
             sSoil_type = "{:02d}".format( iSoil_type )
             ssoil_code = aSoil_combination[iSoil_type-1,0]
             nsoil_layer = int(aSoil_combination[iSoil_type-1,1])
-            
-            sFilename_pest_subbasin = os.path.join( sWorkspace_simulation_case, 'soiltype' + sSoil_type + '_default_parameter.txt' )
-            aData_dummy1 = text_reader_string(sFilename_pest_subbasin, cDelimiter_in=',')
 
-            #read the bound        
-            sFilename_parameter_bounds_subbasin = os.path.join(self.sWorkspace_input,  'parameter_bounds_soil.txt' )
-            aData_dummy2 = text_reader_string(sFilename_parameter_bounds_subbasin, cDelimiter_in=',')
+            
+            sFilename_soil_default_parameter = os.path.join( sWorkspace_soil_parameter_default, 'soiltype' + sSoil_type + '_parameter_default.txt' )
+
+            aData_dummy1 = text_reader_string(sFilename_soil_default_parameter, cDelimiter_in=',')
+
+            
 
             #replace subbasin by writing into a new file
             sFilename_soiltype_out = os.path.join( sWorkspace_simulation_case, 'soiltype' + sSoil_type + '.para' )
@@ -929,7 +1038,10 @@ class swatcase(object):
 
         return
     
-    def generate_parameter_bounds(self):
+    def generate_parameter_bounds(self, sFilename_watershed_parameter_bounds_in = None,\
+        sFilename_subbasin_parameter_bounds_in = None,\
+        sFilename_hru_parameter_bounds_in = None,\
+            sFilename_soil_parameter_bounds_in = None      ):
 
         sFilename_parameter_bounds = self.sFilename_parameter_bounds
         aData_dummy = text_reader_string(sFilename_parameter_bounds, cDelimiter_in=',', iSkipline_in=1)
@@ -981,26 +1093,38 @@ class swatcase(object):
             pass
 
         #export
-        sFilename_parameter_bounds_watershed = os.path.join(self.sWorkspace_output,  'parameter_bounds_watershed.txt' )
-        ofs=open(sFilename_parameter_bounds_watershed, 'w') 
+        if sFilename_watershed_parameter_bounds_in is None:
+            sFilename_watershed_parameter_bounds = os.path.join(self.sWorkspace_output,  'watershed_parameter_bounds.txt' )
+        else:
+            sFilename_watershed_parameter_bounds = sFilename_watershed_parameter_bounds_in
+        ofs=open(sFilename_watershed_parameter_bounds, 'w') 
         for i in aData_out_watershed:
             ofs.write(i + '\n')
         ofs.close()
 
-        sFilename_parameter_bounds_subbasin = os.path.join(self.sWorkspace_output,  'parameter_bounds_subbasin.txt' )
-        ofs=open(sFilename_parameter_bounds_subbasin, 'w') 
+        if sFilename_subbasin_parameter_bounds_in is None:
+            sFilename_subbasin_parameter_bounds = os.path.join(self.sWorkspace_output,  'subbasin_parameter_bounds.txt' )
+        else:
+            sFilename_subbasin_parameter_bounds =sFilename_subbasin_parameter_bounds_in
+        ofs=open(sFilename_subbasin_parameter_bounds, 'w') 
         for i in aData_out_subbasin:
             ofs.write(i + '\n')
         ofs.close()
 
-        sFilename_parameter_bounds_hru = os.path.join(self.sWorkspace_output,  'parameter_bounds_hru.txt' )
-        ofs=open(sFilename_parameter_bounds_hru, 'w') 
+        if sFilename_hru_parameter_bounds_in is None:
+            sFilename_hru_parameter_bounds = os.path.join(self.sWorkspace_output,  'hru_parameter_bounds.txt' )
+        else:
+            sFilename_hru_parameter_bounds = sFilename_hru_parameter_bounds_in
+        ofs=open(sFilename_hru_parameter_bounds, 'w') 
         for i in aData_out_hru:
             ofs.write(i + '\n')
         ofs.close()
 
-        sFilename_parameter_bounds_soil = os.path.join(self.sWorkspace_output,  'parameter_bounds_soil.txt' )
-        ofs=open(sFilename_parameter_bounds_soil, 'w') 
+        if sFilename_soil_parameter_bounds_in is None:
+            sFilename_soil_parameter_bounds = os.path.join(self.sWorkspace_output,  'soil_parameter_bounds.txt' )
+        else:
+            sFilename_soil_parameter_bounds = sFilename_soil_parameter_bounds_in
+        ofs=open(sFilename_soil_parameter_bounds, 'w') 
         for i in aData_out_soil:
             ofs.write(i + '\n')
         ofs.close()
@@ -1008,7 +1132,10 @@ class swatcase(object):
 
         return
 
-    def extract_default_parameter_value(self, aParameter_in):
+    def extract_default_parameter_value(self, aParameter_in, sFilename_watershed_in= None,\
+        sFilename_subbasin_in = None,\
+        sFilename_hru_in = None,\
+        sWorkspace_soil_in = None        ):
 
 
 
@@ -1018,29 +1145,29 @@ class swatcase(object):
         for p in aParameter_in:
             if p.iParameter_type == 1:
                aParameter.append(p) 
-        self.extract_default_parameter_value_watershed(aParameter)
+        self.extract_default_parameter_value_watershed(aParameter, sFilename_watershed_in= sFilename_watershed_in)
         #subbasin
         aParameter.clear()
         for p in aParameter_in:
             if p.iParameter_type == 2:
                aParameter.append(p)
-        self.extract_default_parameter_value_subbasin(aParameter)
+        self.extract_default_parameter_value_subbasin(aParameter, sFilename_subbasin_in=sFilename_subbasin_in)
         #hru
         aParameter.clear()
         for p in aParameter_in:
             if p.iParameter_type == 3:
                aParameter.append(p)
-        self.extract_default_parameter_value_hru(aParameter)
+        self.extract_default_parameter_value_hru(aParameter, sFilename_hru_in= sFilename_hru_in)
         #soil
         aParameter.clear()
         for p in aParameter_in:
             if p.iParameter_type == 4:
                aParameter.append(p)
-        self.extract_default_parameter_value_soil(aParameter)
+        self.extract_default_parameter_value_soil(aParameter, sWorkspace_soil_in=sWorkspace_soil_in)
 
         return
 
-    def extract_default_parameter_value_watershed(self, aParameter_watershed):
+    def extract_default_parameter_value_watershed(self, aParameter_watershed, sFilename_watershed_in = None):
         sWorkspace_source_case = self.sWorkspace_simulation_copy
         sWorkspace_target_case = self.sWorkspace_output
         nParameter_watershed = len(aParameter_watershed)
@@ -1048,8 +1175,12 @@ class swatcase(object):
             return
 
         #open the new file to write out
-        sFilename  = 'watershed_default_parameter.txt'
-        sFilename_watershed_out = os.path.join(str(Path(sWorkspace_target_case)) ,  sFilename )    
+        if sFilename_watershed_in is None:
+            sFilename  = 'watershed_parameter_default.txt'
+            sFilename_watershed_out = os.path.join(str(Path(sWorkspace_target_case)) ,  sFilename )   
+        else:
+            sFilename_watershed_out = sFilename_watershed_in
+
         if os.path.exists(sFilename_watershed_out):                
             os.remove(sFilename_watershed_out)
 
@@ -1236,7 +1367,7 @@ class swatcase(object):
 
         return
     
-    def extract_default_parameter_value_subbasin(self, aParameter_subbasin):
+    def extract_default_parameter_value_subbasin(self, aParameter_subbasin, sFilename_subbasin_in = None):
         sWorkspace_source_case = self.sWorkspace_simulation_copy
         sWorkspace_target_case = self.sWorkspace_output
    
@@ -1249,8 +1380,12 @@ class swatcase(object):
             pass     
     
         #open the new file to write out
-        sFilename  = 'subbasin_default_parameter.txt'
-        sFilename_subbasin_out = os.path.join(str(Path(sWorkspace_target_case)) ,  sFilename )    
+        if sFilename_subbasin_in is None:
+            sFilename  = 'subbasin_parameter_default.txt'
+            sFilename_subbasin_out = os.path.join(str(Path(sWorkspace_target_case)) ,  sFilename )    
+        else:
+            sFilename_subbasin_out = sFilename_subbasin_in
+
         if os.path.exists(sFilename_subbasin_out):                
             os.remove(sFilename_subbasin_out)
 
@@ -1421,7 +1556,7 @@ class swatcase(object):
         return
 
 
-    def extract_default_parameter_value_hru(self, aParameter_hru):
+    def extract_default_parameter_value_hru(self, aParameter_hru, sFilename_hru_in = None):
         sWorkspace_source_case = self.sWorkspace_simulation_copy
         sWorkspace_target_case = self.sWorkspace_output
         nParameter_hru = len(aParameter_hru)
@@ -1433,8 +1568,12 @@ class swatcase(object):
         else:
             pass   
         #open the new file to write out
-        sFilename  = 'hru_default_parameter.txt'
-        sFilename_hru_out = os.path.join(str(Path(sWorkspace_target_case)) ,  sFilename )    
+        if sFilename_hru_in is None:
+            sFilename  = 'hru_parameter_default.txt'
+            sFilename_hru_out = os.path.join(str(Path(sWorkspace_target_case)) ,  sFilename )    
+        else:
+            sFilename_hru_out = sFilename_hru_in
+
         if os.path.exists(sFilename_hru_out):                
             os.remove(sFilename_hru_out)
 
@@ -1722,7 +1861,7 @@ class swatcase(object):
         print('Finished writing hru default parameter file!')
         return
 
-    def extract_default_parameter_value_soil(self, aParameter_soil):
+    def extract_default_parameter_value_soil(self, aParameter_soil, sWorkspace_soil_in = None):
         sWorkspace_source_case = self.sWorkspace_simulation_copy
         sWorkspace_target_case = self.sWorkspace_output
         nParameter_soil = len(aParameter_soil)
@@ -1802,8 +1941,12 @@ class swatcase(object):
         for iSoil in range(1, nsoil_combination+1):
             sSoil_type =  "{:02d}".format( iSoil )
             #open the new file to write out
-            sFilename  = 'soiltype' + sSoil_type + '_default_parameter.txt'
-            sFilename_soil_out = os.path.join(str(Path(sWorkspace_target_case)) ,  sFilename ) 
+            sFilename  = 'soiltype' + sSoil_type + '_parameter_default.txt'
+            if sWorkspace_soil_in is None:                
+                sFilename_soil_out = os.path.join(str(Path(sWorkspace_target_case)) ,  sFilename ) 
+            else:
+                sFilename_soil_out = os.path.join(sWorkspace_soil_in ,  sFilename ) 
+                
             ssoil_code = aSoil_combination[iSoil-1,0]
             nsoil_layer = int(aSoil_combination[iSoil-1,1])
             if os.path.exists(sFilename_soil_out):                
