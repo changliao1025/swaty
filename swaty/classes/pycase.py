@@ -17,6 +17,8 @@ from json import JSONEncoder
 from pyearth.system.define_global_variables import *
 import pyearth.toolbox.date.julian as julian
 from pyearth.toolbox.data.convert_time_series_daily_to_monthly import convert_time_series_daily_to_monthly
+from pyearth.visual.timeseries.plot_time_series_data import plot_time_series_data
+from pyearth.visual.scatter.scatter_plot_data import scatter_plot_data
 
 from swaty.auxiliary.text_reader_string import text_reader_string
 from swaty.auxiliary.line_count import line_count
@@ -105,7 +107,7 @@ class swatcase(object):
     sWorkspace_input=''
     sWorkspace_output=''   
  
-   
+    sTime_step_calibration=''
     sFilename_observation_discharge=''
     sFilename_LandUseSoilsReport=''
     sFilename_HRULandUseSoilsReport=''
@@ -351,6 +353,12 @@ class swatcase(object):
         if 'sFilename_observation_discharge' in aConfig_in: 
             self.sFilename_observation_discharge = aConfig_in['sFilename_observation_discharge']
         
+        if 'sTime_step_calibration' in aConfig_in: 
+            self.sTime_step_calibration = aConfig_in['sTime_step_calibration']
+        else:
+            self.sTime_step_calibration = 'daily'
+        
+
         if 'sFilename_swat' in aConfig_in:
             self.sFilename_swat = aConfig_in[ 'sFilename_swat']
 
@@ -549,26 +557,100 @@ class swatcase(object):
 
         #we need to be careful that Tmp is different in python/linux with tmp
 
+        nsubbasin = self.nsubbasin
+        sFilename_watershed_configuration = self.sFilename_watershed_configuration
+        sFilename_hru_info = self.sFilename_hru_info     
+        aSubbasin_hru  = text_reader_string( sFilename_watershed_configuration, cDelimiter_in = ',' )
+        aHru_configuration = aSubbasin_hru[:,1].astype(int)  
 
-        for sExtension in aExtension:
-            sDummy = '*' + sExtension
+        aExtension_watershed = ( '.fin','.cio','.fig','.dat','.cst','.wwq', '.bsn','.deg','.slr' )
+        aExtension_subbasin = ('.wus','.sub','.swq','.pnd','.rte','.wgn'  )
+        aExtension_hru = ( '.chm','.gw','.hru','.mgt','.sdr','.sep','.sol'  )
+        aExtension_other = ('ATM','.pcp','.tmp','.hmd'  )
+
+        for sExtension in aExtension_watershed:
+            sDummy = '*'+ sExtension
             sRegax = os.path.join(str(Path(sWorkspace_simulation_copy)  ) ,  sDummy  )
+            for sFilename in glob.glob(sRegax):
+                sBasename_with_extension = os.path.basename(sFilename)
+                sFilename_new = os.path.join(str(Path(sWorkspace_target_case)) ,   sBasename_with_extension )     
+                print(sFilename, sFilename_new)               
+                #copyfile(sFilename, sFilename_new)      
+                if (os.path.exists(sFilename_new)): 
+                    sCommand = 'rm -rf  ' + sFilename_new
+                    status = subprocess.call(sCommand, shell=True)  
+                sCommand = 'cp ' + sFilename + ' ' + sFilename_new
+                status = subprocess.call(sCommand, shell=True)  
+        
+        for iSubbasin in range(1, nsubbasin+1):
+            sSubbasin = "{:05d}".format( iSubbasin )            
+            for sExtension in aExtension_subbasin:
+                sDummy = sSubbasin + '0000' + sExtension
+                sFilename = os.path.join(str(Path(sWorkspace_simulation_copy)  ) ,  sDummy  )              
+              
+                #sBasename_with_extension = os.path.basename(sFilename)
+                sFilename_new = os.path.join(str(Path(sWorkspace_target_case)) ,  sDummy  )   
+                print(sFilename, sFilename_new)                 
+                #copyfile(sFilename, sFilename_new)
+                if (os.path.exists(sFilename_new)): 
+                    sCommand = 'rm -rf  ' + sFilename_new
+                    status = subprocess.call(sCommand, shell=True) 
+                sCommand = 'cp ' + sFilename + ' ' + sFilename_new
+                status = subprocess.call(sCommand, shell=True)
 
-            
 
+        for iSubbasin in range(1, nsubbasin+1):
+            sSubbasin = "{:05d}".format( iSubbasin )
+            nhru_subbasin = aHru_configuration[ iSubbasin-1]
+            for iHru in range(1, nhru_subbasin+1):
+                sHru = "{:04d}".format( iHru)
+                print(sSubbasin + sHru) 
+                for sExtension in aExtension_hru:
+                       
+                    sDummy = sSubbasin + sHru + sExtension
+                    sFilename = os.path.join(str(Path(sWorkspace_simulation_copy)  ) ,  sDummy  )
+                    
+                    #else:
+                    #start = datetime.datetime.now()
+                    #for sFilename in glob.glob(sRegax):
+                    #sBasename_with_extension = os.path.basename(sFilename)
+                    sFilename_new = os.path.join(str(Path(sWorkspace_target_case)) ,  sDummy  )   
+                                 
+                    #copyfile(sFilename, sFilename_new)
+                    if (os.path.exists(sFilename_new)): 
+                        sCommand = 'rm -rf  ' + sFilename_new
+                        status = subprocess.call(sCommand, shell=True) 
+                    sCommand = 'cp ' + sFilename + ' ' + sFilename_new
+                    status = subprocess.call(sCommand, shell=True)
+
+                    #finish = datetime.datetime.now()
+                    #print("Time elapsed: ", finish-start) # CPU seconds elapsed (floating point)
+
+        for sExtension in aExtension_other:
             if sExtension == '.tmp':
+                sDummy = '*'+ sExtension
+                sRegax = os.path.join(str(Path(sWorkspace_simulation_copy)  ) ,  sDummy  )
                 for sFilename in glob.glob(sRegax):
                     sBasename_with_extension = os.path.basename(sFilename)
-                    sFilename_new = os.path.join(str(Path(sWorkspace_target_case)) ,  sBasename_with_extension.lower()  )
-                    #sFilename_new = sWorkspace_target_case + slash + sBasename_with_extension.lower()
-                    copyfile(sFilename, sFilename_new)
+                    sFilename_new = os.path.join(str(Path(sWorkspace_target_case)) ,  sBasename_with_extension.lower()  )                    
+                    #copyfile(sFilename, sFilename_new)
+                    if (os.path.exists(sFilename_new)): 
+                        sCommand = 'rm -rf  ' + sFilename_new
+                        status = subprocess.call(sCommand, shell=True) 
+                    sCommand = 'cp ' + sFilename + ' ' + sFilename_new
+                    status = subprocess.call(sCommand, shell=True)  
             else:
-
+                sDummy = '*'+ sExtension
+                sRegax = os.path.join(str(Path(sWorkspace_simulation_copy)  ) ,  sDummy  )
                 for sFilename in glob.glob(sRegax):
                     sBasename_with_extension = os.path.basename(sFilename)
-                    sFilename_new = os.path.join(str(Path(sWorkspace_target_case)) ,  sBasename_with_extension  )
-                    #sFilename_new = sWorkspace_target_case + slash + sBasename_with_extension
-                    copyfile(sFilename, sFilename_new)
+                    sFilename_new = os.path.join(str(Path(sWorkspace_target_case)) ,  sBasename_with_extension  )                    
+                    #copyfile(sFilename, sFilename_new)
+                    sCommand = 'rm -rf  ' + sFilename_new
+                    status = subprocess.call(sCommand, shell=True) 
+                    sCommand = 'cp ' + sFilename + ' ' + sFilename_new
+                    status = subprocess.call(sCommand, shell=True)  
+
 
         print('Finished copying all input files')
     
@@ -588,17 +670,14 @@ class swatcase(object):
         
 
         if (self.iFlag_initialization ==1):
-            #self.copy_TxtInOut_files()                       
-            self.swaty_prepare_watershed_parameter_file()
-            self.swaty_prepare_subbasin_parameter_file()
-            self.swaty_prepare_hru_parameter_file()
-            self.swaty_prepare_soil_parameter_file()
-            #actual update parameter
-            #self.swaty_write_watershed_input_file()                
-            #self.swaty_write_subbasin_input_file()                 
-            #self.swaty_write_hru_input_file()        
+            self.copy_TxtInOut_files()                       
+            #self.swaty_prepare_watershed_parameter_file()
+            #self.swaty_prepare_subbasin_parameter_file()
+            #self.swaty_prepare_hru_parameter_file()
+            #self.swaty_prepare_soil_parameter_file()
+            #actual update parameter                 
                
-            #self.swaty_copy_executable_file()
+            self.swaty_copy_executable_file()
             sFilename_bash = self.swaty_prepare_simulation_bash_file()
             sFilename_job = self.swaty_prepare_simulation_job_file() 
             pass
@@ -707,6 +786,10 @@ class swatcase(object):
             sFilename_pest_parameter_watershed = os.path.join( self.sWorkspace_output, 'watershed.para' )
         else:
             sFilename_pest_parameter_watershed = sFilename_pest_parameter_watershed_in
+        
+        sTime  = datetime.datetime.now().strftime("%m%d%Y%H%M%S")
+        sFilename_new = os.path.join(os.path.dirname(sFilename_pest_parameter_watershed_in), 'watershed_parameter' + sTime + '.txt')
+        copy2(sFilename_pest_parameter_watershed_in, sFilename_new)
 
         aData_dummy0 = text_reader_string(sFilename_pest_parameter_watershed, cDelimiter_in=',')
 
@@ -763,7 +846,9 @@ class swatcase(object):
         sLine = sLine + '\n'
         ofs.write(sLine)
         ofs.close()
-        pass
+        
+        
+        return
     
     def convert_pest_subbasin_parameter_to_actual_parameter(self,  sFilename_pest_parameter_subbasin_in = None,\
         sFilename_subbasin_parameter_default_in = None,sFilename_subbasin_parameter_bounds_in = None):
@@ -774,6 +859,11 @@ class swatcase(object):
             sFilename_pest_subbasin = os.path.join( sWorkspace_output, 'subbasin.para' )
         else:
             sFilename_pest_parameter_subbasin = sFilename_pest_parameter_subbasin_in
+
+        sTime  = datetime.datetime.now().strftime("%m%d%Y%H%M%S")
+        sFilename_new = os.path.join(os.path.dirname(sFilename_pest_parameter_subbasin_in), 'subbasin_parameter' + sTime + '.txt')
+        copy2(sFilename_pest_parameter_subbasin_in, sFilename_new)
+
         aData_dummy0 = text_reader_string(sFilename_pest_parameter_subbasin, cDelimiter_in=',')
 
         #read pest default parameter value
@@ -832,7 +922,8 @@ class swatcase(object):
             sLine = sLine + '\n'
             ofs.write(sLine)
         ofs.close()
-        pass
+        
+        return
     
     def convert_pest_hru_parameter_to_actual_parameter(self, sFilename_pest_parameter_hru_in = None,\
         sFilename_hru_parameter_default_in = None,sFilename_hru_parameter_bounds_in = None):
@@ -844,6 +935,11 @@ class swatcase(object):
             sFilename_pest_parameter_hru = os.path.join(  self.sWorkspace_output, 'hru.para' )
         else:
             sFilename_pest_parameter_hru = sFilename_pest_parameter_hru_in
+        
+        sTime  = datetime.datetime.now().strftime("%m%d%Y%H%M%S")
+        sFilename_new = os.path.join(os.path.dirname(sFilename_pest_parameter_hru_in), 'hru_parameter' + sTime + '.txt')
+        copy2(sFilename_pest_parameter_hru_in, sFilename_new)
+
         aData_dummy0 = text_reader_string(sFilename_pest_parameter_hru, cDelimiter_in=',')
         #read pest default parameter value
         if sFilename_hru_parameter_default_in is None:
@@ -888,7 +984,8 @@ class swatcase(object):
                 if sName in aName_ratio:
                     dValue_default = float(aData_dummy1[iHru,j+1].strip())
                     dRatio = float(aData_dummy01[0][j].strip())
-                    dValue =  dValue_default * dRatio
+                    #dValue =  dValue_default * dRatio #chang (0-10)
+                    dValue =  dValue_default * (1 + dRatio) #khong (-1,1)
                 else:
                     dRatio = 1.0
                     dValue = float(aData_dummy01[0][j].strip()) * dRatio
@@ -907,7 +1004,8 @@ class swatcase(object):
             sLine = sLine + '\n'
             ofs.write(sLine)
         ofs.close()
-        pass
+
+        return
     
     def convert_pest_soil_parameter_to_actual_parameter(self, sFilename_pest_parameter_soil_in = None,\
         sFilename_soil_parameter_bounds_in = None,sWorkspace_soil_parameter_default_in = None ):
@@ -918,6 +1016,11 @@ class swatcase(object):
             sFilename_pest_parameter_soil = os.path.join( sWorkspace_simulation_case, 'soil.para' )
         else: 
             sFilename_pest_parameter_soil= sFilename_pest_parameter_soil_in
+
+        sTime  = datetime.datetime.now().strftime("%m%d%Y%H%M%S")
+        #save history
+        sFilename_new = os.path.join(os.path.dirname(sFilename_pest_parameter_soil), 'soil_parameter' + sTime + '.txt')
+        copy2(sFilename_pest_parameter_soil, sFilename_new)
 
         if sWorkspace_soil_parameter_default_in is None:
             sWorkspace_soil_parameter_default = self.sWorkspace_output
@@ -1024,6 +1127,7 @@ class swatcase(object):
                     self.aHru_combination[iHru-1].aSoil[iSoil_layer-1].aParameter_soil[i].dValue_current= dummy[iSoil_layer-1, i]
 
         
+        
 
         return
 
@@ -1050,6 +1154,7 @@ class swatcase(object):
         return
     
     def evaluate(self):
+        self.swaty_tsplot_stream_discharge()
         return
 
     def swaty_generate_model_structure_files(self):
@@ -1577,7 +1682,6 @@ class swatcase(object):
         ofs.close()
         print('Finished writing subbasin default parameter file!')
         return
-
 
     def extract_default_parameter_value_hru(self, aParameter_hru, sFilename_hru_in = None):
         sWorkspace_source_case = self.sWorkspace_simulation_copy
@@ -3559,6 +3663,7 @@ class swatcase(object):
         iYear_end  = self.iYear_end   
         nstress = self.nstress
         nsegment = self.nsegment
+        sTime_step_calibration = self.sTime_step_calibration
         
       
         sPath_current = self.sWorkspace_output
@@ -3584,19 +3689,27 @@ class swatcase(object):
         iMonth_end_in = self.iMonth_end
         iDay_end_in = self.iDay_end
 
-        aDischarge_simulation_monthly = convert_time_series_daily_to_monthly(aDischarge_simulation_daily,\
-            iYear_start_in, iMonth_start_in, iDay_start_in, \
-          iYear_end_in, iMonth_end_in, iDay_end_in , sType_in = 'sum'  )
+        sFilename_out=''
+        if sTime_step_calibration == 'daily':            
+            sFilename_out = os.path.join(sPath_current , 'stream_discharge_daily.txt') 
+            np.savetxt(sFilename_out, aDischarge_simulation_daily, delimiter=",")
+        else: 
+            if sTime_step_calibration == 'monthly':
+                aDischarge_simulation_monthly = convert_time_series_daily_to_monthly(aDischarge_simulation_daily,\
+                    iYear_start_in, iMonth_start_in, iDay_start_in, \
+                    iYear_end_in, iMonth_end_in, iDay_end_in , sType_in = 'sum'  )
+                
+                sFilename_out = os.path.join(sPath_current , 'stream_discharge_monthly.txt')  
+                np.savetxt(sFilename_out, aDischarge_simulation_monthly, delimiter=",")
+            else:
+                #annual 
+                sFilename_out = os.path.join(sPath_current , 'stream_discharge_annual.txt') 
+                pass
 
-        #save it to a text file
-        sFilename_out = os.path.join(sPath_current , 'stream_discharge_monthly.txt')
-
-        np.savetxt(sFilename_out, aDischarge_simulation_monthly, delimiter=",")
 
         sTime  = datetime.datetime.now().strftime("%m%d%Y%H%M%S")
-
         #save history
-        sFilename_new = os.path.join(sPath_current , 'stream_discharge' + sTime + '.txt')
+        sFilename_new = os.path.join(sPath_current , 'stream_discharge' + sTime_step_calibration + '.txt')
         copy2(sFilename_out, sFilename_new)
 
         #save for pest calibration
@@ -3605,6 +3718,100 @@ class swatcase(object):
 
         print('Finished extracting stream discharge: ' + sFilename_out)
 
+    def swaty_tsplot_stream_discharge(self):
+        iYear_start = self.iYear_start
+        iYear_end = self.iYear_end
+        nstress_month = self.nstress_month
+
+        sWorkspace_simulation_case = self.sWorkspace_output
+
+
+        sFilename1 = self.sFilename_observation_discharge 
+        #'/global/u1/l/liao313/data/swat/arw/auxiliary/usgs/discharge/stream_discharge_monthly.txt'
+
+        aData = text_reader_string(sFilename1)
+        aDischarge_obs = np.array( aData ).astype(float)  
+        aDischarge_obs = aDischarge_obs.flatten() * cms2cmd
+
+        sFilename2 = os.path.join(self.sWorkspace_output , 'stream_discharge_monthly.txt' )
+
+        aData = text_reader_string(sFilename2)
+        aDischarge_simulation1 = np.array( aData ).astype(float)  
+        aDischarge_simulation1 = aDischarge_simulation1.flatten() * cms2cmd
+
+        sFilename3 =  '/global/u1/l/liao313/data/swat/arw/auxiliary/usgs/discharge/stream_discharge_monthly_opt.txt'
+
+        aData = text_reader_string(sFilename3)
+        aDischarge_simulation2 = np.array( aData ).astype(float)  
+        aDischarge_simulation2 = aDischarge_simulation2.flatten() * cms2cmd
+
+        #dummy1 = np.percentile(aDischarge_simulation, 99)
+        #dummy2 = np.where( aDischarge_simulation > dummy1 )
+
+
+        #plot simulation
+        dates = list()
+        for iYear in range(iYear_start, iYear_end+1):
+            for iMonth in range(1,13):
+                dSimulation = datetime.datetime(iYear, iMonth, 1)
+                dates.append(dSimulation)
+    
+
+
+        sLabel_Y =r'Stream discharge ($m^{3} \, day^{-1}$)' 
+        sLabel_legend = 'Simulated stream discharge'
+
+
+        aDate= np.tile( dates , (3,1))
+        aData = np.array([aDischarge_obs , aDischarge_simulation1,aDischarge_simulation2])
+
+        aLabel_legend = ['Default','Initial','Calibrated']
+        aColor_in = ['black', 'red', 'blue']
+
+        sFilename_out = sWorkspace_simulation_case + slash + 'discharge_monthly_scatter1.png'
+
+        scatter_plot_data(aDischarge_obs,aDischarge_simulation1,sFilename_out,\
+            iFlag_scientific_notation_x_in=1,\
+                          iFlag_scientific_notation_y_in=1,\
+                              dMin_x_in = 0.0, \
+                                  dMax_x_in = 1E7, \
+                                       dMin_y_in = 0.0, \
+                                  dMax_y_in = 1E7, \
+         iSize_x_in = 8, \
+                          iSize_y_in = 8,\
+                              sLabel_legend_in = 'Initial',\
+                                   sLabel_x_in = r'Observed discharge ($m^{3} \, day^{-1}$)',\
+                          sLabel_y_in = r'Simulated discharge ($m^{3} \, day^{-1}$)' )
+
+        sFilename_out = sWorkspace_simulation_case + slash + 'discharge_monthly_scatter2.png'
+        scatter_plot_data(aDischarge_obs,aDischarge_simulation2,sFilename_out,\
+             iFlag_scientific_notation_x_in=1,\
+                          iFlag_scientific_notation_y_in=1,\
+                               dMin_x_in = 0.0, \
+                                  dMax_x_in = 1E7, \
+                                       dMin_y_in = 0.0, \
+                                  dMax_y_in = 1E7, \
+             iSize_x_in = 8, \
+                          iSize_y_in = 8,\
+                              sLabel_legend_in = 'Calibrated',\
+                                   sLabel_x_in =r'Observed discharge ($m^{3} \, day^{-1}$)',\
+                          sLabel_y_in = r'Calibrated discharge ($m^{3} \, day^{-1}$)' )
+
+        sFilename_out = sWorkspace_simulation_case + slash + 'discharge_monthly.png'
+        plot_time_series_data(aDate, aData,\
+             sFilename_out,\
+             sTitle_in = '', \
+                 sLabel_y_in= sLabel_Y,\
+                     aColor_in =aColor_in,\
+                  aLabel_legend_in = aLabel_legend, \
+                iSize_x_in = 12,\
+                     iSize_y_in = 5)
+
+
+
+
+        print("finished")
+    
     def export_config_to_json(self, sFilename_output):
         aSkip = [ 'aSubbasin' ,'aHru_combination' ]
         obj = self.__dict__.copy()
