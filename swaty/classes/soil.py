@@ -1,20 +1,15 @@
-import os,stat
-import sys
-import glob
-import shutil
-
 import numpy as np
-from pathlib import Path
-import tarfile
-import subprocess
-from shutil import copyfile
-from abc import ABCMeta, abstractmethod
-import datetime
-from shutil import copy2
 import json
 from json import JSONEncoder
 from swaty.classes.swatpara import swatpara
+
 class SoilClassEncoder(JSONEncoder):
+    """
+    The JSON encoder for the soil class
+
+    Args:
+        JSONEncoder (_type_): _description_
+    """
     def default(self, obj):
         if isinstance(obj, np.integer):
             return int(obj)
@@ -33,7 +28,16 @@ class SoilClassEncoder(JSONEncoder):
   
 
 class pysoil(object):
-    __metaclass__ = ABCMeta
+    """
+    The soil class
+
+    Args:
+        object (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+   
     lIndex_hru=-1
     lIndex_soil_layer=-1
     iFlag_soil=0
@@ -52,7 +56,13 @@ class pysoil(object):
         
         return
     
-    def setup_parameter(self, aPara_in= None):
+    def setup_parameter_by_dict(self, aPara_in= None):
+        """
+        Set up the soil class object parameter
+
+        Args:
+            aPara_in (dict, optional): The dictionary that stores parameters. Defaults to None.
+        """
         if aPara_in is not None:
             self.nParameter_soil = len(aPara_in)
             self.aParameter_soil=list()
@@ -68,7 +78,13 @@ class pysoil(object):
             pass
 
         return
-    def setup_parameter2(self, aPara_in= None):
+    def setup_parameter_by_list(self, aPara_in= None):
+        """
+        Another function to set up the soil class object parameter
+
+        Args:
+            aPara_in (list, optional): The list that stores parameters. Defaults to None.
+        """
         if aPara_in is not None:
             self.nParameter_soil = len(aPara_in)
             self.aParameter_soil=list()
@@ -85,6 +101,12 @@ class pysoil(object):
 
         return
     def tojson(self):
+        """
+        Convert the object to a JSON object
+
+        Returns:
+            _type_: _description_
+        """
         aSkip = []
 
         obj = self.__dict__.copy()

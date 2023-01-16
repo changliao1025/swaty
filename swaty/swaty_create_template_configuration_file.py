@@ -5,8 +5,6 @@ from os.path import realpath
 import json
 #once it's generated, you can modify it and use it for different simulations
 from swaty.classes.pycase import swatcase
-#from swaty.classes.basin import pybasin
-
 from swaty.classes.swatpara import swatpara
 from swaty.classes.watershed import pywatershed
 from swaty.classes.subbasin import pysubbasin
@@ -17,6 +15,19 @@ def swaty_create_template_configuration_file(sFilename_json,sPath_bin, sWorkspac
     iFlag_standalone_in=None, iCase_index_in = None, \
         iFlag_read_discretization_in=None,\
         sDate_in = None, aParameter_in = None):
+    """Generat a template configuration file for users
+
+    Args:
+        sFilename_json (string): The output json file
+        sPath_bin (string): The swat binary file path
+        sWorkspace_input (string): The input workspace
+        sWorkspace_output (string): The output workspace
+        iCase_index_in (int, optional): The case study ID. Defaults to None.
+        aParameter_in (dict, optional): The dictionary that stores all the parameters. Defaults to None.
+
+    Returns:
+        int: None
+    """
     if iCase_index_in is not None:        
         iCase_index = iCase_index_in
     else:       
@@ -195,7 +206,7 @@ def swaty_create_template_configuration_file(sFilename_json,sPath_bin, sWorkspac
             aParameter_subbasin_name.append(aName[iPara].lower())
 
         pdummy = pysubbasin()    
-        pdummy.setup_parameter2(aPara_in = aParameter_subbasin)
+        pdummy.setup_parameter_by_list(aPara_in = aParameter_subbasin)
         pdummy.lIndex = 1
         oSwat.aSubbasin.append(pdummy)
         oSwat.nParameter_subbasin = len(aParameter_subbasin)
@@ -238,10 +249,10 @@ def swaty_create_template_configuration_file(sFilename_json,sPath_bin, sWorkspac
             aParameter_soil_name.append(aName[iPara].lower())
 
         dummy_hru = pyhru()
-        dummy_hru.setup_parameter2(aPara_in = aParameter_hru)
+        dummy_hru.setup_parameter_by_list(aPara_in = aParameter_hru)
 
         dummy_soil = pysoil()        
-        dummy_soil.setup_parameter2(aPara_in = aParameter_soil)
+        dummy_soil.setup_parameter_by_list(aPara_in = aParameter_soil)
         dummy_hru.aSoil=list()
         dummy_hru.aSoil.append(dummy_soil)  
 

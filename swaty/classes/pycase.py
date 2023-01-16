@@ -119,10 +119,24 @@ class swatcase(object):
     sDate_start =''
     sDate_end=''
 
-    def __init__(self, aConfig_in,\
-        iFlag_read_discretization_in=None,\
-        iFlag_standalone_in= None,\
-        sDate_in=None, sWorkspace_output_in=None, aParameter_in = None):
+    def __init__(self, aConfig_in,  iFlag_read_discretization_in=None,   iFlag_standalone_in= None,  sDate_in=None, sWorkspace_output_in=None, aParameter_in = None):
+        """
+        _summary_
+
+        :param aConfig_in: _description_
+        :type aConfig_in: _type_
+        :param iFlag_read_discretization_in: _description_, defaults to None
+        :type iFlag_read_discretization_in: _type_, optional
+        :param iFlag_standalone_in: _description_, defaults to None
+        :type iFlag_standalone_in: _type_, optional
+        :param sDate_in: _description_, defaults to None
+        :type sDate_in: _type_, optional
+        :param sWorkspace_output_in: _description_, defaults to None
+        :type sWorkspace_output_in: _type_, optional
+        :param aParameter_in: _description_, defaults to None
+        :type aParameter_in: _type_, optional
+        """
+                
 
         if 'iFlag_run' in aConfig_in:
             self.iFlag_run =  int(aConfig_in['iFlag_run']) 
@@ -779,7 +793,16 @@ class swatcase(object):
         return
 
     def convert_pest_watershed_parameter_to_actual_parameter(self, sFilename_pest_parameter_watershed_in = None,\
-        sFilename_watershed_parameter_default_in = None,sFilename_watershed_parameter_bounds_in = None ):
+                sFilename_watershed_parameter_default_in = None,sFilename_watershed_parameter_bounds_in = None ):
+        """
+        _summary_
+
+        :param sFilename_pest_parameter_watershed_in: _description_, defaults to None
+        :type sFilename_pest_parameter_watershed_in: _type_, optional
+        :param sFilename_watershed_parameter_bounds_in: _description_, defaults to None
+        :type sFilename_watershed_parameter_bounds_in: _type_, optional
+        """
+        
 
         #read the default parameter value
         if sFilename_pest_parameter_watershed_in is None:

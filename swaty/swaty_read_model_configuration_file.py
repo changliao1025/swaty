@@ -13,20 +13,42 @@ from swaty.classes.pycase import swatcase
 pDate = datetime.datetime.today()
 sDate_default = "{:04d}".format(pDate.year) + "{:02d}".format(pDate.month) + "{:02d}".format(pDate.day)
 
-def swaty_read_model_configuration_file(sFilename_configuration_in , \
-    iFlag_read_discretization_in = None,\
-    iFlag_standalone_in=None, \
-        iCase_index_in = None, sDate_in = None,\
-        iYear_start_in = None,\
-            iMonth_start_in = None,\
-                iDay_start_in = None, \
-        iYear_end_in = None,\
-            iMonth_end_in = None,\
-                iDay_end_in = None, \
-          sWorkspace_input_in =None, \
-              sWorkspace_output_in =None ,\
-              aParameter_in=None  ):
+def swaty_read_model_configuration_file(sFilename_configuration_in , 
+        iFlag_read_discretization_in = None,
+        iFlag_standalone_in=None, 
+        iCase_index_in = None, 
+        sDate_in = None,
+        iYear_start_in = None,
+        iMonth_start_in = None,
+        iDay_start_in = None, 
+        iYear_end_in = None,
+        iMonth_end_in = None,
+        iDay_end_in = None, 
+        sWorkspace_input_in =None, 
+        sWorkspace_output_in =None ,
+        aParameter_in=None  ):
+    """
+    _summary_
 
+    Args:
+        sFilename_configuration_in (str): Filename of the configuration json file
+        iFlag_read_discretization_in (int, optional): _description_. Defaults to None.
+        iFlag_standalone_in (int, optional): _description_. Defaults to None.
+        iCase_index_in (int, optional): _description_. Defaults to None.
+        sDate_in (str, optional): _description_. Defaults to None.
+        iYear_start_in (int, optional): _description_. Defaults to None.
+        iMonth_start_in (int, optional): _description_. Defaults to None.
+        iDay_start_in (int, optional): _description_. Defaults to None.
+        iYear_end_in (int, optional): _description_. Defaults to None.
+        iMonth_end_in (int, optional): _description_. Defaults to None.
+        iDay_end_in (int, optional): _description_. Defaults to None.
+        sWorkspace_input_in (str, optional): _description_. Defaults to None.
+        sWorkspace_output_in (str, optional): _description_. Defaults to None.
+        aParameter_in (dict, optional): _description_. Defaults to None.
+
+    Returns:
+        _type_: _description_
+    """
     if not os.path.isfile(sFilename_configuration_in):
         print(sFilename_configuration_in + ' does not exist')
         return

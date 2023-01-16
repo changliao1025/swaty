@@ -1,10 +1,16 @@
-from abc import ABCMeta
+
 import numpy as np
 import json
 from json import JSONEncoder
 
 
 class ParaClassEncoder(JSONEncoder):
+    """
+    The general parameter JSON encoder
+
+    Args:
+        JSONEncoder (_type_): _description_
+    """
     def default(self, obj):
         if isinstance(obj, np.integer):
             return int(obj)
@@ -14,6 +20,15 @@ class ParaClassEncoder(JSONEncoder):
         return JSONEncoder.default(self, obj)
 
 class swatpara(object):
+    """
+    The parameter class
+
+    Args:
+        object (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     sName=''
     iParameter_type=1 #1 watershed, 2 subbsain 3 hru 4 soil layer
     #iIndex=1
@@ -27,6 +42,12 @@ class swatpara(object):
     dValue_lower=-1
     dValue_upper=1
     def __init__(self, aConfig_in):
+        """
+        Initialize a parameter object through a dictionary
+
+        Args:
+            aConfig_in (dict): The dictionary that stores parameters
+        """
 
         if 'iParameter_type' in aConfig_in:
             self.iParameter_type = int(aConfig_in['iParameter_type'])
@@ -68,6 +89,12 @@ class swatpara(object):
 
         return
     def tojson(self):
+        """
+        Convert a parameter object to a JSON object
+
+        Returns:
+            _type_: _description_
+        """
         sJson = json.dumps(self.__dict__, \
                 sort_keys=True, \
                 indent = 4, \

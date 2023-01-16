@@ -17,6 +17,12 @@ from swaty.classes.swatpara import swatpara
 from swaty.classes.soil import pysoil
 
 class HruClassEncoder(JSONEncoder):
+    """
+    The JSON encoder for the hru class
+
+    Args:
+        JSONEncoder (_type_): The json encoder for hru class
+    """
     def default(self, obj):
         if isinstance(obj, np.integer):
             return int(obj)
@@ -37,7 +43,15 @@ class HruClassEncoder(JSONEncoder):
   
 
 class pyhru(object):
-    __metaclass__ = ABCMeta
+    """
+    The HRU class
+
+    Args:
+        object (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
 
     lIndex_hru=-1    
     iFlag_hru=0
@@ -61,7 +75,14 @@ class pyhru(object):
         return
       
 
-    def setup_parameter(self,aPara_in= None):
+    def setup_parameter_by_dict(self,aPara_in= None):
+        """
+        Set up the hru class object parameter
+
+        Args:
+            aPara_in (dict, optional): The dictionary that stores parameters. Defaults to None.
+        """
+
         self.nParameter_hru = len(aPara_in)
         self.aParameter_hru=list()
         self.aParameter_hru_name=list()
@@ -74,7 +95,13 @@ class pyhru(object):
             if sName not in self.aParameter_hru_name:
                 self.aParameter_hru_name.append(sName)
         return
-    def setup_parameter2(self,aPara_in= None):
+    def setup_parameter_by_list(self,aPara_in= None):
+        """
+        Another function to set up the hru class object parameter
+
+        Args:
+            aPara_in (list, optional): The list that stores parameters. Defaults to None.
+        """
         self.nParameter_hru = len(aPara_in)
         self.aParameter_hru=list()
         self.aParameter_hru_name=list()
@@ -89,6 +116,12 @@ class pyhru(object):
         return
     
     def tojson(self):
+        """
+        Convert a hru object to a JSON object
+
+        Returns:
+            _type_: _description_
+        """
         aSkip = []      
 
         obj = self.__dict__.copy()
