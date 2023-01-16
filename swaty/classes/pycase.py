@@ -1,6 +1,6 @@
 
 import os,stat
-import sys
+
 import glob
 import shutil
 
@@ -8,8 +8,8 @@ import numpy as np
 from pathlib import Path
 import tarfile
 import subprocess
-from shutil import copyfile
-from abc import ABCMeta, abstractmethod
+
+
 import datetime
 from shutil import copy2
 import json
@@ -32,6 +32,12 @@ pDate = datetime.datetime.today()
 sDate_default = "{:04d}".format(pDate.year) + "{:02d}".format(pDate.month) + "{:02d}".format(pDate.day)
 
 class CaseClassEncoder(JSONEncoder):
+    """
+    The JSON encoder for the pycase class
+
+    Args:
+        JSONEncoder (_type_): The json encoder for hru class
+    """
     def default(self, obj):
         if isinstance(obj, np.integer):
             return int(obj)
@@ -59,7 +65,16 @@ class CaseClassEncoder(JSONEncoder):
         return JSONEncoder.default(self, obj)
 
 class swatcase(object):
-    __metaclass__ = ABCMeta
+    """
+    The swat case class
+
+    Args:
+        object (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+
     iCase_index=0
     iSiteID=0
     iFlag_run =0
@@ -119,7 +134,12 @@ class swatcase(object):
     sDate_start =''
     sDate_end=''
 
-    def __init__(self, aConfig_in,  iFlag_read_discretization_in=None,   iFlag_standalone_in= None,  sDate_in=None, sWorkspace_output_in=None, aParameter_in = None):
+    def __init__(self, aConfig_in,  
+        iFlag_read_discretization_in=None,   
+        iFlag_standalone_in= None,  
+        sDate_in=None, 
+        sWorkspace_output_in=None, 
+        aParameter_in = None):
         """
         _summary_
 
@@ -527,9 +547,9 @@ class swatcase(object):
 
     def copy_TxtInOut_files(self):
         """
-        sFilename_configuration_in
-        sModel
-        """        
+        Copy the raw SWAT input files
+        """
+            
         
         sWorkspace_target_case = self.sWorkspace_output   
 
@@ -669,6 +689,9 @@ class swatcase(object):
         print('Finished copying all input files')
     
     def prepare_pest_template_files(self):
+        """
+        Prepare all the PEST calibration template files
+        """
 
         self.swaty_prepare_watershed_template_file()
         self.swaty_prepare_subbasin_template_file()
@@ -719,23 +742,36 @@ class swatcase(object):
         
         return
 
-    def convert_pest_parameter_to_model_input(self, \
-        
-        sFilename_pest_parameter_watershed_in = None,\
-        sFilename_watershed_parameter_default_in = None,\
-        sFilename_watershed_parameter_bounds_in = None,\
+    def convert_pest_parameter_to_model_input(self,         
+        sFilename_pest_parameter_watershed_in = None,
+        sFilename_watershed_parameter_default_in = None,
+        sFilename_watershed_parameter_bounds_in = None,
+        sFilename_pest_parameter_subbasin_in = None,
+        sFilename_subbasin_parameter_default_in = None,
+        sFilename_subbasin_parameter_bounds_in = None,            
+        sFilename_pest_parameter_hru_in = None,
+        sFilename_hru_parameter_default_in = None,
+        sFilename_hru_parameter_bounds_in = None,            
+        sFilename_pest_parameter_soil_in = None,
+        sFilename_soil_parameter_bounds_in = None, 
+        sWorkspace_soil_parameter_default_in = None ):
+        """
+        Convert the pest parameters into SWAT input file
 
-        sFilename_pest_parameter_subbasin_in = None,\
-        sFilename_subbasin_parameter_default_in = None,\
-            sFilename_subbasin_parameter_bounds_in = None,\
-            
-        sFilename_pest_parameter_hru_in = None,\
-        sFilename_hru_parameter_default_in = None,\
-            sFilename_hru_parameter_bounds_in = None,\
-            
-        sFilename_pest_parameter_soil_in = None,\
-        sFilename_soil_parameter_bounds_in = None, \
-            sWorkspace_soil_parameter_default_in = None ):
+        Args:
+            sFilename_pest_parameter_watershed_in (str, optional): _description_. Defaults to None.
+            sFilename_watershed_parameter_default_in (str, optional): _description_. Defaults to None.
+            sFilename_watershed_parameter_bounds_in (str, optional): _description_. Defaults to None.
+            sFilename_pest_parameter_subbasin_in (str, optional): _description_. Defaults to None.
+            sFilename_subbasin_parameter_default_in (str, optional): _description_. Defaults to None.
+            sFilename_subbasin_parameter_bounds_in (str, optional): _description_. Defaults to None.
+            sFilename_pest_parameter_hru_in (str, optional): _description_. Defaults to None.
+            sFilename_hru_parameter_default_in (str, optional): _description_. Defaults to None.
+            sFilename_hru_parameter_bounds_in (str, optional): _description_. Defaults to None.
+            sFilename_pest_parameter_soil_in (str, optional): _description_. Defaults to None.
+            sFilename_soil_parameter_bounds_in (str, optional): _description_. Defaults to None.
+            sWorkspace_soil_parameter_default_in (str, optional): _description_. Defaults to None.
+        """
 
         self.convert_pest_parameter_to_actual_parameter(\
         
@@ -760,23 +796,36 @@ class swatcase(object):
 
         return
 
-    def convert_pest_parameter_to_actual_parameter(self, \
-        
-        sFilename_pest_parameter_watershed_in = None,\
-        sFilename_watershed_parameter_default_in = None,\
-            sFilename_watershed_parameter_bounds_in = None,\
+    def convert_pest_parameter_to_actual_parameter(self,         
+        sFilename_pest_parameter_watershed_in = None,
+        sFilename_watershed_parameter_default_in = None,
+        sFilename_watershed_parameter_bounds_in = None,
+        sFilename_pest_parameter_subbasin_in = None,
+        sFilename_subbasin_parameter_default_in = None,
+        sFilename_subbasin_parameter_bounds_in = None,            
+        sFilename_pest_parameter_hru_in = None,
+        sFilename_hru_parameter_default_in = None,
+        sFilename_hru_parameter_bounds_in = None,            
+        sFilename_pest_parameter_soil_in = None,
+        sFilename_soil_parameter_bounds_in = None,
+        sWorkspace_soil_parameter_default_in = None    ):
+        """
+        Convert PEST parameters to actual SWAT parameters
 
-        sFilename_pest_parameter_subbasin_in = None,\
-        sFilename_subbasin_parameter_default_in = None,\
-            sFilename_subbasin_parameter_bounds_in = None,\
-            
-        sFilename_pest_parameter_hru_in = None,\
-        sFilename_hru_parameter_default_in = None,\
-            sFilename_hru_parameter_bounds_in = None,\
-            
-        sFilename_pest_parameter_soil_in = None,\
-        sFilename_soil_parameter_bounds_in = None,\
-            sWorkspace_soil_parameter_default_in = None    ):
+        Args:
+            sFilename_pest_parameter_watershed_in (_type_, optional): _description_. Defaults to None.
+            sFilename_watershed_parameter_default_in (_type_, optional): _description_. Defaults to None.
+            sFilename_watershed_parameter_bounds_in (_type_, optional): _description_. Defaults to None.
+            sFilename_pest_parameter_subbasin_in (_type_, optional): _description_. Defaults to None.
+            sFilename_subbasin_parameter_default_in (_type_, optional): _description_. Defaults to None.
+            sFilename_subbasin_parameter_bounds_in (_type_, optional): _description_. Defaults to None.
+            sFilename_pest_parameter_hru_in (_type_, optional): _description_. Defaults to None.
+            sFilename_hru_parameter_default_in (_type_, optional): _description_. Defaults to None.
+            sFilename_hru_parameter_bounds_in (_type_, optional): _description_. Defaults to None.
+            sFilename_pest_parameter_soil_in (_type_, optional): _description_. Defaults to None.
+            sFilename_soil_parameter_bounds_in (_type_, optional): _description_. Defaults to None.
+            sWorkspace_soil_parameter_default_in (_type_, optional): _description_. Defaults to None.
+        """
         
         self.convert_pest_watershed_parameter_to_actual_parameter(sFilename_pest_parameter_watershed_in = sFilename_pest_parameter_watershed_in,\
         sFilename_watershed_parameter_default_in = sFilename_watershed_parameter_default_in,sFilename_watershed_parameter_bounds_in = sFilename_watershed_parameter_bounds_in)
@@ -792,10 +841,10 @@ class swatcase(object):
 
         return
 
-    def convert_pest_watershed_parameter_to_actual_parameter(self, sFilename_pest_parameter_watershed_in = None,\
+    def convert_pest_watershed_parameter_to_actual_parameter(self, sFilename_pest_parameter_watershed_in = None,
                 sFilename_watershed_parameter_default_in = None,sFilename_watershed_parameter_bounds_in = None ):
         """
-        _summary_
+        Convert PEST watershed parameter to actual parameter
 
         :param sFilename_pest_parameter_watershed_in: _description_, defaults to None
         :type sFilename_pest_parameter_watershed_in: _type_, optional
@@ -873,8 +922,16 @@ class swatcase(object):
         
         return
     
-    def convert_pest_subbasin_parameter_to_actual_parameter(self,  sFilename_pest_parameter_subbasin_in = None,\
+    def convert_pest_subbasin_parameter_to_actual_parameter(self,  sFilename_pest_parameter_subbasin_in = None,
         sFilename_subbasin_parameter_default_in = None,sFilename_subbasin_parameter_bounds_in = None):
+        """
+        Convert PEST subbasin parameter to actual parameter
+
+        Args:
+            sFilename_pest_parameter_subbasin_in (_type_, optional): _description_. Defaults to None.
+            sFilename_subbasin_parameter_default_in (_type_, optional): _description_. Defaults to None.
+            sFilename_subbasin_parameter_bounds_in (_type_, optional): _description_. Defaults to None.
+        """
         sWorkspace_output = self.sWorkspace_output
         #subbasin
         #read the default parameter value
@@ -948,8 +1005,16 @@ class swatcase(object):
         
         return
     
-    def convert_pest_hru_parameter_to_actual_parameter(self, sFilename_pest_parameter_hru_in = None,\
+    def convert_pest_hru_parameter_to_actual_parameter(self, sFilename_pest_parameter_hru_in = None,
         sFilename_hru_parameter_default_in = None,sFilename_hru_parameter_bounds_in = None):
+        """
+        Convert PEST hru parameter to actual parameter
+
+        Args:
+            sFilename_pest_parameter_hru_in (_type_, optional): _description_. Defaults to None.
+            sFilename_hru_parameter_default_in (_type_, optional): _description_. Defaults to None.
+            sFilename_hru_parameter_bounds_in (_type_, optional): _description_. Defaults to None.
+        """
 
         
         #subbasin
@@ -1030,8 +1095,16 @@ class swatcase(object):
 
         return
     
-    def convert_pest_soil_parameter_to_actual_parameter(self, sFilename_pest_parameter_soil_in = None,\
+    def convert_pest_soil_parameter_to_actual_parameter(self, sFilename_pest_parameter_soil_in = None,
         sFilename_soil_parameter_bounds_in = None,sWorkspace_soil_parameter_default_in = None ):
+        """
+        Convert PEST soil parameter to actual parameter
+
+        Args:
+            sFilename_pest_parameter_soil_in (_type_, optional): _description_. Defaults to None.
+            sFilename_soil_parameter_bounds_in (_type_, optional): _description_. Defaults to None.
+            sWorkspace_soil_parameter_default_in (_type_, optional): _description_. Defaults to None.
+        """
         sWorkspace_simulation_case = self.sWorkspace_output
         #subbasin
         #read the default parameter value
@@ -1155,6 +1228,9 @@ class swatcase(object):
         return
 
     def run(self):
+        """
+        Run the SWAT simulation using a subprocess
+        """
         if (self.iFlag_run ==1):            
             sFilename_bash = os.path.join(self.sWorkspace_output,  'run_swat.sh' )
             if (os.path.exists(sFilename_bash)):
@@ -1172,15 +1248,27 @@ class swatcase(object):
         return    
 
     def analyze(self, sFilename_output_in=None):
+        """
+        Analyze the SWAT simulation
+
+        Args:
+            sFilename_output_in (_type_, optional): _description_. Defaults to None.
+        """
         self.swaty_extract_stream_discharge(sFilename_output_in = sFilename_output_in )
         
         return
     
     def evaluate(self):
+        """
+        Evaluate the SWAT model simualtion
+        """
         self.swaty_tsplot_stream_discharge()
         return
 
     def swaty_generate_model_structure_files(self):
+        """
+        Generate the SWAT model spatial discretization configuration
+        """
         #the files from this step should be saved at the output folder instead of input folder
         self.swaty_prepare_watershed_configuration()
         self.swaty_retrieve_soil_info()
@@ -1189,10 +1277,19 @@ class swatcase(object):
 
         return
     
-    def generate_parameter_bounds(self, sFilename_watershed_parameter_bounds_in = None,\
-        sFilename_subbasin_parameter_bounds_in = None,\
-        sFilename_hru_parameter_bounds_in = None,\
+    def generate_parameter_bounds(self, sFilename_watershed_parameter_bounds_in = None,
+        sFilename_subbasin_parameter_bounds_in = None,
+        sFilename_hru_parameter_bounds_in = None,
             sFilename_soil_parameter_bounds_in = None      ):
+        """
+        Generate the upper and lower bound of SWAT parameters
+
+        Args:
+            sFilename_watershed_parameter_bounds_in (str, optional): _description_. Defaults to None.
+            sFilename_subbasin_parameter_bounds_in (str, optional): _description_. Defaults to None.
+            sFilename_hru_parameter_bounds_in (str, optional): _description_. Defaults to None.
+            sFilename_soil_parameter_bounds_in (str, optional): _description_. Defaults to None.
+        """
 
         sFilename_parameter_bounds = self.sFilename_parameter_bounds
         aData_dummy = text_reader_string(sFilename_parameter_bounds, cDelimiter_in=',', iSkipline_in=1)
@@ -1283,13 +1380,20 @@ class swatcase(object):
 
         return
 
-    def extract_default_parameter_value(self, aParameter_in, sFilename_watershed_in= None,\
-        sFilename_subbasin_in = None,\
-        sFilename_hru_in = None,\
+    def extract_default_parameter_value(self, aParameter_in, sFilename_watershed_in= None,
+        sFilename_subbasin_in = None,
+        sFilename_hru_in = None,
         sWorkspace_soil_in = None        ):
+        """
+        Extract the default SWAT model parameters
 
-
-
+        Args:
+            aParameter_in (_type_): _description_
+            sFilename_watershed_in (str, optional): _description_. Defaults to None.
+            sFilename_subbasin_in (str, optional): _description_. Defaults to None.
+            sFilename_hru_in (str, optional): _description_. Defaults to None.
+            sWorkspace_soil_in (str, optional): _description_. Defaults to None.
+        """
 
         #watershed
         aParameter = list()
@@ -1319,6 +1423,13 @@ class swatcase(object):
         return
 
     def extract_default_parameter_value_watershed(self, aParameter_watershed, sFilename_watershed_in = None):
+        """
+        Extract the default watershed parameter
+
+        Args:
+            aParameter_watershed (_type_): _description_
+            sFilename_watershed_in (str, optional): _description_. Defaults to None.
+        """
         sWorkspace_source_case = self.sWorkspace_simulation_copy
         sWorkspace_target_case = self.sWorkspace_output
         nParameter_watershed = len(aParameter_watershed)
@@ -1519,6 +1630,13 @@ class swatcase(object):
         return
     
     def extract_default_parameter_value_subbasin(self, aParameter_subbasin, sFilename_subbasin_in = None):
+        """
+        Extract the default subbaisn parameter
+
+        Args:
+            aParameter_subbasin (_type_): _description_
+            sFilename_subbasin_in (_type_, optional): _description_. Defaults to None.
+        """
         sWorkspace_source_case = self.sWorkspace_simulation_copy
         sWorkspace_target_case = self.sWorkspace_output
    
@@ -1707,6 +1825,13 @@ class swatcase(object):
         return
 
     def extract_default_parameter_value_hru(self, aParameter_hru, sFilename_hru_in = None):
+        """
+        Extract the default hru parameters
+
+        Args:
+            aParameter_hru (_type_): _description_
+            sFilename_hru_in (str, optional): _description_. Defaults to None.
+        """
         sWorkspace_source_case = self.sWorkspace_simulation_copy
         sWorkspace_target_case = self.sWorkspace_output
         nParameter_hru = len(aParameter_hru)
@@ -2012,6 +2137,13 @@ class swatcase(object):
         return
 
     def extract_default_parameter_value_soil(self, aParameter_soil, sWorkspace_soil_in = None):
+        """
+        Extract the default soil parameter
+
+        Args:
+            aParameter_soil (_type_): _description_
+            sWorkspace_soil_in (str, optional): _description_. Defaults to None.
+        """
         sWorkspace_source_case = self.sWorkspace_simulation_copy
         sWorkspace_target_case = self.sWorkspace_output
         nParameter_soil = len(aParameter_soil)
@@ -2224,6 +2356,9 @@ class swatcase(object):
         return
 
     def swaty_prepare_watershed_configuration(self):
+        """
+        Prepare the watershed configuration
+        """
         #process hru report if needed
         if(os.path.isfile(self.sFilename_hru_info) \
             and os.path.isfile(self.sFilename_hru_combination) \
@@ -2331,6 +2466,9 @@ class swatcase(object):
         print('finished')    
 
     def swaty_retrieve_soil_info(self):
+        """
+        Retrieve the soil information from the existing files
+        """
         sWorkspace_source_case = self.sWorkspace_simulation_copy
         sWorkspace_target_case = self.sWorkspace_output
         sFilename_watershed_configuration = self.sFilename_watershed_configuration
@@ -2417,7 +2555,7 @@ class swatcase(object):
     
     def swaty_prepare_watershed_parameter_file(self):
         """
-        #prepare the pest control file
+        prepare the pest control file
         """      
         sWorkspace_output = self.sWorkspace_output    
 
@@ -2639,8 +2777,12 @@ class swatcase(object):
 
     def swaty_prepare_hru_template_file(self, sFilename_hru_template_in = None):
         """
-        #prepare the pest control file
-        """      
+        Prepare the hru template file for PEST
+
+        Args:
+            sFilename_hru_template_in (str, optional): _description_. Defaults to None.
+        """
+           
    
         sWorkspace_output = self.sWorkspace_output    
         iFlag_simulation = self.iFlag_simulation    
@@ -2684,6 +2826,9 @@ class swatcase(object):
         return
 
     def swaty_prepare_soil_parameter_file(self):
+        """
+        Prepare the soil parameter file
+        """
         sWorkspace_output = self.sWorkspace_output    
         iFlag_simulation = self.iFlag_simulation    
         iFlag_hru = self.iFlag_hru
@@ -2762,6 +2907,12 @@ class swatcase(object):
         return
 
     def swaty_prepare_soil_template_file(self, sFilename_soil_template_in = None):
+        """
+        Prepare the soil template file for PEST
+
+        Args:
+            sFilename_soil_template_in (str, optional): _description_. Defaults to None.
+        """
         sWorkspace_output = self.sWorkspace_output    
         iFlag_simulation = self.iFlag_simulation    
         iFlag_hru = self.iFlag_hru
@@ -2819,8 +2970,12 @@ class swatcase(object):
 
     def swaty_create_pest_instruction_file(self, sFilename_instruction):
         """
-        prepare pest instruction file
-        """            
+        Prepare pest instruction file
+
+        Args:
+            sFilename_instruction (str): The pest instruction filename
+        """
+                   
         nstress_month = self.nstress_month
 
         sFilename_observation = os.path.join( self.sWorkspace_input,'discharge_observation_monthly.txt' )
@@ -3501,7 +3656,7 @@ class swatcase(object):
          
     def swaty_copy_executable_file(self):
         """    
-        prepare executable file
+        Prepare executable file to the workspace
         """    
         sWorkspace_bin = self.sWorkspace_bin 
         sFilename_swat = self.sFilename_swat   
@@ -3537,6 +3692,12 @@ class swatcase(object):
         print('The swat executable file is copied successfully!')
     
     def swaty_prepare_simulation_bash_file(self):
+        """
+        Generate a swat simulation bash file.
+
+        Returns:
+            _type_: _description_
+        """
 
         sWorkspace_output = self.sWorkspace_output
 
@@ -3561,6 +3722,12 @@ class swatcase(object):
         return sFilename_bash
     
     def swaty_prepare_simulation_job_file(self):
+        """
+        Generate a HPC job file for the SWAT simulation
+
+        Returns:
+            _type_: _description_
+        """
 
         sWorkspace_output = self.sWorkspace_output
         sJob = self.sJob
@@ -3615,6 +3782,9 @@ class swatcase(object):
         return sFilename_job
     
     def swaty_prepare_observation_discharge_file(self):
+        """
+        Pre-process the observed stream discharge
+        """
         sModel = self.sModel
         sWorkspace_scratch = self.sWorkspace_scratch    
         sWorkspace_data = self.sWorkspace_data
@@ -3677,8 +3847,12 @@ class swatcase(object):
     
     def swaty_extract_stream_discharge(self, sFilename_output_in=None):
         """
-        extract discharge from swat model simulation
-        """     
+        Extract discharge from swat model simulation
+
+        Args:
+            sFilename_output_in (str, optional): the destination filename. Defaults to None.
+        """
+        
         sModel = self.sModel
         sRegion = self.sRegion
         sCase = self.sCase
@@ -3742,6 +3916,9 @@ class swatcase(object):
         print('Finished extracting stream discharge: ' + sFilename_out)
 
     def swaty_tsplot_stream_discharge(self):
+        """
+        Plot the time series swat simulated stream discharge
+        """
         iYear_start = self.iYear_start
         iYear_end = self.iYear_end
         nstress_month = self.nstress_month
@@ -3836,6 +4013,12 @@ class swatcase(object):
         print("finished")
     
     def export_config_to_json(self, sFilename_output):
+        """
+        Export the configuration to a JSON object
+
+        Returns:
+            _type_: _description_
+        """
         aSkip = [ 'aSubbasin' ,'aHru_combination' ]
         obj = self.__dict__.copy()
         for sKey in aSkip:
@@ -3850,6 +4033,12 @@ class swatcase(object):
         return
 
     def tojson(self):
+        """
+        Convert a swat case object to a JSON object
+
+        Returns:
+            _type_: _description_
+        """
         aSkip = [ 'aSubbasin', 'aHru_combination'    ]  
 
         obj = self.__dict__.copy()
