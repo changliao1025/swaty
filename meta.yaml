@@ -1,10 +1,10 @@
 package:
-  name: "pyearth"
+  name: "swaty"
   version: "0.1"
 
 source:
   git_rev: v0.1
-  git_url: https://github.com/changliao1025/pyearth
+  git_url: https://github.com/changliao1025/swaty
 
 requirements:
   host:

@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-swaty documentation!
+Welcome to swaty documentation!
 ==============================================
 
 Contents:
@@ -12,7 +12,11 @@ Contents:
    :maxdepth: 2
 
    getting-started
-   commands
+   authors
+   contribution
+   glossary
+   history
+   api
 
 
 
